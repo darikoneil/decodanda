@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 #     Copyright (C) 2023  Lorenzo Posani
 #
 #     This program is free software: you can redistribute it and/or modify
@@ -11,12 +13,18 @@
 #     GNU General Public License for more details.
 #
 
+from typing import Tuple, Union, Callable, Iterable, List, Mapping
 import copy
-from typing import Tuple, Union
 
 import numpy as np
+from sklearn.svm import LinearSVC
+
+from ._defaults import classifier_parameters
+from ._dev import identify_calling_function
+
 import scipy.stats.stats
 from numpy import ndarray
+
 from .imports import *
 from .utilities import generate_binary_words, string_bool, sample_training_testing_from_rasters, CrossValidator, \
     log_dichotomy, hamming, sample_from_rasters, generate_dichotomies, semantic_score, z_pval, DictSession, \
@@ -28,9 +36,10 @@ from .visualize import corr_scatter, visualize_decoding, plot_perfs_null_model, 
 
 class Decodanda:
     def __init__(self,
-                 data: Union[list, dict],
+                 data: Union[Iterable, dict],
                  conditions: dict,
-                 classifier: any = 'svc',
+                 classifier: Callable = LinearSVC,
+                 classifier_params: Mapping = classifier_parameters,
                  neural_attr: str = 'raster',
                  trial_attr: str = 'trial',
                  squeeze_trials: bool = False,
@@ -147,23 +156,11 @@ class Decodanda:
         variables are specified ``stimulus`` and ``action``.
         A properly-formatted data set would look like this:
 
-        >>> data = {
-        >>>     'raster': [[0, 1, ..., 0], ..., [0, 2, ..., 1]],     # <800x50 array>, neural activations
-        >>>     'stimulus': ['A', 'A', 'B', ..., 'B'],               # <800x1 array>, values of the stimulus variable
-        >>>     'action': ['left', 'left', 'none', ..., 'left'],    # <800x1 array>, values of the action variable
-        >>>     'trial':  [1, 1, 1, ..., 2, 2, 2, ..., 80, 80, 80],  # <800x1 array>, trial number, 80 unique numbers
-        >>> }
-
         The ``conditions`` dictionary is used to specify which variables - out of
         all the keywords in the ``data`` dictionary, and which and values - out of
         all possible values of each specified variable - we want to decode.
 
         It has to be in the form ``{key: [value1, value2]}``:
-
-        >>> conditions = {
-        >>>     'stimulus': ['A', 'B'],
-        >>>     'action': ['left', 'right']
-        >>> }
 
         If more than one variable is specified, `Decodanda` will balance all
         conditions during each decoding analysis to disentangle
@@ -175,13 +172,6 @@ class Decodanda:
 
         Using the data set defined above:
 
-        >>> from decodanda import Decodanda
-        >>>
-        >>> dec = Decodanda(
-        >>>         data=data,
-        >>>         conditions=conditions
-        >>>         verbose=True)
-        >>>
         [Decodanda]	building conditioned rasters for session 0
                     (stimulus = A, action = left):	Selected 150 time bin out of 800, divided into 15 trials
                     (stimulus = A, action = right):	Selected 210 time bin out of 800, divided into 21 trials
@@ -195,30 +185,18 @@ class Decodanda:
 
         """
 
-        # casting single session to a list so that it is compatible with all loops below
-        if type(data) != list:
-            data = [data]
+        # abstracted for readability - DAO 06/08/2023
+        self.data = self._sanitize_data(data)
 
-        # handling dictionaries as sessions
-
-        # TODO: change default behavior with dictionaries instead of data structures
-
-        if type(data[0]) == dict:
-            dict_sessions = []
-            for session in data:
-                dict_sessions.append(DictSession(session))
-            data = dict_sessions
+        # abstracted to directly passing a callable with sklearn syntax - DAO 06/08/2023
+        self.classifier = classifier(**classifier_params)
 
         # handling discrete dict conditions
         if type(list(conditions.values())[0]) == list:
             conditions = _generate_binary_conditions(conditions)
 
         # setting input parameters
-        self.data = data
         self.conditions = conditions
-        if classifier == 'svc':
-            classifier = LinearSVC(dual=False, C=1.0, class_weight='balanced', max_iter=5000)
-        self.classifier = classifier
 
         # private params
         self._min_data_per_condition = min_data_per_condition
@@ -235,8 +213,8 @@ class Decodanda:
         self._trial_average = squeeze_trials
 
         # setting session(s) data
-        self.n_sessions = len(data)
-        self.n_conditions = len(conditions)
+        self.n_sessions = len(self.data)
+        self.n_conditions = len(self.conditions)
         self._max_conditioned_data = 0
         self._min_conditioned_data = 10 ** 6
         self.n_neurons = 0
@@ -265,7 +243,7 @@ class Decodanda:
         self.conditioned_trial_index = {string_bool(w): [] for w in self._condition_vectors}
 
         #   >>> main part: create conditioned arrays <<< ---------------------------------
-        self._divide_data_into_conditions(data)
+        self._divide_data_into_conditions(self.data)
         #  \ >>> main part: create conditioned arrays <<< --------------------------------
 
         # raising exceptions
@@ -288,6 +266,28 @@ class Decodanda:
             for w in self.conditioned_rasters.keys():
                 self.ordered_conditioned_rasters[w] = self.conditioned_rasters[w].copy()
                 self.ordered_conditioned_trial_index[w] = self.conditioned_trial_index[w].copy()
+
+    @staticmethod
+    def _sanitize_data(data: Union[Iterable, dict]) -> List[dict]:
+
+        # casting single session to a list so that it is compatible with all loops below
+        if isinstance(data, dict):  # faster and considers inheritance - DAO -6/08/2023
+            data = [data]
+
+        # ensure each session in data is a dictionary - DAO -6/08/2023
+        for idx, session in zip(range(len(data)), data):
+            assert (isinstance(session, dict)), f"Session {idx} is a {type(session)} not a dictionary"
+
+        # make sure all session data is numpy array
+        if isinstance(data[0], dict):
+            data = [{key: np.asarray(value) for key, value in session.items()} for session in data]
+            # List Comprehension, pythonic / faster
+            # Ensuring all numpy array using dict comprehension
+            # This ensures all dictionary methods / optimizations (including getattr)
+            # Preferable to mutable mapping abstract base class with regards to performance
+            # DAO 06/08/2023
+
+        return data
 
     # basic decoding functions
 
@@ -892,49 +892,44 @@ class Decodanda:
         [0.51, 0.54, 0.48, ..., 0.46] # 25 values
         """
 
-        if type(dichotomy) == str:
+        # am i necessary
+        if isinstance(dichotomy, str):  # DAO 06/08/2023
             dic = self._dichotomy_from_key(dichotomy)
         else:
             dic = dichotomy
 
-        d_performances = self.decode_dichotomy(dichotomy=dic,
+        # Decode Real Data
+        real_performance = self.decode_dichotomy(dichotomy=dic,
                                                training_fraction=training_fraction,
                                                cross_validations=cross_validations,
                                                ndata=ndata,
                                                parallel=parallel,
                                                testing_trials=testing_trials,
                                                dic_key=dic_key)
-        if return_CV:
-            data_performance = d_performances
-        else:
-            data_performance = np.nanmean(d_performances)
+        # Report Progress
+        if self._verbose:
+            print(f"\n{identify_calling_function()}\t Fraction Correct: {np.nanmean(real_performance):.2f}")
 
-        if self._verbose and nshuffles:
-            print(
-                "\n[decode_with_nullmodel]\t data <p> = %.2f" % np.nanmean(d_performances))
-            print('\n[decode_with_nullmodel]\tLooping over null model shuffles.')
+        if self._verbose:
+            print(f"\n{identify_calling_function()}\t Looping over null model shuffles")
             count = tqdm(range(nshuffles))
         else:
             count = range(nshuffles)
 
-        null_model_performances = np.zeros(nshuffles)
-
-        for n in count:
-            performances = self.decode_dichotomy(dichotomy=dic,
+        null_model_performances = [np.nanmean(self.decode_dichotomy(dichotomy=dic,
                                                  training_fraction=training_fraction,
                                                  cross_validations=cross_validations,
                                                  ndata=ndata,
                                                  parallel=parallel,
                                                  testing_trials=testing_trials,
-                                                 shuffled=True)
-
-            null_model_performances[n] = np.nanmean(performances)
+                                                 shuffled=True))
+                                   for _ in count]
 
         if plot:
-            visualize_decoding(self, dic, d_performances, null_model_performances,
+            visualize_decoding(self, dic, real_performance, null_model_performances,
                                training_fraction=training_fraction, ndata=ndata, testing_trials=testing_trials)
 
-        return data_performance, null_model_performances
+        return real_performance, null_model_performances
 
     def CCGP_with_nullmodel(self, dichotomy: Union[str, list],
                             resamplings: int = 5,
@@ -1202,7 +1197,6 @@ class Decodanda:
                 ndata=ndata,
                 nshuffles=nshuffles,
                 parallel=parallel,
-                return_CV=return_CV,
                 testing_trials=testing_trials,
                 plot=plot_all)
 
@@ -1551,7 +1545,7 @@ class Decodanda:
             session_conditioned_trial_index = {}
 
             # exclude inactive neurons across the specified conditions
-            array = getattr(session, self._neural_attr)
+            array = session.get(self._neural_attr)
             total_mask = np.zeros(len(array)) > 0
 
             for condition_vec in self._condition_vectors:
@@ -1566,7 +1560,7 @@ class Decodanda:
 
             for condition_vec in self._condition_vectors:
                 # get the array from the session object
-                array = getattr(session, self._neural_attr)
+                array = session.get(self._neural_attr)
                 array = array[:, min_activity_mask]
 
                 # create a mask that becomes more and more restrictive by iterating on semanting conditions
@@ -1587,7 +1581,7 @@ class Decodanda:
                     return no
 
                 if self._trial_attr is not None:
-                    conditioned_trial = getattr(session, self._trial_attr)[mask]
+                    conditioned_trial = session.get(self._trial_attr)[mask]
                 elif self._trial_chunk is None:
                     if self._verbose:
                         print('[Decodanda]\tUsing contiguous chunks of the same labels as trials.')
@@ -2080,11 +2074,10 @@ def _generate_binary_conditions(discrete_dict):
     conditions = {}
     for key in discrete_dict.keys():
         conditions[key] = {
-            '%s' % discrete_dict[key][0]: lambda d, k=key: getattr(d, k) == discrete_dict[k][0],
-            '%s' % discrete_dict[key][1]: lambda d, k=key: getattr(d, k) == discrete_dict[k][1],
+            '%s' % discrete_dict[key][0]: lambda d, k=key: d.get(k) == discrete_dict[k][0],
+            '%s' % discrete_dict[key][1]: lambda d, k=key: d.get(k) == discrete_dict[k][1],
         }
     return conditions
-
 
 def _powerchotomy_to_key(dic):
     return '_'.join(dic[0]) + '_v_' + '_'.join(dic[1])
