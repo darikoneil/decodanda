@@ -23,7 +23,6 @@ from ._defaults import classifier_parameters
 from ._dev import identify_calling_function
 
 import scipy.stats.stats
-from numpy import ndarray
 
 from .imports import *
 from .utilities import generate_binary_words, string_bool, sample_training_testing_from_rasters, CrossValidator, \
@@ -422,7 +421,7 @@ class Decodanda:
                          cross_validations: int = 10, ndata: Optional[int] = None,
                          shuffled: bool = False, parallel: bool = False,
                          testing_trials: Optional[list] = None,
-                         dic_key: Optional[str] = None, **kwargs) -> ndarray:
+                         dic_key: Optional[str] = None, **kwargs) -> np.ndarray:
         """
         Function that performs cross-validated decoding of a specific dichotomy.
         Decoding is performed by sampling a balanced amount of data points from each condition in each class of the
@@ -792,7 +791,7 @@ class Decodanda:
                               return_CV: bool = False,
                               testing_trials: Optional[list] = None,
                               plot: bool = False,
-                              dic_key: Optional[str] = None) -> Tuple[Union[list, ndarray], ndarray]:
+                              dic_key: Optional[str] = None) -> Tuple[Union[list, np.ndarray], np.ndarray]:
         """
         Function that performs cross-validated decoding of a specific dichotomy and compares the resulting values with
         a null model where the relationship between the neural data and the two sides of the dichotomy is
@@ -2079,6 +2078,7 @@ def _generate_binary_conditions(discrete_dict):
             '%s' % discrete_dict[key][1]: lambda d, k=key: d.get(k) == discrete_dict[k][1],
         }
     return conditions
+
 
 def _powerchotomy_to_key(dic):
     return '_'.join(dic[0]) + '_v_' + '_'.join(dic[1])
