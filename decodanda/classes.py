@@ -508,10 +508,11 @@ class Decodanda:
 
         """
 
-        if type(dichotomy) == str:
+        if isinstance(dichotomy, str):  # DAO 06/08/2023
             dic = self._dichotomy_from_key(dichotomy)
         else:
             dic = dichotomy
+
         if ndata is None and self.n_brains == 1:
             ndata = self._max_conditioned_data
         if ndata is None and self.n_brains > 1:
@@ -1189,7 +1190,7 @@ class Decodanda:
         perfs_nullmodel = {}
         for key, dic in zip(semantic_keys, semantic_dics):
             if self._verbose:
-                print("\nTesting decoding performance for semantic dichotomy: ", key)
+                print(f"\nTesting decoding performance for semantic dichotomy: {key}")
             performance, null_model_performances = self.decode_with_nullmodel(
                 dic,
                 training_fraction,
