@@ -1,34 +1,20 @@
 from __future__ import annotations
-
-#     Copyright (C) 2023  Lorenzo Posani
-#
-#     This program is free software: you can redistribute it and/or modify
-#     it under the terms of the GNU General Public License as published by
-#     the Free Software Foundation, either version 3 of the License, or
-#     (at your option) any later version.
-#
-#     This program is distributed in the hope that it will be useful,
-#     but WITHOUT ANY WARRANTY; without even the implied warranty of
-#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#     GNU General Public License for more details.
-#
-
-from typing import Tuple, Union, Callable, Iterable, List, Mapping
+from typing import Tuple, Union, Callable, Iterable, List, Mapping, Optional
+from types import MappingProxyType
+from itertools import chain, combinations
+from multiprocessing import Pool
 import copy
+
 
 import numpy as np
 from sklearn.svm import LinearSVC
+from sklearn.base import clone
+from tqdm import tqdm
 
-from ._defaults import classifier_parameters
+from ._defaults import classifier_parameters, DecodandaParameters
 from ._dev import identify_calling_function
-
-import scipy.stats.stats
-
-from .imports import *
 from .utilities import generate_binary_words, string_bool, sample_training_testing_from_rasters, CrossValidator, \
-    log_dichotomy, hamming, sample_from_rasters, generate_dichotomies, semantic_score, z_pval, DictSession, \
-    contiguous_chunking, non_contiguous_mask, cosine
-from .visualize import corr_scatter, visualize_decoding, plot_perfs_null_model, visualize_PCA
+    log_dichotomy, hamming, generate_dichotomies, contiguous_chunking, non_contiguous_mask, generate_binary_conditions
 
 
 # Main class
@@ -39,19 +25,7 @@ class Decodanda:
                  conditions: dict,
                  classifier: Callable = LinearSVC,
                  classifier_params: Mapping = classifier_parameters,
-                 neural_attr: str = 'raster',
-                 trial_attr: str = 'trial',
-                 squeeze_trials: bool = False,
-                 min_data_per_condition: int = 2,
-                 min_trials_per_condition: int = 2,
-                 min_activations_per_cell: int = 1,
-                 trial_chunk: Optional[int] = None,
-                 exclude_contiguous_chunks: bool = False,
-                 exclude_silent: bool = False,
-                 verbose: bool = False,
-                 zscore: bool = False,
-                 fault_tolerance: bool = False,
-                 debug: bool = False,
+                 decodanda_params: Optional[Mapping] = None,
                  **kwargs
                  ):
 
@@ -171,7 +145,7 @@ class Decodanda:
 
         Using the data set defined above:
 
-        [Decodanda]	building conditioned rasters for session 0
+        [Decodanda]	building conditioned rasters for dataset 0
                     (stimulus = A, action = left):	Selected 150 time bin out of 800, divided into 15 trials
                     (stimulus = A, action = right):	Selected 210 time bin out of 800, divided into 21 trials
                     (stimulus = B, action = left):	Selected 210 time bin out of 800, divided into 21 trials
@@ -192,27 +166,19 @@ class Decodanda:
 
         # handling discrete dict conditions
         if type(list(conditions.values())[0]) == list:
-            conditions = _generate_binary_conditions(conditions)
+            conditions = generate_binary_conditions(conditions)
 
         # setting input parameters
         self.conditions = conditions
 
-        # private params
-        self._min_data_per_condition = min_data_per_condition
-        self._min_trials_per_condition = min_trials_per_condition
-        self._min_activations_per_cell = min_activations_per_cell
-        self._verbose = verbose
-        self._debug = debug
-        self._zscore = zscore
-        self._exclude_silent = exclude_silent
-        self._neural_attr = neural_attr
-        self._trial_attr = trial_attr
-        self._trial_chunk = trial_chunk
-        self._exclude_contiguous_trials = exclude_contiguous_chunks
-        self._trial_average = squeeze_trials
+        # decodanda parameters
+        self.parameters = DecodandaParameters.build([decodanda_params, kwargs])
+        # integrate parameters
+        for key, value in self.parameters.items():
+            vars(self)["".join(["_", key])] = value
 
-        # setting session(s) data
-        self.n_sessions = len(self.data)
+        # deriving dataset(s) attributes
+        self.n_datasets = len(self.data)
         self.n_conditions = len(self.conditions)
         self._max_conditioned_data = 0
         self._min_conditioned_data = 10 ** 6
@@ -233,7 +199,7 @@ class Decodanda:
         # creating conditioned array with the following structure:
         #   define a condition_vector with boolean values for each semantic condition, es. 100
         #   use this vector as the key for a dictionary
-        #   as a value, create a list of neural data for each session conditioned as per key
+        #   as a value, create a list of neural data for each dataset conditioned as per key
 
         #   >>> main object: neural rasters conditioned to semantic vector <<<
         self.conditioned_rasters = {string_bool(w): [] for w in self._condition_vectors}
@@ -249,8 +215,9 @@ class Decodanda:
         if self.n_brains == 0:
             if not fault_tolerance:
                 raise RuntimeError(
-                    "\n[Decodanda] No session passed the minimum data threshold for conditioned arrays.\n\t\t"
-                    "Check for mutually-exclusive conditions or try using less restrictive thresholds.")
+                    f"\n{identify_calling_function()}\tNo dataset passed the minimum data threshold for conditioned "
+                    f"arrays.\n\t\t Check for mutually-exclusive conditions or try using less restrictive thresholds."
+                )
         else:
             # derived attributes
             self._compute_centroids()
@@ -269,17 +236,17 @@ class Decodanda:
     @staticmethod
     def _sanitize_data(data: Union[Iterable, dict]) -> List[dict]:
 
-        # casting single session to a list so that it is compatible with all loops below
+        # casting single dataset to a list so that it is compatible with all loops below
         if isinstance(data, dict):  # faster and considers inheritance - DAO -6/08/2023
             data = [data]
 
-        # ensure each session in data is a dictionary - DAO -6/08/2023
-        for idx, session in zip(range(len(data)), data):
-            assert (isinstance(session, dict)), f"Session {idx} is a {type(session)} not a dictionary"
+        # ensure each dataset in data is a dictionary - DAO -6/08/2023
+        for idx, dataset in zip(range(len(data)), data):
+            assert (isinstance(dataset, dict)), f"Dataset {idx} is a {type(dataset)} not a dictionary"
 
-        # make sure all session data is numpy array
+        # make sure all dataset data is numpy array
         if isinstance(data[0], dict):
-            data = [{key: np.asarray(value) for key, value in session.items()} for session in data]
+            data = [{key: np.asarray(value) for key, value in dataset.items()} for dataset in data]
             # List Comprehension, pythonic / faster
             # Ensuring all numpy array using dict comprehension
             # This ensures all dictionary methods / optimizations (including getattr)
@@ -298,7 +265,7 @@ class Decodanda:
         training_raster = np.vstack([training_raster_A, training_raster_B])
         training_labels = np.hstack([training_labels_A, training_labels_B])
 
-        self.classifier = sklearn.base.clone(self.classifier)
+        self.classifier = clone(self.classifier)
 
         training_raster = training_raster[:, self.subset]
 
@@ -387,7 +354,7 @@ class Decodanda:
         if self._debug:
             selectivity_training = np.nanmean(training_array_A, 0) - np.nanmean(training_array_B, 0)
             selectivity_testing = np.nanmean(testing_array_A, 0) - np.nanmean(testing_array_B, 0)
-            corr_scatter(selectivity_training, selectivity_testing, 'Selectivity (training)', 'Selectivity (testing)')
+            # corr_scatter(selectivity_training, selectivity_testing, 'Selectivity (training)', 'Selectivity (testing)')
 
         if self._zscore:
             big_raster = np.vstack([training_array_A, training_array_B])  # z-scoring using the training data
@@ -551,235 +518,6 @@ class Decodanda:
             self._order_conditioned_rasters()
         return np.asarray(performances)
 
-    def CCGP_dichotomy(self, dichotomy: Union[str, list],
-                       resamplings: int = 3,
-                       ndata: Optional[int] = None,
-                       max_semantic_dist: int = 1,
-                       shuffled: bool = False):
-        """
-        Function that performs the cross-condition generalization performance analysis (CCGP, Bernardi et al. 2020, Cell)
-        for a given variable, specified through its corresponding dichotomy. This function tests how well a given
-        coding strategy for the given variable generalizes when the other variables are changed.
-
-
-        Parameters
-        ----------
-            dichotomy : str || list
-                The dichotomy corresponding to the variable to be tested, expressed in a double-list binary format, e.g. [['10', '11'], ['01', '00']], or as a variable name.
-            resamplings:
-                The number of iterations for each decoding analysis. The returned performance value is the average over these resamplings.
-            ndata:
-                The number of data points (population vectors) sampled for training and for testing for each condition.
-            max_semantic_dist:
-                The maximum semantic distance (number of variables that change value) between conditions in the held-out pair used to test the classifier.
-            shuffled:
-                If True, the data is sampled according to geometrical null model for CCGP that keeps variables decodable but breaks the generalization. See Bernardi et al 2020 & Boyle, Posani et al. 2023.
-
-        Returns
-        -------
-            performances: list of performance values for each cross-condition training-testing split.
-
-        Note
-        ----
-
-        This function trains the ``self._classifier`` to decode the given variable in a sub-set
-        of conditions, and tests it on the held-out set.
-
-        The split of training and testing conditions is decided by the ``max_semantic_dist`` parameter: if set to 1,
-        only pairs of conditions that have all variables in common except the specified one are held out to test the
-        classifier.
-
-
-            For example, if the data set has two variables
-        ``stimulus`` :math:`\\in` {-1, 1} and ``action`` :math:`\\in` {-1, 1}, to compute CCGP for ``stimulus``
-        with ``max_semantic_dist=1`` this function will train the classifier on
-
-        ``(stimulus = -1, action = -1)`` vs. ``(stimulus = 1, action = -1)``
-
-        And test it on
-
-        ``(stimulus = -1, action = 1)`` vs. ``(stimulus = 1, action = 1)``
-
-        note that action is kept fixed within the training and testing conditions.
-
-        If instead we use ``max_semantic_dist=2``, all possible combinations are used, including training on
-
-        ``(stimulus = -1, action = -1)`` vs. ``(stimulus = 1, action = 1)``
-
-        and testing on
-
-        ``(stimulus = -1, action = 1)`` vs. ``(stimulus = 1, action = -1)``
-
-
-                ``dichotomy`` can be passed as a string or as a list.
-        If a string is passed, it has to be a name of one of the variables specified in the conditions dictionary.
-
-        If a list is passed, it needs to contain two lists in the shape [[...], [...]].
-        Each sub list contains the conditions used to define one of the two decoded classes
-        in binary notation.
-
-        For example, if the data set has two variables
-        ``stimulus`` :math:`\\in` {-1, 1} and ``action`` :math:`\\in` {-1, 1}, the condition
-        ``stimulus=-1`` & ``action=-1`` will correspond to the binary notation ``'00'``,
-        the condition ``stimulus=+1`` & ``action=-1`` will correspond to ``10`` and so on.
-
-        Therefore, if ``stimulus`` is the first variable in the conditions dictionary, its corresponding dichotomy is
-
-        >>> stimulus = [['00', '01'], ['10', '11']]
-
-        Example
-        -------
-        >>> data = generate_synthetic_data(keyA='stimulus', keyB='action')
-        >>> dec = Decodanda(data=data, conditions={'stimulus': [-1, 1], 'action': [-1, 1]})
-        >>> perfs = dec.CCGP_dichotomy('stimulus')
-        >>> perfs
-        [0.82, 0.87] # 2 values
-
-        """
-
-        if type(dichotomy) == str:
-            dic = self._dichotomy_from_key(dichotomy)
-        else:
-            dic = dichotomy
-
-        if ndata is None and self.n_brains == 1:
-            ndata = self._max_conditioned_data
-        if ndata is None and self.n_brains > 1:
-            ndata = max(self._max_conditioned_data, 2 * self.n_neurons)
-
-        all_performances = []
-
-        if not shuffled and self._verbose:
-            log_dichotomy(self, dic, ndata, 'Cross-condition decoding')
-            iterable = tqdm(range(resamplings))
-        elif not shuffled:
-            iterable = range(resamplings)
-        else:
-            iterable = range(1)
-
-        for n in iterable:
-            performances = []
-
-            set_A = dic[0]
-            set_B = dic[1]
-
-            for i in range(len(set_A)):
-                for j in range(len(set_B)):
-                    test_condition_A = set_A[i]
-                    test_condition_B = set_B[j]
-
-                    if hamming(string_bool(test_condition_A), string_bool(test_condition_B)) <= max_semantic_dist:
-                        training_conditions_A = [x for iA, x in enumerate(set_A) if iA != i]
-                        training_conditions_B = [x for iB, x in enumerate(set_B) if iB != j]
-
-                        training_array_A = []
-                        training_array_B = []
-                        label_A = ''
-                        label_B = ''
-
-                        for ck in training_conditions_A:
-                            arr = sample_from_rasters(self.conditioned_rasters[ck], ndata=ndata)
-                            training_array_A.append(arr)
-                            label_A += (self._semantic_vectors[ck] + ' ')
-
-                        for ck in training_conditions_B:
-                            arr = sample_from_rasters(self.conditioned_rasters[ck], ndata=ndata)
-                            training_array_B.append(arr)
-                            label_B += (self._semantic_vectors[ck] + ' ')
-
-                        training_array_A = np.vstack(training_array_A)
-                        training_array_B = np.vstack(training_array_B)
-
-                        testing_array_A = sample_from_rasters(self.conditioned_rasters[test_condition_A], ndata=ndata)
-                        testing_array_B = sample_from_rasters(self.conditioned_rasters[test_condition_B], ndata=ndata)
-
-                        if shuffled:
-                            rotation_A = np.arange(testing_array_A.shape[1]).astype(int)
-                            rotation_B = np.arange(testing_array_B.shape[1]).astype(int)
-                            np.random.shuffle(rotation_A)
-                            np.random.shuffle(rotation_B)
-                            testing_array_A = testing_array_A[:, rotation_A]
-                            testing_array_B = testing_array_B[:, rotation_A]
-
-                        if self._zscore:
-                            big_raster = np.vstack([training_array_A, training_array_B])  # z-scoring using the training data
-                            big_mean = np.nanmean(big_raster, 0)
-                            big_std = np.nanstd(big_raster, 0)
-                            big_std[big_std == 0] = np.inf
-                            training_array_A = (training_array_A - big_mean) / big_std
-                            training_array_B = (training_array_B - big_mean) / big_std
-                            testing_array_A = (testing_array_A - big_mean) / big_std
-                            testing_array_B = (testing_array_B - big_mean) / big_std
-
-                        self._train(training_array_A, training_array_B, label_A, label_B)
-                        performance = self._test(testing_array_A, testing_array_B, label_A, label_B)
-                        performances.append(performance)
-
-            all_performances.append(performances)
-        return np.nanmean(all_performances, 0)
-
-    def parallelism_score_dichotomy(self, dichotomy: Union[str, list],
-                                    max_semantic_dist: int = 1,
-                                    shuffled: bool = False,
-                                    method: str = 'pearson',
-                                    return_combinations: bool = False):
-        if type(dichotomy) == str:
-            dic = self._dichotomy_from_key(dichotomy)
-        else:
-            dic = dichotomy
-
-        ndata = 2 * self._max_conditioned_data
-
-        coding_directions = []
-
-        set_A = dic[0]
-        set_B = dic[1]
-
-        for i in range(len(set_A)):
-            for j in range(len(set_B)):
-                test_condition_A = set_A[i]
-                test_condition_B = set_B[j]
-                if hamming(string_bool(test_condition_A), string_bool(test_condition_B)) <= max_semantic_dist:
-                    testing_array_A = sample_from_rasters(self.conditioned_rasters[test_condition_A], ndata=ndata)
-                    testing_array_B = sample_from_rasters(self.conditioned_rasters[test_condition_B], ndata=ndata)
-
-                    if shuffled:
-                        rotation_A = np.arange(testing_array_A.shape[1]).astype(int)
-                        rotation_B = np.arange(testing_array_B.shape[1]).astype(int)
-                        np.random.shuffle(rotation_A)
-                        np.random.shuffle(rotation_B)
-                        testing_array_A = testing_array_A[:, rotation_A]
-                        testing_array_B = testing_array_B[:, rotation_A]
-
-                    if self._zscore:
-                        big_raster = np.vstack([testing_array_A, testing_array_B])
-                        big_mean = np.nanmean(big_raster, 0)
-                        big_std = np.nanstd(big_raster, 0)
-                        big_std[big_std == 0] = np.inf
-                        testing_array_A = (testing_array_A - big_mean) / big_std
-                        testing_array_B = (testing_array_B - big_mean) / big_std
-
-                    vA = np.nanmean(testing_array_A, 0)
-                    vB = np.nanmean(testing_array_B, 0)
-                    coding_directions.append(vB - vA)
-
-        parallelism_scores = []
-        for i in range(len(coding_directions)):
-            for j in range(i + 1, len(coding_directions)):
-                if method == 'pearson':
-                    parallelism_scores.append(scipy.stats.pearsonr(coding_directions[i], coding_directions[j])[0])
-                elif method == 'cosine':
-                    parallelism_scores.append(cosine(coding_directions[i], coding_directions[j]))
-                elif method == 'spearman':
-                    parallelism_scores.append(scipy.stats.spearmanr(coding_directions[i], coding_directions[j])[0])
-                else:
-                    raise ValueError(
-                        "The specified method is not supported, please use one of: pearson, cosine, spearman")
-        if return_combinations:
-            return np.asarray(parallelism_scores)
-        else:
-            return np.nanmean(parallelism_scores)
-
     # Dichotomy analysis functions with null model
 
     def decode_with_nullmodel(self, dichotomy: Union[str, list],
@@ -925,164 +663,7 @@ class Decodanda:
                                                  shuffled=True))
                                    for _ in count]
 
-        if plot:
-            visualize_decoding(self, dic, real_performance, null_model_performances,
-                               training_fraction=training_fraction, ndata=ndata, testing_trials=testing_trials)
-
         return real_performance, null_model_performances
-
-    def CCGP_with_nullmodel(self, dichotomy: Union[str, list],
-                            resamplings: int = 5,
-                            nshuffles: int = 25,
-                            ndata: Optional[int] = None,
-                            max_semantic_dist: int = 1,
-                            return_combinations: bool = False):
-
-        """
-                Function that performs the cross-condition generalization performance analysis (CCGP, Bernardi et al. 2020, Cell)
-                for a given variable, specified through its corresponding dichotomy.
-
-                    This function tests how well a given coding strategy for the given variable generalizes
-                when the other variables are changed and compares the
-                resulting values with a geometrical null model that keeps variables decodable but randomly
-                displaces conditions in the neural activity space, hence breaking any coding parallelism and generizability.
-                See Bernardi et al 2020 & Boyle, Posani et al. 2023 for more details.
-
-                Parameters
-                ----------
-                    dichotomy : str || list
-                        The dichotomy corresponding to the variable to be tested, expressed in a double-list binary format, e.g. [['10', '11'], ['01', '00']], or as a variable name.
-                    resamplings:
-                        The number of iterations for each decoding analysis. The returned performance value is the average over these resamplings.
-                    nshuffles:
-                        The number of null-model iterations for the CCGP analysis.
-                    ndata:
-                        The number of data points (population vectors) sampled for training and for testing for each condition.
-                    max_semantic_dist:
-                        The maximum semantic distance (number of variables that change value) between conditions in the held-out pair used to test the classifier.
-                    return_combinations:
-                        If True, returns all the individual performances for cross-conditions train-test splits, otherwise returns the average over combinations.
-
-
-                Returns
-                -------
-                    ccgp: mean of performance values for each cross-condition training-testing split (or list, if ``return_combinations=True``).
-                    null: a list of null values for the mean ccgp
-
-                Note
-                ----
-
-                This function trains the ``self._classifier`` to decode the given variable in a sub-set
-                of conditions, and tests it on the held-out set.
-
-                The split of training and testing conditions is decided by the ``max_semantic_dist`` parameter: if set to 1,
-                only pairs of conditions that have all variables in common except the specified one are held out to test the
-                classifier.
-
-
-                    For example, if the data set has two variables
-                ``stimulus`` :math:`\\in` {-1, 1} and ``action`` :math:`\\in` {-1, 1}, to compute CCGP for ``stimulus``
-                with ``max_semantic_dist=1`` this function will train the classifier on
-
-                ``(stimulus = -1, action = -1)`` vs. ``(stimulus = 1, action = -1)``
-
-                And test it on
-
-                ``(stimulus = -1, action = 1)`` vs. ``(stimulus = 1, action = 1)``
-
-                note that action is kept fixed within the training and testing conditions.
-
-                If instead we use ``max_semantic_dist=2``, all possible combinations are used, including training on
-
-                ``(stimulus = -1, action = -1)`` vs. ``(stimulus = 1, action = 1)``
-
-                and testing on
-
-                ``(stimulus = -1, action = 1)`` vs. ``(stimulus = 1, action = -1)``
-
-
-                        ``dichotomy`` can be passed as a string or as a list.
-                If a string is passed, it has to be a name of one of the variables specified in the conditions dictionary.
-
-                If a list is passed, it needs to contain two lists in the shape [[...], [...]].
-                Each sub list contains the conditions used to define one of the two decoded classes
-                in binary notation.
-
-                For example, if the data set has two variables
-                ``stimulus`` :math:`\\in` {-1, 1} and ``action`` :math:`\\in` {-1, 1}, the condition
-                ``stimulus=-1`` & ``action=-1`` will correspond to the binary notation ``'00'``,
-                the condition ``stimulus=+1`` & ``action=-1`` will correspond to ``10`` and so on.
-
-                Therefore, if ``stimulus`` is the first variable in the conditions dictionary, its corresponding dichotomy is
-
-                >>> stimulus = [['00', '01'], ['10', '11']]
-
-                Example
-                -------
-                >>> data = generate_synthetic_data(keyA='stimulus', keyB='action')
-                >>> dec = Decodanda(data=data, conditions={'stimulus': [-1, 1], 'action': [-1, 1]})
-                >>> perf, null = dec.CCGP_with_nullmodel('stimulus', nshuffles=10)
-                >>> perf
-                0.85
-                >>> null
-                [0.44, 0.48, ..., 0.54] # 10 values
-                """
-
-        performances = self.CCGP_dichotomy(dichotomy=dichotomy, resamplings=resamplings, ndata=ndata,
-                                           max_semantic_dist=max_semantic_dist)
-
-        if return_combinations:
-            ccgp = performances
-        else:
-            ccgp = np.nanmean(performances)
-
-        if self._verbose and nshuffles:
-            print("\t\t[CCGP_with_nullmodel]\t\t----- Data: <p> = %.2f -----\n" % np.nanmean(performances))
-            count = tqdm(range(nshuffles))
-        else:
-            count = range(nshuffles)
-
-        shuffled_ccgp = []
-        for n in count:
-            performances = self.CCGP_dichotomy(dichotomy=dichotomy,
-                                               resamplings=resamplings,
-                                               ndata=ndata,
-                                               max_semantic_dist=max_semantic_dist,
-                                               shuffled=True)
-            if return_combinations:
-                shuffled_ccgp.append(performances)
-            else:
-                shuffled_ccgp.append(np.nanmean(performances))
-
-        return ccgp, shuffled_ccgp
-
-    def PS_with_nullmodel(self, dichotomy: Union[str, list],
-                          nshuffles: int = 25,
-                          max_semantic_dist: int = 1,
-                          method: str = 'pearson',
-                          return_combinations: bool = False):
-
-        scores = self.parallelism_score_dichotomy(dichotomy=dichotomy,
-                                                  method=method,
-                                                  max_semantic_dist=max_semantic_dist,
-                                                  return_combinations=return_combinations)
-
-        if self._verbose and nshuffles:
-            print("\t\t[PS_with_nullmodel]\t\t----- Data: <p> = %.2f -----\n" % np.nanmean(scores))
-            count = tqdm(range(nshuffles))
-        else:
-            count = range(nshuffles)
-
-        shuffled_scores = []
-        for n in count:
-            scores_null = self.parallelism_score_dichotomy(dichotomy=dichotomy,
-                                                           method=method,
-                                                           max_semantic_dist=max_semantic_dist,
-                                                           return_combinations=return_combinations,
-                                                           shuffled=True)
-            shuffled_scores.append(scores_null)
-
-        return scores, shuffled_scores
 
     # Decoding analysis for semantic dichotomies
 
@@ -1094,9 +675,6 @@ class Decodanda:
                non_semantic: bool = False,
                return_CV: bool = False,
                testing_trials: Optional[list] = None,
-               plot: bool = False,
-               ax: Optional[plt.Axes] = None,
-               plot_all: bool = False,
                **kwargs):
 
         """
@@ -1187,9 +765,12 @@ class Decodanda:
 
         perfs = {}
         perfs_nullmodel = {}
+
         for key, dic in zip(semantic_keys, semantic_dics):
+
             if self._verbose:
-                print(f"\nTesting decoding performance for semantic dichotomy: {key}")
+                print(f"\n{identify_calling_function()}\tTesting decoding performance for semantic dichotomy: {key}")
+
             performance, null_model_performances = self.decode_with_nullmodel(
                 dic,
                 training_fraction,
@@ -1203,371 +784,48 @@ class Decodanda:
             perfs[key] = performance
             perfs_nullmodel[key] = null_model_performances
 
-        if non_semantic and len(self.conditions) == 2:
-            xor_dic = [['01', '10'], ['00', '11']]
-            perfs_xor, perfs_null_xor = self.decode_with_nullmodel(dichotomy=xor_dic,
-                                                                   training_fraction=training_fraction,
-                                                                   cross_validations=cross_validations,
-                                                                   nshuffles=nshuffles,
-                                                                   parallel=parallel,
-                                                                   ndata=ndata,
-                                                                   return_CV=return_CV,
-                                                                   testing_trials=testing_trials,
-                                                                   plot=plot_all)
-            perfs['XOR'] = perfs_xor
-            perfs_nullmodel['XOR'] = perfs_null_xor
-
-        if non_semantic and len(self.conditions) > 2:
-            dics = self._find_nonsemantic_dichotomies()
-            for dic in dics:
-                dic_key = '_'.join(dic[0]) + '__' + '_'.join(dic[1])
-                perfs_dic, null_dic = self.decode_with_nullmodel(dichotomy=dic,
-                                                                 training_fraction=training_fraction,
-                                                                 cross_validations=cross_validations,
-                                                                 nshuffles=nshuffles,
-                                                                 parallel=parallel,
-                                                                 ndata=ndata,
-                                                                 return_CV=return_CV,
-                                                                 testing_trials=testing_trials,
-                                                                 plot=plot_all)
-                perfs[dic_key] = perfs_dic
-                perfs_nullmodel[dic_key] = null_dic
-
-        if plot:
-            if not ax:
-                f, ax = plt.subplots(figsize=(0.5 + 1.8 * len(perfs.keys()), 3.5))
-            plot_perfs_null_model(perfs, perfs_nullmodel, ylabel='Decoding performance', ax=ax, **kwargs)
-
         return perfs, perfs_nullmodel
 
     # Geometrical analysis for semantic dichotomies
 
-    def CCGP(self, resamplings=5,
-             nshuffles: int = 25,
-             ndata: Optional[int] = None,
-             max_semantic_dist: int = 1,
-             plot: bool = False,
-             ax: Optional[plt.Axes] = None,
-             **kwargs):
-
-        """
-        Main function that performs the cross-condition generalization performance analysis (CCGP, Bernardi et al. 2020, Cell)
-        for the variables specified through the ``conditions`` dictionary.
-
-        It returns a single ccgp value per variable which represents the average over
-        all cross-condition train-test splits.
-
-        It also returns an array of null-model values for each variable to test the significance of
-        the corresponding ccgp result. The employed geometrical null model keeps variables decodable but randomly
-        displaces conditions in the neural activity space, hence breaking any coding parallelism and generizability.
-        See Bernardi et al 2020 & Boyle, Posani et al. 2023 for more details.
-
-        Parameters
-        ----
-            resamplings:
-                The number of iterations for each decoding analysis. The returned performance value is the average over these resamplings.
-            nshuffles:
-                The number of null-model iterations for the CCGP analysis.
-            ndata:
-                The number of data points (population vectors) sampled for training and for testing for each condition.
-            max_semantic_dist:
-                The maximum semantic distance (number of variables that change value) between conditions in the held-out pair used to test the classifier.
-            plot:
-                if True, a visualization of the decoding results is shown.
-            ax:
-                if specified and ``plot=True``, the results will be displayed in the specified axis instead of a new figure.
-
-        Returns
-        -------
-            performance: mean of performance values for each cross-condition training-testing split.
-            null: a list of null values for the generalization performance
-
-        See Also
-        --------
-        Decodanda.CCGP_with_nullmodel
-
-        Note
-        ----
-
-        For each variable, this function trains the ``self._classifier`` to decode the given variable in a sub-set
-        of conditions, and tests it on the held-out set.
-
-        The split of training and testing conditions is performed by keeping the semantic distance between held out
-        conditions to 1 (``max_semantic_dist=1`` in the CCGP_dichotomy function).
-
-        For example, if the data set has two variables:
-
-        ``stimulus`` :math:`\\in` {-1, 1} and ``action`` :math:`\\in` {-1, 1}, to compute CCGP for ``stimulus``
-
-        This function will train the classifier on
-
-        ``(stimulus = -1, action = -1)`` vs. ``(stimulus = 1, action = -1)``
-
-        And test it on
-
-        ``(stimulus = -1, action = 1)`` vs. ``(stimulus = 1, action = 1)``
-
-        And vice-versa. Note that action is kept fixed within the training and testing conditions.
-
-        Example
-        -------
-        >>> data = generate_synthetic_data(keyA='stimulus', keyB='action')
-        >>> dec = Decodanda(data=data, conditions={'stimulus': [-1, 1], 'action': [-1, 1]})
-        >>> perfs, null = dec.CCGP(nshuffles=10)
-        >>> perfs
-        {'stimulus': 0.81, 'action': 0.79}  # each value is the mean over 2 cross-condition train-test splits
-        >>> null
-        {'stimulus': [0.51, ..., 0.46], 'action': [0.48, ..., 0.55]}  # null model means, 10 values each
-        """
-
-        semantic_dics, semantic_keys = self._find_semantic_dichotomies()
-
-        ccgp = {}
-        ccgp_nullmodel = {}
-        for key, dic in zip(semantic_keys, semantic_dics):
-            if self._verbose:
-                print("\nTesting CCGP for semantic dichotomy: ", key)
-            data_ccgp, null_ccgps = self.CCGP_with_nullmodel(dichotomy=dic,
-                                                             resamplings=resamplings,
-                                                             nshuffles=nshuffles,
-                                                             ndata=ndata,
-                                                             max_semantic_dist=max_semantic_dist)
-            ccgp[key] = data_ccgp
-            ccgp_nullmodel[key] = null_ccgps
-
-        if plot:
-            if not ax:
-                f, ax = plt.subplots(figsize=(0.5 + 1.8 * len(semantic_dics), 3.5))
-            plot_perfs_null_model(ccgp, ccgp_nullmodel, ylabel='CCGP', ax=ax, **kwargs)
-
-        return ccgp, ccgp_nullmodel
-
-    def PS(self, nshuffles: int = 25,
-           max_semantic_dist: int = 1,
-           method: str = 'pearson',
-           plot: bool = False,
-           ax: Optional[plt.Axes] = None,
-           **kwargs):
-
-        semantic_dics, semantic_keys = self._find_semantic_dichotomies()
-
-        ps = {}
-        ps_nullmodel = {}
-        for key, dic in zip(semantic_keys, semantic_dics):
-            if self._verbose:
-                print("\nTesting PS for semantic dichotomy: ", key)
-            data_ps, null_ps = self.PS_with_nullmodel(dichotomy=dic,
-                                                      nshuffles=nshuffles,
-                                                      method=method,
-                                                      max_semantic_dist=max_semantic_dist)
-            ps[key] = data_ps
-            ps_nullmodel[key] = null_ps
-
-        if plot:
-            if not ax:
-                f, ax = plt.subplots(figsize=(0.5 + 1.8 * len(semantic_dics), 3.5))
-            plot_perfs_null_model(ps, ps_nullmodel, ylabel='Parallelism Score', ax=ax, ylow=-1.05, yhigh=1.05, chance=0,
-                                  **kwargs)
-
-        return ps, ps_nullmodel
-
-    def semantic_score_geometry(self,
-                                training_fraction: float = 0.75,
-                                cross_validations: int = 10,
-                                nshuffles: int = 10,
-                                ndata: Optional[int] = None,
-                                visualize=True):
-        """
-        This function performs a balanced decoding analysis for each possible dichotomy, and
-        plots the result sorted by a semantic score that tells how close each dichotomy is to
-        any of the specified variables. A semantic dichotomy has ``semantic_score = 1``, the
-        XOR dichotomy has ``semantic_score = 0``.
-
-        Parameters
-        ----------
-        training_fraction:
-            the fraction of trials used for training in each cross-validation fold.
-        cross_validations:
-            the number of cross-validations.
-        nshuffles:
-            the number of null-model iterations of the decoding procedure.
-        ndata:
-            the number of data points (population vectors) sampled for training and for testing for each condition.
-        visualize:
-            if ``True``, the decoding results are shown in a figure.
-
-
-        Returns
-        -------
-        dichotomies_data:
-            Two lists, one containing all the dichotomies in binary notation
-            and one containing the corresponding semantic score.
-        decoding_data:
-            Two dictionaries, one containing the decoding performances for all dichotomies
-            and one containing all the corresponding lists of null model performances.
-        CCGP_data:
-            Two dictionaries, one containing the CCGP values for all dichotomies
-            and one containing all the corresponding lists of null model values.
-        """
-
-        all_dics = generate_dichotomies(self.n_conditions)[1]
-        semantic_overlap = []
-        dic_name = []
-
-        for i, dic in enumerate(all_dics):
-            semantic_overlap.append(semantic_score(dic))
-            dic_name.append(str(self._dic_key(dic)))
-        semantic_overlap = np.asarray(semantic_overlap)
-
-        # sorting dichotomies wrt semantic overlap
-        dic_name = np.asarray(dic_name)[np.argsort(semantic_overlap)[::-1]]
-        all_dics = list(np.asarray(all_dics)[np.argsort(semantic_overlap)[::-1]])
-        semantic_overlap = semantic_overlap[np.argsort(semantic_overlap)[::-1]]
-        semantic_overlap = (semantic_overlap - np.min(semantic_overlap)) / (
-                np.max(semantic_overlap) - np.min(semantic_overlap))
-
-        # decoding all dichotomies
-        decoding_results = []
-        decoding_null = []
-        for i, dic in enumerate(all_dics):
-            res, null = self.decode_with_nullmodel(dic,
-                                                   training_fraction=training_fraction,
-                                                   cross_validations=cross_validations,
-                                                   nshuffles=nshuffles,
-                                                   ndata=ndata)
-            print(i, res)
-            decoding_results.append(res)
-            decoding_null.append(null)
-
-        # CCGP all dichotomies
-        CCGP_results = []
-        CCGP_null = []
-        for i, dic in enumerate(all_dics):
-            print(dic)
-            res, null = self.CCGP_with_nullmodel(dic,
-                                                 nshuffles=nshuffles,
-                                                 ndata=ndata,
-                                                 max_semantic_dist=self.n_conditions)
-            print(i, res)
-            CCGP_results.append(res)
-            CCGP_null.append(null)
-
-        # plotting
-        if visualize:
-            if self.n_conditions > 2:
-                f, axs = plt.subplots(2, 1, figsize=(6, 6))
-                axs[0].set_xlabel('Dichotomy (ordered by semantic score)')
-                axs[1].set_xlabel('Dichotomy (ordered by semantic score)')
-            else:
-                f, axs = plt.subplots(1, 2, figsize=(6, 3.5))
-                axs[0].set_xlabel('Dichotomy')
-                axs[1].set_xlabel('Dichotomy')
-                axs[0].set_xlim([-0.5, 2.5])
-                axs[1].set_xlim([-0.5, 2.5])
-
-            axs[0].set_ylabel('Decoding Performance')
-            axs[1].set_ylabel('CCGP')
-            axs[0].axhline([0.5], color='k', linestyle='--', alpha=0.5)
-            axs[1].axhline([0.5], color='k', linestyle='--', alpha=0.5)
-            axs[0].set_xticks([])
-            axs[1].set_xticks([])
-            axs[0].set_ylim([0, 1.05])
-            axs[1].set_ylim([0, 1.05])
-            sns.despine(f)
-
-            # visualize Decoding
-            for i in range(len(all_dics)):
-                if z_pval(decoding_results[i], decoding_null[i])[1] < 0.01:
-                    axs[0].scatter(i, decoding_results[i], marker='o',
-                                   color=cm.cool(int(semantic_overlap[i] * 255)), edgecolor='k',
-                                   s=110, linewidth=2, linestyle='-')
-                elif z_pval(decoding_results[i], decoding_null[i])[1] < 0.05:
-                    axs[0].scatter(i, decoding_results[i], marker='o',
-                                   color=cm.cool(int(semantic_overlap[i] * 255)), edgecolor='k',
-                                   s=110, linewidth=2, linestyle='--')
-                elif z_pval(decoding_results[i], decoding_null[i])[1] > 0.05:
-                    axs[0].scatter(i, decoding_results[i], marker='o',
-                                   color=cm.cool(int(semantic_overlap[i] * 255)), edgecolor='k',
-                                   s=110, linewidth=2, linestyle='dotted')
-                axs[0].errorbar(i, np.nanmean(decoding_null[i]), np.nanstd(decoding_null[i]), color='k', alpha=0.3)
-
-                if dic_name[i] != '0':
-                    axs[0].text(i, decoding_results[i] + 0.08, dic_name[i], rotation=90, fontsize=6, color='k',
-                                ha='center', fontweight='bold')
-            # visualize CCGP
-
-            for i in range(len(all_dics)):
-                if z_pval(CCGP_results[i], CCGP_null[i])[1] < 0.01:
-                    axs[1].scatter(i, CCGP_results[i], marker='s',
-                                   color=cm.cool(int(semantic_overlap[i] * 255)), edgecolor='k',
-                                   s=110, linewidth=2, linestyle='-')
-                elif z_pval(CCGP_results[i], CCGP_null[i])[1] < 0.05:
-                    axs[1].scatter(i, CCGP_results[i], marker='s',
-                                   color=cm.cool(int(semantic_overlap[i] * 255)), edgecolor='k',
-                                   s=110, linewidth=2, linestyle='--')
-                elif z_pval(CCGP_results[i], CCGP_null[i])[1] > 0.05:
-                    axs[1].scatter(i, CCGP_results[i], marker='s',
-                                   color=cm.cool(int(semantic_overlap[i] * 255)), edgecolor='k',
-                                   s=110, linewidth=2, linestyle='dotted')
-
-                axs[1].errorbar(i, np.nanmean(CCGP_null[i]), np.nanstd(CCGP_null[i]), color='k', alpha=0.3)
-
-                if dic_name[i] != '0':
-                    axs[1].text(i, CCGP_results[i] + 0.08, dic_name[i], rotation=90, fontsize=6, color='k',
-                                ha='center', fontweight='bold')
-
-        dichotomies_data = [all_dics, semantic_overlap]
-        decoding_data = [decoding_results, decoding_null]
-        CCGP_data = [CCGP_results, CCGP_null]
-
-        return dichotomies_data, decoding_data, CCGP_data
-
-    # Utilities
-
-    def visualize_PCA(self, **kwargs):
-        visualize_PCA(self, **kwargs)
-
-    # __init__ utilities
-
-    def _divide_data_into_conditions(self, sessions):
-        # TODO: rename sessions into datasets?
+    def _divide_data_into_conditions(self, datasets):
         # TODO: make sure conditions don't overlap somehow
 
-        for si, session in enumerate(sessions):
+        for si, dataset in enumerate(datasets):
 
             if self._verbose:
-                if hasattr(session, 'name'):
-                    print("\t\t[Decodanda]\tbuilding conditioned rasters for session %s" % session.name)
+                if hasattr(dataset, 'name'):
+                    print(f"\n{identify_calling_function()}\tBuilding conditioned rasters for dataset {dataset.name}")
                 else:
-                    print("\t\t[Decodanda]\tbuilding conditioned rasters for session %u" % si)
+                    print(f"\n{identify_calling_function()}\tBuilding conditioned rasters for dataset {si}")
 
-            session_conditioned_rasters = {}
-            session_conditioned_trial_index = {}
+            dataset_conditioned_rasters = {}
+            dataset_conditioned_trial_index = {}
 
             # exclude inactive neurons across the specified conditions
-            array = session.get(self._neural_attr)
+            array = dataset.get(self._neural_attr)
             total_mask = np.zeros(len(array)) > 0
 
             for condition_vec in self._condition_vectors:
                 mask = np.ones(len(array)) > 0
                 for i, sk in enumerate(self._semantic_keys):
                     semantic_values = list(self.conditions[sk])
-                    mask_i = self.conditions[sk][semantic_values[condition_vec[i]]](session)
+                    mask_i = self.conditions[sk][semantic_values[condition_vec[i]]](dataset)
                     mask = mask & mask_i
                 total_mask = total_mask | mask
 
             min_activity_mask = np.sum(array[total_mask] > 0, 0) >= self._min_activations_per_cell
 
             for condition_vec in self._condition_vectors:
-                # get the array from the session object
-                array = session.get(self._neural_attr)
+                # get the array from the dataset object
+                array = dataset.get(self._neural_attr)
                 array = array[:, min_activity_mask]
 
                 # create a mask that becomes more and more restrictive by iterating on semanting conditions
                 mask = np.ones(len(array)) > 0
                 for i, sk in enumerate(self._semantic_keys):
                     semantic_values = list(self.conditions[sk])
-                    mask_i = self.conditions[sk][semantic_values[condition_vec[i]]](session)
+                    mask_i = self.conditions[sk][semantic_values[condition_vec[i]]](dataset)
                     mask = mask & mask_i
 
                 # select bins conditioned on the semantic behavioural vector
@@ -1581,7 +839,7 @@ class Decodanda:
                     return no
 
                 if self._trial_attr is not None:
-                    conditioned_trial = session.get(self._trial_attr)[mask]
+                    conditioned_trial = dataset.get(self._trial_attr)[mask]
                 elif self._trial_chunk is None:
                     if self._verbose:
                         print('[Decodanda]\tUsing contiguous chunks of the same labels as trials.')
@@ -1617,8 +875,8 @@ class Decodanda:
                     conditioned_trial = np.asarray(squeezed_trial_index)
 
                 # set the conditioned neural data in the conditioned_rasters dictionary
-                session_conditioned_rasters[string_bool(condition_vec)] = conditioned_raster
-                session_conditioned_trial_index[string_bool(condition_vec)] = conditioned_trial
+                dataset_conditioned_rasters[string_bool(condition_vec)] = conditioned_raster
+                dataset_conditioned_trial_index[string_bool(condition_vec)] = conditioned_trial
 
                 if self._verbose:
                     semantic_vector_string = []
@@ -1630,32 +888,33 @@ class Decodanda:
                           % (semantic_vector_string, conditioned_raster.shape[0], len(array),
                              len(np.unique(conditioned_trial))))
 
-            session_conditioned_data = [r.shape[0] for r in list(session_conditioned_rasters.values())]
-            session_conditioned_trials = [len(np.unique(c)) for c in list(session_conditioned_trial_index.values())]
+            dataset_conditioned_data = [r.shape[0] for r in list(dataset_conditioned_rasters.values())]
+            dataset_conditioned_trials = [len(np.unique(c)) for c in list(dataset_conditioned_trial_index.values())]
 
-            self._max_conditioned_data = max([self._max_conditioned_data, np.max(session_conditioned_data)])
-            self._min_conditioned_data = min([self._min_conditioned_data, np.min(session_conditioned_data)])
+            self._max_conditioned_data = max([self._max_conditioned_data, np.max(dataset_conditioned_data)])
+            self._min_conditioned_data = min([self._min_conditioned_data, np.min(dataset_conditioned_data)])
 
-            # if the session has enough data for each condition, append it to the main data dictionary
+            # if the dataset has enough data for each condition, append it to the main data dictionary
 
-            if np.min(session_conditioned_data) >= self._min_data_per_condition and \
-                    np.min(session_conditioned_trials) >= self._min_trials_per_condition:
+            if np.min(dataset_conditioned_data) >= self._min_data_per_condition and \
+                    np.min(dataset_conditioned_trials) >= self._min_trials_per_condition:
                 for cv in self._condition_vectors:
-                    self.conditioned_rasters[string_bool(cv)].append(session_conditioned_rasters[string_bool(cv)])
+                    self.conditioned_rasters[string_bool(cv)].append(dataset_conditioned_rasters[string_bool(cv)])
                     self.conditioned_trial_index[string_bool(cv)].append(
-                        session_conditioned_trial_index[string_bool(cv)])
+                        dataset_conditioned_trial_index[string_bool(cv)])
                 if self._verbose:
                     print('\n')
                 self.n_brains += 1
-                self.n_neurons += list(session_conditioned_rasters.values())[0].shape[1]
-                self.which_brain.append(np.ones(list(session_conditioned_rasters.values())[0].shape[1]) * self.n_brains)
+                self.n_neurons += list(dataset_conditioned_rasters.values())[0].shape[1]
+                self.which_brain.append(np.ones(list(dataset_conditioned_rasters.values())[0].shape[1]) * self.n_brains)
             else:
                 if self._verbose:
-                    print('\t\t\t===> Session discarded for insufficient data.\n')
+                    print('\t\t\t===> dataset discarded for insufficient data.\n')
         if len(self.which_brain):
             self.which_brain = np.hstack(self.which_brain)
 
     def _find_semantic_dichotomies(self):
+        # I think this exports possible vals x conditions
         d_keys, dics = generate_dichotomies(self.n_conditions)
         semantic_dics = []
         semantic_keys = []
@@ -1906,208 +1165,3 @@ class Decodanda:
                 if np.unique(ti).shape[0] < 2:
                     return False
         return True
-
-
-# Wrapper for decoding
-
-def decoding_analysis(data, conditions, decodanda_params, analysis_params, parallel=False, plot=False, ax=None):
-    """
-    Function that performs a balanced decoding analyses of the
-    data set passed in the ``data`` argument, using variables and values
-    specified in the ``conditions`` dictionary.
-
-    This functions is a shortcut for building a ``Decodanda`` object
-    with ``decodanda_params`` as arguments and calling the ``Decodanda.decode`` function
-    with ``analysis_params`` as arguments.
-
-
-    See Also
-    --------
-    Decodanda
-
-    Decodanda.decode
-
-
-    Notes
-    -----
-    This function is equivalent to
-
-    >>> Decodanda(data, conditions, **decodanda_params).decode(**analysis_params)
-
-
-    Parameters
-    ----------
-    data
-        The data set used by the ``Decodanda`` object.
-    conditions
-        The conditions dictionary for the ``Decodanda`` object.
-    decodanda_params
-        A dictionary specifying the values for the ``Decodanda`` constructor parameters.
-    analysis_params
-        A dictionary specifying the values for the ``Decodanda.decode`` function parameters.
-    parallel
-        [Experimental] if ``True``, null model iterations are performed on separated threads.
-    plot
-        If ``True``, the decoding results are shown in a figure.
-    ax
-        If specified, and ``plot=True`` the results are shown in the specified axis.
-
-    Returns
-    -------
-        performances, null
-
-
-    """
-    an_params = copy.deepcopy(analysis_params)
-
-    if parallel:
-        # Data
-        null_iterations = an_params['nshuffles']
-        an_params['nshuffles'] = 0
-        performances, _ = Decodanda(data, conditions, **decodanda_params).decode(**an_params)
-
-        # Null
-        del an_params['nshuffles']
-        pool = Pool()
-        null_performances = pool.map(_NullmodelIterator(data, conditions, decodanda_params, an_params),
-                                     range(null_iterations))
-        null = {key: np.stack([p[key] for p in null_performances]) for key in null_performances[0].keys()}
-    else:
-        performances, null = Decodanda(data, conditions, **decodanda_params).decode(**an_params)
-
-    if plot:
-        plot_perfs_null_model(performances, null, ax=ax, ptype='zscore')
-    return performances, null
-
-
-# Utilities
-
-
-def check_session_requirements(session, conditions, **decodanda_params):
-    d = Decodanda(session, conditions, fault_tolerance=True, **decodanda_params)
-    if d.n_brains:
-        return True
-    else:
-        return False
-
-
-def check_requirements_two_conditions(sessions, conditions_1, conditions_2, **decodanda_params):
-    good_sessions = []
-    for s in sessions:
-        if check_session_requirements(s, conditions_1, **decodanda_params) and check_session_requirements(s,
-                                                                                                          conditions_2,
-                                                                                                          **decodanda_params):
-            good_sessions.append(s)
-    return good_sessions
-
-
-def balance_decodandas(ds):
-    for i in range(len(ds)):
-        for j in range(i + 1, len(ds)):
-            _balance_two_decodandas(ds[i], ds[j])
-
-
-def _balance_two_decodandas(d1, d2, sampling_strategy='random'):
-    assert d1.n_brains == d2.n_brains, "The two decodandas do not have the same number of brains."
-    assert d1.n_conditions == d2.n_conditions, "The two decodanda do not have the same number of semantic conditions."
-
-    n_brains = d1.n_brains
-    n_conditioned_rasters = len(list(d1.conditioned_rasters.values()))
-
-    for n in range(n_brains):
-        for i in range(n_conditioned_rasters):
-            t1 = list(d1.conditioned_rasters.values())[i][n].shape[0]
-            t2 = list(d2.conditioned_rasters.values())[i][n].shape[0]
-            t = min(t1, t2)
-
-            if t1 > t2:
-                if sampling_strategy == 'random':
-                    sampling = np.random.choice(t1, t2, replace=False)
-                if sampling_strategy == 'ordered':
-                    sampling = np.arange(t2, dtype=int)
-                list(d1.conditioned_rasters.values())[i][n] = list(d1.conditioned_rasters.values())[i][n][sampling, :]
-                list(d1.conditioned_trial_index.values())[i][n] = list(d1.conditioned_trial_index.values())[i][n][
-                    sampling]
-
-            if t2 > t1:
-                if sampling_strategy == 'random':
-                    sampling = np.random.choice(t2, t1, replace=False)
-                if sampling_strategy == 'ordered':
-                    sampling = np.arange(t1, dtype=int)
-                list(d2.conditioned_rasters.values())[i][n] = list(d2.conditioned_rasters.values())[i][n][sampling, :]
-                list(d2.conditioned_trial_index.values())[i][n] = list(d2.conditioned_trial_index.values())[i][n][
-                    sampling]
-
-            if d1._verbose:
-                print("Balancing data for d1: %u, d2: %u - now d1: %u, d2: %u" % (
-                    t1, t2, list(d1.conditioned_rasters.values())[i][n].shape[0],
-                    list(d2.conditioned_rasters.values())[i][n].shape[0]))
-
-    for w in d1.conditioned_rasters.keys():
-        d1.ordered_conditioned_rasters[w] = d1.conditioned_rasters[w].copy()
-        d1.ordered_conditioned_trial_index[w] = d1.conditioned_trial_index[w].copy()
-        d2.ordered_conditioned_rasters[w] = d2.conditioned_rasters[w].copy()
-        d2.ordered_conditioned_trial_index[w] = d2.conditioned_trial_index[w].copy()
-
-    print("\n")
-
-
-def _generate_binary_condition(var_key, value1, value2, key1=None, key2=None, var_key_plot=None):
-    if key1 is None:
-        key1 = '%s' % value1
-    if key2 is None:
-        key2 = '%s' % value2
-    if var_key_plot is None:
-        var_key_plot = var_key
-
-    conditions = {
-        var_key_plot: {
-            key1: lambda d, x=value1: d[var_key] == x,
-            key2: lambda d, x=value2: d[var_key] == x,
-        }
-    }
-
-    return conditions
-
-
-def _generate_binary_conditions(discrete_dict):
-    conditions = {}
-    for key in discrete_dict.keys():
-        conditions[key] = {
-            '%s' % discrete_dict[key][0]: lambda d, k=key: d.get(k) == discrete_dict[k][0],
-            '%s' % discrete_dict[key][1]: lambda d, k=key: d.get(k) == discrete_dict[k][1],
-        }
-    return conditions
-
-
-def _powerchotomy_to_key(dic):
-    return '_'.join(dic[0]) + '_v_' + '_'.join(dic[1])
-
-
-class _NullmodelIterator(object):  # necessary for parallelization of null model iterations
-    def __init__(self, data, conditions, decodanda_params, analysis_params):
-        self.data = data
-        self.conditions = conditions
-        self.decodanda_params = decodanda_params
-        self.analysis_params = analysis_params
-
-    def __call__(self, i):
-        self.i = i
-        self.randomstate = RandomState(i)
-        dec = Decodanda(data=self.data, conditions=self.conditions, **self.decodanda_params)
-        semantic_dics, semantic_keys = dec._find_semantic_dichotomies()
-        if 'XOR' in self.analysis_params.keys():
-            if self.analysis_params['XOR'] and len(self.conditions) == 2:
-                semantic_dics.append([['01', '10'], ['00', '11']])
-                semantic_keys.append('XOR')
-
-        perfs = {}
-        for key, dic in zip(semantic_keys, semantic_dics):
-            if dec._verbose:
-                print("\nTesting null decoding performance for semantic dichotomy: ", key)
-            dec._shuffle_conditioned_arrays(dic)
-            performance = dec.decode_dichotomy(dic, **self.analysis_params)
-            perfs[key] = np.nanmean(performance)
-            dec._order_conditioned_rasters()
-
-        return perfs

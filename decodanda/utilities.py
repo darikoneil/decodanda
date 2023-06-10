@@ -1,3 +1,7 @@
+from __future__ import annotations
+from typing import Tuple, Union
+from itertools import product
+
 import numpy as np
 import scipy.stats
 
@@ -429,29 +433,25 @@ def delete_silent_bins(array):
     return array[mask, :]
 
 
-def string_bool(x):
-    if (type(x) == str) or (type(x) == np.str_):
-        values = []
-        for s in x:
-            values.append(bool(int(s)))
-    elif (type(x) == list) or (type(x)==type(np.zeros(10))):
-        values = ''
-        for s in x:
-            values += str(s)
+def string_bool(x: Union[str, np.str_, list, np.ndarray]) -> Union[List[bool], str]:
+    """
+    Function converts strings to bools / bools to string
+    """
+    if isinstance(x, (str, np.str_)):
+        return [bool(int(value)) for value in x]
+    elif isinstance(x, (list, np.ndarray)):
+        return "".join([str(value) for value in x])
     else:
-        print(x, type(x))
-        print('WE HAVE A PROBLEM')
-        raise ValueError('x (type=%s) should either be a string, a list, or a numpy array' % type(x))
-    return values
+        raise ValueError(f"x should be either a string, list, or numpy array not {type(x)}")
 
 
-def generate_binary_words(n):
-    words = list(itertools.product([0, 1], repeat=n))
+def generate_binary_words(n: int) -> np.ndarray:
+    words = list(product([0, 1], repeat=n))
     words = [list(w) for w in words]
     return np.asarray(words)
 
 
-def generate_dichotomies(n):
+def generate_dichotomies(n: int) -> Tuple[list, list]:
     words = generate_binary_words(n)
     dy_words = generate_binary_words(2 ** n)
     dichotomies = []
@@ -1036,3 +1036,14 @@ def generate_synthetic_data_intime(n_neurons=50, min_time=-10, max_time=10, sign
 
     return data
 
+###
+
+
+def generate_binary_conditions(discrete_dict):
+    conditions = {}
+    for key in discrete_dict.keys():
+        conditions[key] = {
+            '%s' % discrete_dict[key][0]: lambda d, k=key: d.get(k) == discrete_dict[k][0],
+            '%s' % discrete_dict[key][1]: lambda d, k=key: d.get(k) == discrete_dict[k][1],
+        }
+    return conditions
