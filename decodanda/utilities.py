@@ -6,7 +6,7 @@ import numpy as np
 import scipy.stats
 
 from .imports import *
-
+from ._dev import identify_calling_function
 
 # Classes
 
@@ -680,10 +680,8 @@ def log_dichotomy(dec, dic, ndata, s='Decoding'):
             % (s, ndata, len(dec.subset), dec.n_brains, label_A, label_B))
 
     if dec.n_conditions > 2:
-        print(
-            '\n[decode_dichotomy]\t%s - %u time bins - %u neurons - %u brains'
-            '\n\t\t%s\n\t\t\t\t\tvs.\t\t\t\t\t\n\t\t%s'
-            % (s, ndata, len(dec.subset), dec.n_brains, label_A, label_B))
+        print(f"\n{identify_calling_function()}\t{s} - {ndata} time bins - {len(dec.subset)} neurons - {dec.nbrains}"
+              f" brains \n\t\t{label_A}\n\t\t\t\t\tvs.\t\t\t\t\t\n\t\t{label_B}")
 
 
 def destroy_time_correlations(array):
