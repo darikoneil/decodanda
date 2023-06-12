@@ -3,9 +3,13 @@ from types import MappingProxyType
 from typing import Optional, Mapping, Iterable, Union, Any, List, Tuple
 from dataclasses import dataclass, Field, field  # use for complex property checks (e.g., range)
 from collections import ChainMap
-from inspect import get_annotations
 from math import inf
 import re
+
+try:
+    from inspect import get_annotations
+except ImportError:
+    from get_annotations import get_annotations  # backport
 
 
 classifier_parameters = MappingProxyType({

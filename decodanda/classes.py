@@ -514,7 +514,7 @@ class Decodanda:
         if verbose and not shuffled:
             print(f"{dichotomy=}, {ndata=}")
             log_dichotomy(self, dichotomy, ndata, 'Decoding')
-            count = tqdm(range(cross_validations))
+            count = tqdm(range(cross_validations), delay=1)
         else:
             count = range(cross_validations)
 
