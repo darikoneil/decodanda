@@ -174,7 +174,8 @@ class Decodanda:
         self.conditions = conditions
 
         # decodanda parameters; making call to hashmap each time but more pythonic & flexible--also faster fwiw
-        self._parameters = DecodandaParameters.build([decodanda_params, kwargs])
+        # kwargs take precedence over passed params dictionary -- DAO 06/10/2023
+        self._parameters = DecodandaParameters.build([kwargs, decodanda_params])
         # it's still protected as before,
         # but we have a dedicated getter/setter now that allows the user to view & change the values
         # DAO 06/11/2023
@@ -192,7 +193,7 @@ class Decodanda:
         self._semantic_vectors = {string_bool(w): [] for w in generate_binary_words(self.n_conditions)}
         self._generate_semantic_vectors()
 
-        # results
+        # results 6/11/2023; memory costs are small, save it all DAO 06/11/2023
         self.real_performance = {}
         self.real_performance_folds = {}
         self.real_performance_weights = {}
@@ -490,7 +491,8 @@ class Decodanda:
         [0.82, 0.87, 0.75, ..., 0.77] # 10 values
 
         """
-        # INGEST PARAMETERS
+        # INGEST PARAMETERS - Actually saves a few hundred ms / model, relevant when 100's of small models
+        # DAO 06/11/2023
         ndata = self._parameters.get("ndata")
         max_conditioned_data = self._parameters.get("max_conditioned_data")
         verbose = self._parameters.get("verbose")

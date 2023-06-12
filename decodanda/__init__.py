@@ -1,1 +1,5 @@
-from .classes import Decodanda
+__all__ = [
+    "Decodanda"
+]
+
+from .classes import Decodanda  # noqa: F401
