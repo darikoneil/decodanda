@@ -14,7 +14,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'matplotlib>=3.3.4', 'numpy>=1.20.1', 'pandas>=1.4.0', 'scikit_learn>=0.24.1',
-        'scipy>=1.6.1', 'seaborn>=0.11.1', 'tqdm>=4.58.0'],
+        'scipy>=1.6.1', 'seaborn>=0.11.1', 'tqdm>=4.58.0', 'scikit-learn-intelex',
     keywords=['python', 'decoding', 'neuroscience', 'ccgp', 'neural activity', 'population activity', 'neural decoding', 'geometry'],
     url="https://github.com/lposani/decodanda",
     classifiers=[
