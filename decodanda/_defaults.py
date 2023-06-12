@@ -1,11 +1,12 @@
 from __future__ import annotations
 from types import MappingProxyType
-from typing import Optional, Mapping, Iterable, Union, Any, List, Tuple
+from typing import Optional, Mapping, Iterable, Union, Any, List, Tuple, Callable
 from dataclasses import dataclass, Field, field  # use for complex property checks (e.g., range)
 from collections import ChainMap
 from math import inf
 import re
-import numpy  as np
+import numpy as np
+from prettytable import PrettyTable, ALL
 
 
 try:
@@ -49,7 +50,7 @@ class DecodandaParameters:
     trial_attr: str = "trial"
     trial_chunk: Optional[int] = None
     verbose: bool = False
-    zscore: bool = False
+    scale: Optional[Callable] = None
 
     def __post_init__(self):
         """
@@ -172,6 +173,22 @@ class DecodandaParameters:
                     logger += e
 
         return logger.exceptions
+
+    def hint_types(self) -> None:
+        """
+        Verbose printing of type information to assist users in setting decodanda parameters
+        """
+        pretty_table = PrettyTable(hrules=ALL, vrules=ALL, float_format=".2f")
+        title = f"{_TerminalStyle.BOLD}{_TerminalStyle.YELLOW}{self.__name__()}{_TerminalStyle.RESET}"
+        type_string = f"{_TerminalStyle.BOLD}{_TerminalStyle.YELLOW}Type{_TerminalStyle.RESET}"
+        pretty_table.field_names = [title, type_string]
+        pretty_table.align[title] = "l"
+        pretty_table.align[type_string] = "c"
+        annotations_ = self._collect_annotations()
+        for key, type_ in annotations_.items():
+            pretty_table.add_row([f"{_TerminalStyle.BOLD}{key}{_TerminalStyle.RESET}",
+                                  f" {type_} "])
+        print(pretty_table.get_string())
 
     def _format_fields(self) -> tuple:
         """

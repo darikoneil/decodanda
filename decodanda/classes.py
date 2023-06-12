@@ -1,13 +1,11 @@
 from __future__ import annotations
 
-
+# Patch scikit-learn with intel extension
 from sklearnex import patch_sklearn
-patch_sklearn(verbose=False)
+patch_sklearn(verbose=False)  # noqa: E402
 
 
-from typing import Tuple, Union, Callable, Iterable, List, Mapping, Optional
-from types import MappingProxyType
-from itertools import chain, combinations
+from typing import Tuple, Union, Callable, Iterable, List, Mapping, Optional, Any
 from multiprocessing import Pool
 import copy
 
@@ -22,7 +20,7 @@ from ._defaults import classifier_parameters, DecodandaParameters
 from ._dev import identify_calling_function
 from .utilities import generate_binary_words, string_bool, sample_training_testing_from_rasters, \
     log_dichotomy, hamming, generate_dichotomies, contiguous_chunking, non_contiguous_mask, \
-    generate_binary_conditions, compute_dic_key, compute_label
+    generate_binary_conditions, compute_label
 from .geometry import compute_centroids
 
 
@@ -182,6 +180,8 @@ class Decodanda:
 
         # decodanda parameters; making call to hashmap each time but more pythonic & flexible--also faster fwiw
         # kwargs take precedence over passed params dictionary -- DAO 06/10/2023
+        if isinstance(decodanda_params, DecodandaParameters):
+            decodanda_params = vars(decodanda_params)  # in case a user passes the actual dataclass object
         self._parameters = DecodandaParameters.build([kwargs, decodanda_params])
         # it's still protected as before,
         # but we have a dedicated getter/setter now that allows the user to view & change the values
@@ -246,25 +246,11 @@ class Decodanda:
                 self.ordered_conditioned_trial_index[w] = self.conditioned_trial_index[w].copy()
 
     @property
-    def parameters(self):
+    def parameters(self) -> dict:
         """
         Decodanda parameters
         """
         return self._parameters
-
-    @parameters.setter
-    def parameters(self, value: Union[Mapping, Tuple[str, Any]]):
-        """
-        Set a parameter by passing a key-value tuple or a mapping
-
-        """
-        if isinstance(value, Mapping):
-            self._parameters = DecodandaParameters().build([value, self._parameters])
-        elif isinstance(value, tuple) and isinstance(value[0], str):
-            key, value = value
-            self._parameters = DecodandaParameters().build([{key: value}, self._parameters])
-        else:
-            raise TypeError(f"Argument must be a key-value tuple or mapping not {type(value)}")
 
     @staticmethod
     def _sanitize_data(data: Union[Iterable, dict]) -> List[dict]:
@@ -289,9 +275,13 @@ class Decodanda:
         return data
 
     # basic decoding functions
+    @staticmethod
+    def parameter_info() -> None:
+        DecodandaParameters().hint_types()
 
     @classmethod
-    def _train(cls, classifier, subset, training_raster_a, training_raster_b, label_a, label_b):
+    def _train(cls: Decodanda, classifier: Callable, subset: np.ndarray, training_raster_a: np.ndarray,
+               training_raster_b: np.ndarray, label_a: np.ndarray, label_b: np.ndarray) -> Callable:
 
         training_labels_a = np.repeat(label_a, training_raster_a.shape[0]).astype(object)
         training_labels_b = np.repeat(label_b, training_raster_b.shape[0]).astype(object)
@@ -306,7 +296,8 @@ class Decodanda:
         return classifier.fit(training_raster, training_labels)
 
     @classmethod
-    def _test(cls, classifier, subset, testing_raster_a, testing_raster_b, label_a, label_b):
+    def _test(cls: Decodanda, classifier: Callable, subset: np.ndarray, testing_raster_a: np.ndarray,
+              testing_raster_b: np.ndarray, label_a: np.ndarray, label_b: np.ndarray) -> Tuple[float, np.ndarray]:
 
         testing_labels_a = np.repeat(label_a, testing_raster_a.shape[0]).astype(object)
         testing_labels_b = np.repeat(label_b, testing_raster_b.shape[0]).astype(object)
@@ -319,21 +310,18 @@ class Decodanda:
         return classifier.score(testing_raster, testing_labels)
 
     @classmethod
-    def _one_cv_step(cls,
-                     classifier,
-                     dichotomy,
-                     training_fraction,
-                     semantic_vectors,
-                     conditioned_rasters,
-                     conditioned_trial_index,
-                     ndata,
-                     subset,
-                     shuffled=False,
-                     zscore=True,
-                     testing_trials=None,
-                     ):
-
-        dic_key = compute_dic_key(dichotomy)
+    def _one_cv_step(cls: Decodanda,
+                     classifier: Callable,
+                     dichotomy: Union[str, List[str]],
+                     training_fraction: float,
+                     semantic_vectors: dict,
+                     conditioned_rasters: dict,
+                     conditioned_trial_index: dict,
+                     ndata: int,
+                     subset: np.ndarray,
+                     scale: Optional[Callable] = None,
+                     testing_trials: Optional[list] = None,
+                     ) -> Tuple[float, np.ndarray, np.ndarray]:
 
         set_a = dichotomy[0]
         # abstracted DAO 06/11/2023
@@ -378,15 +366,12 @@ class Decodanda:
         testing_array_a = np.vstack(testing_array_a)
         testing_array_b = np.vstack(testing_array_b)
 
-        if zscore:
-            big_raster = np.vstack([training_array_a, training_array_b])  # z-scoring using the training data
-            big_mean = np.nanmean(big_raster, 0)
-            big_std = np.nanstd(big_raster, 0)
-            big_std[big_std == 0] = np.inf
-            training_array_a = (training_array_a - big_mean) / big_std
-            training_array_b = (training_array_b - big_mean) / big_std
-            testing_array_a = (testing_array_a - big_mean) / big_std
-            testing_array_b = (testing_array_b - big_mean) / big_std
+        if scale:
+            scaler = scale().fit(np.vstack([training_array_a, training_array_b]))
+            training_array_a = scaler.transform(training_array_a, copy=False)
+            training_array_b = scaler.transform(training_array_b, copy=False)
+            testing_array_a = scaler.transform(testing_array_a, copy=False)
+            testing_array_b = scaler.transform(testing_array_b, copy=False)
 
         classifier = cls._train(classifier=classifier,
                                 subset=subset,
@@ -408,6 +393,20 @@ class Decodanda:
                                 label_b=label_b)
 
         return performance, weights
+
+    @parameters.setter
+    def parameters(self, value: Union[Mapping, Tuple[str, Any]]) -> Decodanda:
+        """
+        Set a parameter by passing a key-value tuple or a mapping
+
+        """
+        if isinstance(value, Mapping):
+            self._parameters = DecodandaParameters().build([value, self._parameters])
+        elif isinstance(value, tuple) and isinstance(value[0], str):
+            key, value = value
+            self._parameters = DecodandaParameters().build([{key: value}, self._parameters])
+        else:
+            raise TypeError(f"Argument must be a key-value tuple or mapping not {type(value)}")
 
     # Dichotomy analysis functions
 
@@ -498,7 +497,6 @@ class Decodanda:
         """
         # INGEST PARAMETERS - Actually saves a few hundred ms / model, relevant when 100's of small models
         # DAO 06/11/2023
-        debug = self._parameters.get("debug")
         ndata = self._parameters.get("ndata")
         max_conditioned_data = self._parameters.get("max_conditioned_data")
         verbose = self._parameters.get("verbose")
@@ -507,7 +505,7 @@ class Decodanda:
         subset = self.subset
         training_fraction = self._parameters.get("training_fraction")
         testing_trials = self._parameters.get("testing_trials")
-        zscore = self._parameters.get("zscore")
+        scale = self._parameters.get("scale")
 
         # Estimate n_data if needed if needed
         if ndata is None and self.n_brains == 1:
@@ -528,19 +526,17 @@ class Decodanda:
 
         if parallel:
             pool = Pool()
-            res = pool.map(_CrossValidator(classifier=self.classifier,
-                                           dichotomy=dichotomy,
-                                           training_fraction=training_fraction,
-                                           semantic_vectors=self._semantic_vectors,
-                                           conditioned_rasters=self.conditioned_rasters,
-                                           conditioned_trial_index=self.conditioned_trial_index,
-                                           ndata=ndata,
-                                           subset=self.subset,
-                                           shuffled=shuffled,
-                                           zscore=zscore,
-                                           testing_trials=testing_trials),
-                           range(cross_validations))
-            performances = np.asarray([r[0] for r in res])
+            performances = pool.map(_CrossValidator(classifier=self.classifier,
+                                                    dichotomy=dichotomy,
+                                                    training_fraction=training_fraction,
+                                                    semantic_vectors=self._semantic_vectors,
+                                                    conditioned_rasters=self.conditioned_rasters,
+                                                    conditioned_trial_index=self.conditioned_trial_index,
+                                                    ndata=ndata,
+                                                    subset=self.subset,
+                                                    scale=scale,
+                                                    testing_trials=testing_trials),
+                                    range(cross_validations))
         else:
             if verbose and not shuffled:
                 print('\nLooping over decoding cross validation folds:')
@@ -552,8 +548,7 @@ class Decodanda:
                                               conditioned_trial_index=self.conditioned_trial_index,
                                               ndata=ndata,
                                               subset=subset,
-                                              shuffled=shuffled,
-                                              zscore=zscore,
+                                              scale=scale,
                                               testing_trials=testing_trials) for _ in count]
 
         # noinspection PyUnboundLocalVariable
@@ -690,7 +685,7 @@ class Decodanda:
 
     # Decoding analysis for semantic dichotomies
 
-    def decode(self, **kwargs):
+    def decode(self, **kwargs) -> Decodanda:
 
         """
         Main function to decode the variables specified in the ``conditions`` dictionary.
@@ -795,9 +790,9 @@ class Decodanda:
 
         return self.real_performance, self.null_performance
 
-    def _divide_data_into_conditions(self, datasets):
+    def _divide_data_into_conditions(self, datasets: dict) -> Decodanda:
         # TODO: make sure conditions don't overlap somehow
-        # TODO: This is probably too complex and needs broken down for maintainability
+        # TODO: This is too complex and needs broken down for maintainability
 
         for si, dataset in enumerate(datasets):
 
@@ -840,7 +835,7 @@ class Decodanda:
                 conditioned_raster = array[mask, :]
 
                 # Define trial logic
-                def condition_no(cond):
+                def condition_no(cond):  # noqa
                     no = 0
                     for i in range(len(cond)):
                         no += cond[i] * 10 ** (i + 2)
@@ -917,13 +912,13 @@ class Decodanda:
         if len(self.which_brain):
             self.which_brain = np.hstack(self.which_brain)
 
-    def _find_semantic_dichotomies(self):
+    def _find_semantic_dichotomies(self) -> Tuple[list, list]:
         # I think this exports possible vals x conditions
         d_keys, dics = generate_dichotomies(self.n_conditions)
         semantic_dics = []
         semantic_keys = []
 
-        for i, dic in enumerate(dics):
+        for _, dic in enumerate(dics):
             d = [string_bool(x) for x in dic[0]]
             col_sum = np.sum(d, 0)
             if (0 in col_sum) or (len(dic[0]) in col_sum):
@@ -931,7 +926,7 @@ class Decodanda:
                 semantic_keys.append(self._semantic_keys[np.where(col_sum == len(dic[0]))[0][0]])
         return semantic_dics, semantic_keys
 
-    def _dichotomy_from_key(self, key):
+    def _dichotomy_from_key(self, key: str) -> Union[str, List[str]]:
         dics, keys = self._find_semantic_dichotomies()
         if key in keys:
             dic = dics[np.where(np.asarray(keys) == key)[0][0]]
@@ -942,7 +937,7 @@ class Decodanda:
 
         return dic
 
-    def _shuffle_conditioned_arrays(self, dic):
+    def _shuffle_conditioned_arrays(self, dic) -> Decodanda:
         """
         the null model is built by interchanging trials between conditioned arrays that are in different
         dichotomies but have only hamming distance = 1. This ensures that even in the null model the other
@@ -1008,7 +1003,7 @@ class Decodanda:
         else:
             for n in range(self.n_brains):
                 # select conditioned rasters
-                for iteration in range(10):
+                for _ in range(10):
                     all_conditions = list(self._semantic_vectors.keys())
                     all_data = np.vstack([self.conditioned_rasters[cond][n] for cond in all_conditions])
                     all_trials = np.hstack([self.conditioned_trial_index[cond][n] for cond in all_conditions])
@@ -1035,7 +1030,7 @@ class Decodanda:
             self._order_conditioned_rasters()
             self._shuffle_conditioned_arrays(dic)
 
-    def _check_trial_availability(self):
+    def _check_trial_availability(self) -> bool:
         if self._parameters.get("debug"):
             print('\nCheck trial availability')
         for k in self.conditioned_trial_index:
@@ -1046,7 +1041,7 @@ class Decodanda:
                     return False
         return True
 
-    def _order_conditioned_rasters(self):
+    def _order_conditioned_rasters(self) -> Decodanda:
         for w in self.conditioned_rasters.keys():
             self.conditioned_rasters[w] = self.ordered_conditioned_rasters[w].copy()
             self.conditioned_trial_index[w] = self.ordered_conditioned_trial_index[w].copy()
@@ -1060,7 +1055,7 @@ class Decodanda:
                     return self._semantic_keys[np.where(col_sum == len(dic[0]))[0][0]]
         return 0
 
-    def _generate_semantic_vectors(self):
+    def _generate_semantic_vectors(self) -> Decodanda:
         for condition_vec in self._condition_vectors:
             semantic_vector = '('
             for i, sk in enumerate(self._semantic_keys):
@@ -1069,7 +1064,7 @@ class Decodanda:
             semantic_vector = semantic_vector + ')'
             self._semantic_vectors[string_bool(condition_vec)] = semantic_vector
 
-    def _zscore_activity(self):
+    def _zscore_activity(self) -> Decodanda:
         keys = [string_bool(w) for w in self._condition_vectors]
         for n in range(self.n_brains):
             n_neurons = self.conditioned_rasters[keys[0]][n].shape[1]
@@ -1081,49 +1076,29 @@ class Decodanda:
                     for key in keys:
                         self.conditioned_rasters[key][n][:, i] = (self.conditioned_rasters[key][n][:, i] - m) / std
 
-    def _generate_random_subset(self, n):
+    def _generate_random_subset(self, n: int) -> Decodanda:
         if n < self.n_neurons:
             self.subset = np.random.choice(self.n_neurons, n, replace=False)
         else:
             self.subset = np.arange(self.n_neurons)
 
-    def _reset_random_subset(self):
+    def _reset_random_subset(self) -> Decodanda:
         self.subset = np.arange(self.n_neurons)
-
-    def _rototraslate_conditioned_rasters(self):
-        # DEPCRECATED
-
-        for i in range(self.n_brains):
-            # brain_means = np.vstack([np.nanmean(self.conditioned_rasters[key][i], 0) for key in self.conditioned_rasters.keys()])
-            # mean_centroid = np.nanmean(brain_means, axis=0)
-            for w in self.conditioned_rasters.keys():
-                raster = self.conditioned_rasters[w][i]
-                rotation = np.arange(raster.shape[1]).astype(int)
-                np.random.shuffle(rotation)
-                raster = raster[:, rotation]
-                # mean = np.nanmean(raster, 0)
-                # randomdir = np.random.rand()-0.5
-                # randomdir = randomdir/np.sqrt(np.dot(randomdir, randomdir))
-                # vector_from_mean_centroid = mean - mean_centroid
-                # distance_from_mean_centroid = np.sqrt(np.dot(vector_from_mean_centroid, vector_from_mean_centroid))
-                # raster = raster - vector_from_mean_centroid + randomdir*distance_from_mean_centroid
-                self.conditioned_rasters[w][i] = raster
 
 
 class _CrossValidator(Decodanda):
     # noinspection PyMissingConstructor
     def __init__(self,
-                 classifier,
-                 dichotomy,
-                 training_fraction,
-                 semantic_vectors,
-                 conditioned_rasters,
-                 conditioned_trial_index,
-                 ndata,
-                 subset,
-                 shuffled=False,
-                 zscore=True,
-                 testing_trials=None):
+                 classifier: Callable,
+                 dichotomy: Union[str, List[str]],
+                 training_fraction: float,
+                 semantic_vectors: dict,
+                 conditioned_rasters: dict,
+                 conditioned_trial_index: dict,
+                 ndata: int,
+                 subset: np.ndarray,
+                 scale: Optional[Callable] = None,
+                 testing_trials: Optional[list] = None):
         self.classifier = classifier
         self.dichotomy = dichotomy
         self.training_fraction = training_fraction
@@ -1131,12 +1106,11 @@ class _CrossValidator(Decodanda):
         self.conditioned_rasters = copy.deepcopy(conditioned_rasters)
         self.conditioned_trial_index = copy.deepcopy(conditioned_trial_index)
         self.ndata = ndata
-        self.shuffled = shuffled
         self.subset = subset
         self.testing_trials = testing_trials
-        self.zscore = zscore
+        self.scale = scale
 
-    def __call__(self, cur_iter):
+    def __call__(self, cur_iter: int) -> Tuple[float, np.ndarray, np.ndarray]:
         self.cur_iter = cur_iter
         self.random_state = np.random.RandomState(cur_iter)
         return self._one_cv_step(classifier=self.classifier,
@@ -1147,6 +1121,5 @@ class _CrossValidator(Decodanda):
                                  conditioned_trial_index=self.conditioned_trial_index,
                                  ndata=self.ndata,
                                  subset=self.subset,
-                                 shuffled=self.shuffled,
-                                 zscore=self.zscore,
+                                 scale=self.scale,
                                  testing_trials=self.testing_trials)

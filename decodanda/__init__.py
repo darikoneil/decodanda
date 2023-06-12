@@ -1,5 +1,6 @@
 __all__ = [
-    "Decodanda"
+    "Decodanda",
+    "visualize",
 ]
 
 from .classes import Decodanda  # noqa: F401
