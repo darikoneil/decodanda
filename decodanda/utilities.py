@@ -11,110 +11,12 @@ from ._dev import identify_calling_function
 # Classes
 
 
-class CrossValidator(object):
-    # necessary for parallelization of cross validation repetitions
-    # TODO: fix parallelization by fixing this
-    def __init__(self, classifier, conditioned_rasters, conditioned_trial_index, dic, training_fraction, ndata, subset,
-                 semantic_vectors):
-        self.classifier = classifier
-        self.conditioned_rasters = deepcopy(conditioned_rasters)
-        self.conditioned_trial_index = deepcopy(conditioned_trial_index)
-        self.dic = dic
-        self.training_fraction = training_fraction
-        self.ndata = ndata
-        self.subset = subset
-        self.semantic_vectors = semantic_vectors
-
-    def __call__(self, i):
-        self.i = i
-        self.randomstate = RandomState(i)
-        performance = self.one_cv_step(self.dic, self.training_fraction, self.ndata)
-        return performance
-
-    def train(self, training_raster_A, training_raster_B, label_A, label_B):
-
-        training_labels_A = np.repeat(label_A, training_raster_A.shape[0]).astype(object)
-        training_labels_B = np.repeat(label_B, training_raster_B.shape[0]).astype(object)
-
-        training_raster = np.vstack([training_raster_A, training_raster_B])
-        training_labels = np.hstack([training_labels_A, training_labels_B])
-
-        self.classifier = sklearn.base.clone(self.classifier)
-
-        training_raster = training_raster[:, self.subset]
-        self.classifier.fit(training_raster, training_labels)
-
-    def test(self, testing_raster_A, testing_raster_B, label_A, label_B):
-
-        testing_labels_A = np.repeat(label_A, testing_raster_A.shape[0]).astype(object)
-        testing_labels_B = np.repeat(label_B, testing_raster_B.shape[0]).astype(object)
-
-        testing_raster = np.vstack([testing_raster_A, testing_raster_B])
-        testing_labels = np.hstack([testing_labels_A, testing_labels_B])
-
-        testing_raster = testing_raster[:, self.subset]
-        performance = self.classifier.score(testing_raster, testing_labels)
-        return performance
-
-    def one_cv_step(self, dic, training_fraction, ndata):
-        set_A = dic[0]
-        label_A = ''
-        for d in set_A:
-            label_A += (self.semantic_vectors[d] + ' ')
-        label_A = label_A[:-1]
-
-        set_B = dic[1]
-        label_B = ''
-        for d in set_B:
-            label_B += (self.semantic_vectors[d] + ' ')
-        label_B = label_B[:-1]
-
-        training_array_A = []
-        training_array_B = []
-        testing_array_A = []
-        testing_array_B = []
-
-        for d in set_A:
-            training, testing = sample_training_testing_from_rasters(self.conditioned_rasters[d],
-                                                                     ndata,
-                                                                     training_fraction,
-                                                                     self.conditioned_trial_index[d],
-                                                                     randomstate=self.randomstate)
-            training_array_A.append(training)
-            testing_array_A.append(testing)
-
-        for d in set_B:
-            training, testing = sample_training_testing_from_rasters(self.conditioned_rasters[d],
-                                                                     ndata,
-                                                                     training_fraction,
-                                                                     self.conditioned_trial_index[d])
-            training_array_B.append(training)
-            testing_array_B.append(testing)
-
-        training_array_A = np.vstack(training_array_A)
-        training_array_B = np.vstack(training_array_B)
-        testing_array_A = np.vstack(testing_array_A)
-        testing_array_B = np.vstack(testing_array_B)
-
-        self._train(training_array_A, training_array_B, label_A, label_B)
-
-        performance = self._test(testing_array_A, testing_array_B, label_A, label_B)
-
-        return performance
+def compute_dic_key(dic):
+    return '_'.join(dic[0]) + '_v_' + '_'.join(dic[1])
 
 
-class DictSession:
-    """
-    Translator from dictionary to session object with getattr
-
-    """
-
-    def __init__(self, dictionary):
-        for key in list(dictionary.keys()):
-            self.__setattr__(key, np.asarray(dictionary[key]))
-
-    def __getitem__(self, key):
-        return self.__getattribute__(key)
+def compute_label(semantic_vectors, dichotomy_set):
+    return "".join([f"{semantic_vectors[vector]} " for vector in dichotomy_set])[:-1]
 
 
 class FakeSession:

@@ -1,4 +1,10 @@
 from __future__ import annotations
+
+
+from sklearnex import patch_sklearn
+patch_sklearn(verbose=False)
+
+
 from typing import Tuple, Union, Callable, Iterable, List, Mapping, Optional
 from types import MappingProxyType
 from itertools import chain, combinations
@@ -14,8 +20,9 @@ from tqdm import tqdm
 
 from ._defaults import classifier_parameters, DecodandaParameters
 from ._dev import identify_calling_function
-from .utilities import generate_binary_words, string_bool, sample_training_testing_from_rasters, CrossValidator, \
-    log_dichotomy, hamming, generate_dichotomies, contiguous_chunking, non_contiguous_mask, generate_binary_conditions
+from .utilities import generate_binary_words, string_bool, sample_training_testing_from_rasters, \
+    log_dichotomy, hamming, generate_dichotomies, contiguous_chunking, non_contiguous_mask, \
+    generate_binary_conditions, compute_dic_key, compute_label
 from .geometry import compute_centroids
 
 
@@ -283,124 +290,122 @@ class Decodanda:
 
     # basic decoding functions
 
-    def _train(self, training_raster_A, training_raster_B, label_A, label_B):
+    @classmethod
+    def _train(cls, classifier, subset, training_raster_a, training_raster_b, label_a, label_b):
 
-        training_labels_A = np.repeat(label_A, training_raster_A.shape[0]).astype(object)
-        training_labels_B = np.repeat(label_B, training_raster_B.shape[0]).astype(object)
+        training_labels_a = np.repeat(label_a, training_raster_a.shape[0]).astype(object)
+        training_labels_b = np.repeat(label_b, training_raster_b.shape[0]).astype(object)
 
-        training_raster = np.vstack([training_raster_A, training_raster_B])
-        training_labels = np.hstack([training_labels_A, training_labels_B])
+        training_raster = np.vstack([training_raster_a, training_raster_b])
+        training_labels = np.hstack([training_labels_a, training_labels_b])
 
-        self.classifier = clone(self.classifier)
+        classifier = clone(classifier)
 
-        training_raster = training_raster[:, self.subset]
+        training_raster = training_raster[:, subset]
 
-        self.classifier.fit(training_raster, training_labels)
+        return classifier.fit(training_raster, training_labels)
 
-    def _test(self, testing_raster_A, testing_raster_B, label_A, label_B):
+    @classmethod
+    def _test(cls, classifier, subset, testing_raster_a, testing_raster_b, label_a, label_b):
 
-        testing_labels_A = np.repeat(label_A, testing_raster_A.shape[0]).astype(object)
-        testing_labels_B = np.repeat(label_B, testing_raster_B.shape[0]).astype(object)
+        testing_labels_a = np.repeat(label_a, testing_raster_a.shape[0]).astype(object)
+        testing_labels_b = np.repeat(label_b, testing_raster_b.shape[0]).astype(object)
 
-        testing_raster = np.vstack([testing_raster_A, testing_raster_B])
-        testing_labels = np.hstack([testing_labels_A, testing_labels_B])
+        testing_raster = np.vstack([testing_raster_a, testing_raster_b])
+        testing_labels = np.hstack([testing_labels_a, testing_labels_b])
 
-        testing_raster = testing_raster[:, self.subset]
+        testing_raster = testing_raster[:, subset]
 
-        if self._parameters.get("debug"):
-            print("Real labels")
-            print(testing_labels)
-            print("Predicted labels")
-            print(self.classifier.predict(testing_raster))
-        performance = self.classifier.score(testing_raster, testing_labels)
-        return performance
+        return classifier.score(testing_raster, testing_labels)
 
-    def _one_cv_step(self, dic, training_fraction, ndata, shuffled=False, testing_trials=None, dic_key=None):
-        if dic_key is None:
-            dic_key = self._dic_key(dic)
+    @classmethod
+    def _one_cv_step(cls,
+                     classifier,
+                     dichotomy,
+                     training_fraction,
+                     semantic_vectors,
+                     conditioned_rasters,
+                     conditioned_trial_index,
+                     ndata,
+                     subset,
+                     shuffled=False,
+                     zscore=True,
+                     testing_trials=None,
+                     ):
 
-        set_A = dic[0]
-        label_A = ''
-        for d in set_A:
-            label_A += (self._semantic_vectors[d] + ' ')
-        label_A = label_A[:-1]
+        dic_key = compute_dic_key(dichotomy)
 
-        set_B = dic[1]
-        label_B = ''
-        for d in set_B:
-            label_B += (self._semantic_vectors[d] + ' ')
-        label_B = label_B[:-1]
+        set_a = dichotomy[0]
+        # abstracted DAO 06/11/2023
+        label_a = compute_label(semantic_vectors, set_a)
 
-        training_array_A = []
-        training_array_B = []
-        testing_array_A = []
-        testing_array_B = []
+        set_b = dichotomy[1]
+        # abstracted DAO 06/11/2023
+        label_b = compute_label(semantic_vectors, set_b)
+
+        training_array_a = []
+        training_array_b = []
+        testing_array_a = []
+        testing_array_b = []
 
         # allow for unbalanced dichotomies
-        n_conditions_A = float(len(dic[0]))
-        n_conditions_B = float(len(dic[1]))
-        fraction = n_conditions_A / n_conditions_B
+        n_conditions_a = float(len(dichotomy[0]))
+        n_conditions_b = float(len(dichotomy[1]))
+        fraction = n_conditions_a / n_conditions_b
 
-        for d in set_A:
+        for d in set_a:
             training, testing = \
-                sample_training_testing_from_rasters(self.conditioned_rasters[d],
-                                                     int(self._parameters.get("ndata") / fraction),
-                                                     self._parameters.get("training_fraction"),
-                                                     self.conditioned_trial_index[d],
-                                                     debug=self._parameters.get("debug"),
-                                                     testing_trials=self._parameters.get("testing_trials"))
-            if self._parameters.get("debug"):
-                plt.title('Condition A')
-                print("Sampling for condition A, d=%s" % d)
-                print("Conditioned raster mean:")
-                print(np.nanmean(self.conditioned_rasters[d][0], 0))
+                sample_training_testing_from_rasters(conditioned_rasters[d],
+                                                     int(ndata / fraction),
+                                                     training_fraction,
+                                                     conditioned_trial_index[d],
+                                                     testing_trials=testing_trials)
 
-            training_array_A.append(training)
-            testing_array_A.append(testing)
+            training_array_a.append(training)
+            testing_array_a.append(testing)
 
-        for d in set_B:
-            training, testing = sample_training_testing_from_rasters(self.conditioned_rasters[d],
+        for d in set_b:
+            training, testing = sample_training_testing_from_rasters(conditioned_rasters[d],
                                                                      int(ndata),
                                                                      training_fraction,
-                                                                     self.conditioned_trial_index[d],
-                                                                     debug=self._parameters.get("debug"),
+                                                                     conditioned_trial_index[d],
                                                                      testing_trials=testing_trials)
-            training_array_B.append(training)
-            testing_array_B.append(testing)
-            if self._parameters.get("debug"):
-                plt.title('Condition B')
-                print("Sampling for condition B, d=%s" % d)
-                print("Conditioned raster mean:")
-                print(np.nanmean(self.conditioned_rasters[d][0], 0))
+            training_array_b.append(training)
+            testing_array_b.append(testing)
 
-        training_array_A = np.vstack(training_array_A)
-        training_array_B = np.vstack(training_array_B)
-        testing_array_A = np.vstack(testing_array_A)
-        testing_array_B = np.vstack(testing_array_B)
+        training_array_a = np.vstack(training_array_a)
+        training_array_b = np.vstack(training_array_b)
+        testing_array_a = np.vstack(testing_array_a)
+        testing_array_b = np.vstack(testing_array_b)
 
-        if self._parameters.get("debug"):
-            selectivity_training = np.nanmean(training_array_A, 0) - np.nanmean(training_array_B, 0)
-            selectivity_testing = np.nanmean(testing_array_A, 0) - np.nanmean(testing_array_B, 0)
-            # corr_scatter(selectivity_training, selectivity_testing, 'Selectivity (training)', 'Selectivity (testing)')
-
-        if self._parameters.get("zscore"):
-            big_raster = np.vstack([training_array_A, training_array_B])  # z-scoring using the training data
+        if zscore:
+            big_raster = np.vstack([training_array_a, training_array_b])  # z-scoring using the training data
             big_mean = np.nanmean(big_raster, 0)
             big_std = np.nanstd(big_raster, 0)
             big_std[big_std == 0] = np.inf
-            training_array_A = (training_array_A - big_mean) / big_std
-            training_array_B = (training_array_B - big_mean) / big_std
-            testing_array_A = (testing_array_A - big_mean) / big_std
-            testing_array_B = (testing_array_B - big_mean) / big_std
+            training_array_a = (training_array_a - big_mean) / big_std
+            training_array_b = (training_array_b - big_mean) / big_std
+            testing_array_a = (testing_array_a - big_mean) / big_std
+            testing_array_b = (testing_array_b - big_mean) / big_std
 
-        self._train(training_array_A, training_array_B, label_A, label_B)
+        classifier = cls._train(classifier=classifier,
+                                subset=subset,
+                                training_raster_a=training_array_a,
+                                training_raster_b=training_array_b,
+                                label_a=label_a,
+                                label_b=label_b)
 
-        if hasattr(self.classifier, 'coef_'):
-            weights = self.classifier.coef_
+        if hasattr(classifier, 'coef_'):
+            weights = classifier.coef_
         else:
             weights = None
 
-        performance = self._test(testing_array_A, testing_array_B, label_A, label_B)
+        performance = cls._test(classifier=classifier,
+                                subset=subset,
+                                testing_raster_a=testing_array_a,
+                                testing_raster_b=testing_array_b,
+                                label_a=label_a,
+                                label_b=label_b)
 
         return performance, weights
 
@@ -493,13 +498,16 @@ class Decodanda:
         """
         # INGEST PARAMETERS - Actually saves a few hundred ms / model, relevant when 100's of small models
         # DAO 06/11/2023
+        debug = self._parameters.get("debug")
         ndata = self._parameters.get("ndata")
         max_conditioned_data = self._parameters.get("max_conditioned_data")
         verbose = self._parameters.get("verbose")
         cross_validations = self._parameters.get("cross_validations")
         parallel = self._parameters.get("parallel")
+        subset = self.subset
         training_fraction = self._parameters.get("training_fraction")
         testing_trials = self._parameters.get("testing_trials")
+        zscore = self._parameters.get("zscore")
 
         # Estimate n_data if needed if needed
         if ndata is None and self.n_brains == 1:
@@ -520,34 +528,43 @@ class Decodanda:
 
         if parallel:
             pool = Pool()
-            performances = pool.map(CrossValidator(classifier=self.classifier,
-                                                   conditioned_rasters=self.conditioned_rasters,
-                                                   conditioned_trial_index=self.conditioned_trial_index,
-                                                   dic=dichotomy,
-                                                   training_fraction=training_fraction,
-                                                   ndata=ndata,
-                                                   subset=self.subset,
-                                                   semantic_vectors=self._semantic_vectors),
-                                    range(cross_validations))
-
+            res = pool.map(_CrossValidator(classifier=self.classifier,
+                                           dichotomy=dichotomy,
+                                           training_fraction=training_fraction,
+                                           semantic_vectors=self._semantic_vectors,
+                                           conditioned_rasters=self.conditioned_rasters,
+                                           conditioned_trial_index=self.conditioned_trial_index,
+                                           ndata=ndata,
+                                           subset=self.subset,
+                                           shuffled=shuffled,
+                                           zscore=zscore,
+                                           testing_trials=testing_trials),
+                           range(cross_validations))
+            performances = np.asarray([r[0] for r in res])
         else:
             if verbose and not shuffled:
                 print('\nLooping over decoding cross validation folds:')
-            performances = [self._one_cv_step(dic=dichotomy,
+            performances = [self._one_cv_step(classifier=self.classifier,
+                                              dichotomy=dichotomy,
                                               training_fraction=training_fraction,
+                                              semantic_vectors=self._semantic_vectors,
+                                              conditioned_rasters=self.conditioned_rasters,
+                                              conditioned_trial_index=self.conditioned_trial_index,
                                               ndata=ndata,
+                                              subset=subset,
                                               shuffled=shuffled,
+                                              zscore=zscore,
                                               testing_trials=testing_trials) for _ in count]
 
         # noinspection PyUnboundLocalVariable
-        weights = [weight[1] for weight in performances]
-        performances = [performance[0] for performance in performances]
+        scores, weights = map(list, zip(*performances))
+        scores = np.asarray(scores)
+        weights = np.asarray(weights)
 
         if shuffled:
             self._order_conditioned_rasters()
 
-        # noinspection PyUnboundLocalVariable
-        return np.nanmean(np.asarray(performances)), np.asarray(performances), np.asarray(weights)
+        return np.nanmean(scores), scores, weights
 
     # Dichotomy analysis functions with null model
 
@@ -1091,3 +1108,45 @@ class Decodanda:
                 # distance_from_mean_centroid = np.sqrt(np.dot(vector_from_mean_centroid, vector_from_mean_centroid))
                 # raster = raster - vector_from_mean_centroid + randomdir*distance_from_mean_centroid
                 self.conditioned_rasters[w][i] = raster
+
+
+class _CrossValidator(Decodanda):
+    # noinspection PyMissingConstructor
+    def __init__(self,
+                 classifier,
+                 dichotomy,
+                 training_fraction,
+                 semantic_vectors,
+                 conditioned_rasters,
+                 conditioned_trial_index,
+                 ndata,
+                 subset,
+                 shuffled=False,
+                 zscore=True,
+                 testing_trials=None):
+        self.classifier = classifier
+        self.dichotomy = dichotomy
+        self.training_fraction = training_fraction
+        self.semantic_vectors = semantic_vectors
+        self.conditioned_rasters = copy.deepcopy(conditioned_rasters)
+        self.conditioned_trial_index = copy.deepcopy(conditioned_trial_index)
+        self.ndata = ndata
+        self.shuffled = shuffled
+        self.subset = subset
+        self.testing_trials = testing_trials
+        self.zscore = zscore
+
+    def __call__(self, cur_iter):
+        self.cur_iter = cur_iter
+        self.random_state = np.random.RandomState(cur_iter)
+        return self._one_cv_step(classifier=self.classifier,
+                                 dichotomy=self.dichotomy,
+                                 training_fraction=self.training_fraction,
+                                 semantic_vectors=self.semantic_vectors,
+                                 conditioned_rasters=self.conditioned_rasters,
+                                 conditioned_trial_index=self.conditioned_trial_index,
+                                 ndata=self.ndata,
+                                 subset=self.subset,
+                                 shuffled=self.shuffled,
+                                 zscore=self.zscore,
+                                 testing_trials=self.testing_trials)

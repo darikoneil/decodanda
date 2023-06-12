@@ -5,6 +5,8 @@ from dataclasses import dataclass, Field, field  # use for complex property chec
 from collections import ChainMap
 from math import inf
 import re
+import numpy  as np
+
 
 try:
     from inspect import get_annotations
@@ -32,8 +34,8 @@ class DecodandaParameters:
     exclude_contiguous_trials: bool = False
     exclude_silent: bool = False
     fault_tolerance: bool = False
-    max_conditioned_data: int = field(default=0, metadata={"range": (0, inf)})
-    min_conditioned_data: int = field(default=10 ** 6, metadata={"range": (0, inf)})
+    max_conditioned_data: np.int32 = field(default=np.int32(0), metadata={"range": (0, inf)})
+    min_conditioned_data: np.int32 = field(default=np.int32(10 ** 6), metadata={"range": (0, inf)})
     min_data_per_condition: int = field(default=2, metadata={"range": (1, inf)})
     min_trials_per_condition: int = field(default=2, metadata={"range": (1, inf)})
     min_activations_per_cell: int = field(default=1, metadata={"range": (0, inf)})
