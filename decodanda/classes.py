@@ -1,23 +1,24 @@
 from __future__ import annotations
-
-# Patch scikit-learn with intel extension
-from sklearnex import patch_sklearn
-patch_sklearn(verbose=False)  # noqa: E402
-
-
 from typing import Tuple, Union, Callable, Iterable, List, Mapping, Optional, Any
 from multiprocessing import Pool
 import copy
 
 
-import numpy as np
+# support for scikit-learn-intelex
+from ._dev import INTELX
+if INTELX:
+    from sklearnex import patch_sklearn
+    patch_sklearn(verbose=False)  # Patch scikit-learn with intel extension, must be done before importing sklearn
+
+
 from sklearn.svm import LinearSVC
+import numpy as np
 from sklearn.base import clone
 from tqdm import tqdm
 
 
-from ._defaults import classifier_parameters, DecodandaParameters
 from ._dev import identify_calling_function
+from ._defaults import classifier_parameters, DecodandaParameters
 from .utilities import generate_binary_words, string_bool, sample_training_testing_from_rasters, \
     log_dichotomy, hamming, generate_dichotomies, contiguous_chunking, non_contiguous_mask, \
     generate_binary_conditions, compute_label

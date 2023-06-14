@@ -5,20 +5,52 @@ from dataclasses import dataclass, Field, field  # use for complex property chec
 from collections import ChainMap
 from math import inf
 import re
+
+
 import numpy as np
 from prettytable import PrettyTable, ALL
 
 
+# SET VRAM LIMIT FOR THUNDER
+from ._dev import NVIDIA_SMI, determine_gpu_memory
+if NVIDIA_SMI:
+    GPU_MEMORY = determine_gpu_memory(0)
+else:
+    GPU_MEMORY = 0
+
+
+# BACKPORT INSPECTIONS IF NECESSARY
 try:
     from inspect import get_annotations
 except ImportError:
-    from get_annotations import get_annotations  # backport
+    from get_annotations import get_annotations
+
+
+classifier_parameters_thunder = MappingProxyType({
+    "C": 1.0,
+    "class_weight": "balanced",
+    "gpu_id": 0,
+    "kernel": "linear",
+    "max_iter": 5000,
+    "max_mem_size":  GPU_MEMORY,
+    "n_jobs": -1,
+    "probability": False,
+    "shrinking": False,
+})
+
+
+classifier_parameters_intel = MappingProxyType({
+    "C": 1.0,
+    "class_weight": "balanced",
+    "kernel": "linear",
+    "max_iter": 5000,
+})
 
 
 classifier_parameters = MappingProxyType({
-    "dual": False,
     "C": 1.0,
     "class_weight": "balanced",
+    "dual": False,
     "max_iter": 5000,
 })
 
