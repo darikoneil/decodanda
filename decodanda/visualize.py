@@ -1,6 +1,26 @@
 import numpy as np
 
-from .imports import *
+# visualization stuff
+import matplotlib as mpl
+mpl.rcParams.update({'figure.autolayout': True})
+import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
+pltcolors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+pltcolors = pltcolors * 100
+import seaborn as sns
+from sklearn.manifold import MDS
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import animation
+from scipy.spatial.distance import mahalanobis
+from tqdm import tqdm
+import datetime
+from matplotlib import cm
+from scipy.stats import special_ortho_group
+import matplotlib.transforms as transforms
+from typing import Union
+from typing import Optional
+from itertools import chain, combinations
+
 from .utilities import *
 
 
