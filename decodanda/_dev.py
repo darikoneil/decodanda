@@ -1,20 +1,12 @@
 from __future__ import annotations
-from typing import List
 from inspect import stack
 
 
-try:
-    from pynvml import nvmlInit, nvmlDeviceGetHandleByIndex, nvmlDeviceGetMemoryInfo, nvmlShutdown
-    NVIDIA_SMI = True
-except ImportError:
-    NVIDIA_SMI = False
+from . import NVIDIA_SMI
 
 
-try:
-    from sklearnex import patch_sklearn
-    INTELX = True
-except ImportError:
-    INTELX = False
+if NVIDIA_SMI:
+    from pynvml import nvmlInit, nvmlShutdown, nvmlDeviceGetHandleByIndex, nvmlDeviceGetMemoryInfo
 
 
 def determine_gpu_memory(gpu_index: int = 0) -> int:
@@ -22,7 +14,7 @@ def determine_gpu_memory(gpu_index: int = 0) -> int:
     Function returns the amount of VRAM the current GPU
     """
     nvmlInit()
-    handle = nvmlDeviceGetHandleByIndex(0)
+    handle = nvmlDeviceGetHandleByIndex(gpu_index)
     vram = nvmlDeviceGetMemoryInfo(handle)
     nvmlShutdown()
     return vram
@@ -34,5 +26,3 @@ def identify_calling_function() -> str:
 
     """
     return f"[{stack()[1][3]}]"
-
-

@@ -8,11 +8,11 @@ import re
 
 
 import numpy as np
-from prettytable import PrettyTable, ALL
 
 
 # SET VRAM LIMIT FOR THUNDER
-from ._dev import NVIDIA_SMI, determine_gpu_memory
+from . import NVIDIA_SMI
+from ._dev import determine_gpu_memory
 if NVIDIA_SMI:
     GPU_MEMORY = determine_gpu_memory(0)
 else:
@@ -31,11 +31,12 @@ classifier_parameters_thunder = MappingProxyType({
     "class_weight": "balanced",
     "gpu_id": 0,
     "kernel": "linear",
-    "max_iter": 5000,
-    "max_mem_size":  GPU_MEMORY,
+    "max_iter": 1000,
+    "max_mem_size": GPU_MEMORY,
     "n_jobs": -1,
     "probability": False,
     "shrinking": False,
+    "tol": 1e-4,
 })
 
 
@@ -43,7 +44,10 @@ classifier_parameters_intel = MappingProxyType({
     "C": 1.0,
     "class_weight": "balanced",
     "kernel": "linear",
-    "max_iter": 5000,
+    "max_iter": 1000,
+    "probability": False,
+    "shrinking": False,
+    "tol": 1e-4,
 })
 
 
@@ -51,7 +55,8 @@ classifier_parameters = MappingProxyType({
     "C": 1.0,
     "class_weight": "balanced",
     "dual": False,
-    "max_iter": 5000,
+    "max_iter": 1000,
+    "tol": 1e-4
 })
 
 
@@ -67,6 +72,7 @@ class DecodandaParameters:
     exclude_contiguous_trials: bool = False
     exclude_silent: bool = False
     fault_tolerance: bool = False
+    # label_shuffling: str = field(default="bin", metadata={"permitted": ("bin", "condition", "shift")})
     max_conditioned_data: np.int32 = field(default=np.int32(0), metadata={"range": (0, inf)})
     min_conditioned_data: np.int32 = field(default=np.int32(10 ** 6), metadata={"range": (0, inf)})
     min_data_per_condition: int = field(default=2, metadata={"range": (1, inf)})
@@ -76,19 +82,33 @@ class DecodandaParameters:
     non_semantic: bool = False
     n_shuffles: int = field(default=25, metadata={"range": (0, inf)})
     parallel: bool = False
-    testing_trials: Optional[list] = None
-    training_fraction: float = field(default=0.7, metadata={"range": (0, 1)})
+    scale: Optional[Callable] = None
     trial_average: bool = False
     trial_attr: str = "trial"
     trial_chunk: Optional[int] = None
+    testing_trials: Optional[list] = None
+    training_fraction: float = field(default=0.7, metadata={"range": (0, 1)})
     verbose: bool = False
-    scale: Optional[Callable] = None
 
     def __post_init__(self):
         """
         Post initialization type-checking for current and child classes
         """
         self._validate_fields()
+
+    def __str__(self):
+        """
+        Verbose printing of the decodanda parameters
+        """
+        parameters = f"\n{_TerminalStyle.BOLD}{_TerminalStyle.UNDERLINE}{_TerminalStyle.YELLOW}" \
+                     f"{self.__name__()}{_TerminalStyle.RESET}\n"
+        annotations_ = self._collect_annotations()
+
+        for key, type_ in annotations_.items():
+            parameters += f"{_TerminalStyle.YELLOW}{_TerminalStyle.BOLD}{key}: " \
+                          f"{_TerminalStyle.RESET}{self.__dict__.get(key)}" \
+                          f"{_TerminalStyle.BLUE} ({type_}){_TerminalStyle.RESET}\n"
+        return parameters
 
     @staticmethod
     def _type_check_nested_types(var: Any, expected: str) -> bool:
@@ -129,6 +149,22 @@ class DecodandaParameters:
             return all(checks)
 
     @staticmethod
+    def _validate_permitted(var: Any, values: Tuple[Any]) -> List[Exception]:
+        logger = _ParameterLogger()
+        try:
+            _ = iter(var)
+        except TypeError:
+            if var not in values:
+                return [AssertionError(f"{var} not permitted value")]
+        else:
+            for val in var:
+                try:
+                    assert (val in values), f"{val} not permitted value"
+                except AssertionError as e:
+                    logger += e
+            return logger.exceptions
+
+    @staticmethod
     def _validate_range(var: Any, val_range: Tuple[Any, Any]) -> List[Exception]:
         logger = _ParameterLogger()
         val_min, val_max = val_range
@@ -155,11 +191,11 @@ class DecodandaParameters:
         """
         mappings = [mapping for mapping in mappings if isinstance(mapping, Mapping)]
         if len(mappings) > 1:
-            return vars(cls(**ChainMap(*mappings)))
+            return cls(**ChainMap(*mappings))
         elif len(mappings) == 1:
-            return vars(cls(**mappings[0]))
+            return cls(**mappings[0])
         else:
-            return vars(cls())
+            return cls()
 
     @classmethod
     def _collect_annotations(cls: DecodandaParameters) -> dict:
@@ -210,17 +246,16 @@ class DecodandaParameters:
         """
         Verbose printing of type information to assist users in setting decodanda parameters
         """
-        pretty_table = PrettyTable(hrules=ALL, vrules=ALL, float_format=".2f")
-        title = f"{_TerminalStyle.BOLD}{_TerminalStyle.YELLOW}{self.__name__()}{_TerminalStyle.RESET}"
-        type_string = f"{_TerminalStyle.BOLD}{_TerminalStyle.YELLOW}Type{_TerminalStyle.RESET}"
-        pretty_table.field_names = [title, type_string]
-        pretty_table.align[title] = "l"
-        pretty_table.align[type_string] = "c"
+        type_hints = f"\n{_TerminalStyle.BOLD}{_TerminalStyle.YELLOW}{_TerminalStyle.UNDERLINE}" \
+                     f"{self.__name__()}{_TerminalStyle.RESET}\n"
+
         annotations_ = self._collect_annotations()
+
         for key, type_ in annotations_.items():
-            pretty_table.add_row([f"{_TerminalStyle.BOLD}{key}{_TerminalStyle.RESET}",
-                                  f" {type_} "])
-        print(pretty_table.get_string())
+            type_hints += f"{_TerminalStyle.YELLOW}{_TerminalStyle.BOLD}{key}: {_TerminalStyle.RESET}" \
+                          f"{_TerminalStyle.BLUE}{type_}{_TerminalStyle.RESET}\n"
+
+        print(type_hints)
 
     def _format_fields(self) -> tuple:
         """
@@ -263,6 +298,7 @@ class DecodandaParameters:
 # noinspection PyProtectedMember
 META_VALIDATORS = MappingProxyType({
     "range": DecodandaParameters._validate_range,
+    "permitted": DecodandaParameters._validate_permitted,
 })
 
 

@@ -2,13 +2,12 @@ from __future__ import annotations
 from typing import Tuple, Union, Callable, Iterable, List, Mapping, Optional, Any
 from multiprocessing import Pool
 import copy
-
+from . import INTELX
 
 # support for scikit-learn-intelex
-from ._dev import INTELX
 if INTELX:
     from sklearnex import patch_sklearn
-    patch_sklearn(verbose=False)  # Patch scikit-learn with intel extension, must be done before importing sklearn
+    patch_sklearn(verbose=False)  # Patch scikit-learn with intel extension, must be done BEFORE importing sklearn
 
 
 from sklearn.svm import LinearSVC
@@ -187,6 +186,13 @@ class Decodanda:
         # it's still protected as before,
         # but we have a dedicated getter/setter now that allows the user to view & change the values
         # DAO 06/11/2023
+
+        # Print parameters if verbose
+        if vars(self._parameters).get("verbose"):
+            print(self._parameters)
+
+        # Convert parameters to dictionary (no longer validated dataclass but hashmap)
+        self._parameters = vars(self._parameters)
 
         # deriving dataset(s) attributes
         self.n_datasets = len(self.data)
@@ -402,10 +408,10 @@ class Decodanda:
 
         """
         if isinstance(value, Mapping):
-            self._parameters = DecodandaParameters().build([value, self._parameters])
+            self._parameters = vars(DecodandaParameters().build([value, self._parameters]))
         elif isinstance(value, tuple) and isinstance(value[0], str):
             key, value = value
-            self._parameters = DecodandaParameters().build([{key: value}, self._parameters])
+            self._parameters = vars(DecodandaParameters().build([{key: value}, self._parameters]))
         else:
             raise TypeError(f"Argument must be a key-value tuple or mapping not {type(value)}")
 
