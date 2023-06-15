@@ -182,15 +182,12 @@ class Decodanda:
         # kwargs take precedence over passed params dictionary -- DAO 06/10/2023
         if isinstance(decodanda_params, DecodandaParameters):
             decodanda_params = vars(decodanda_params)  # in case a user passes the actual dataclass object
-        self._parameters = DecodandaParameters.build([kwargs, decodanda_params])
+        self._parameters = DecodandaParameters.build([kwargs, decodanda_params])  # preference to kwargs
         # it's still protected as before,
         # but we have a dedicated getter/setter now that allows the user to view & change the values
         # DAO 06/11/2023
-
-        # Print parameters if verbose
-        if vars(self._parameters).get("verbose"):
+        if vars(self._parameters).get("verbose"): # Print parameters if verbose
             print(self._parameters)
-
         # Convert parameters to dictionary (no longer validated dataclass but hashmap)
         self._parameters = vars(self._parameters)
 
