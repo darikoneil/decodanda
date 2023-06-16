@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Tuple, Union, Callable, Iterable, List, Mapping, Optional, Any
+from types import MappingProxyType
 from multiprocessing import Pool
 import copy
 from . import INTELX
@@ -16,7 +17,7 @@ from sklearn.base import clone
 from tqdm import tqdm
 
 
-from ._dev import identify_calling_function
+from ._dev import identify_calling_function, validate_classifier
 from ._defaults import classifier_parameters, DecodandaParameters
 from .utilities import generate_binary_words, string_bool, sample_training_testing_from_rasters, \
     log_dichotomy, hamming, generate_dichotomies, contiguous_chunking, non_contiguous_mask, \
@@ -165,19 +166,6 @@ class Decodanda:
 
         """
 
-        # abstracted for readability - DAO 06/08/2023
-        self.data = self._sanitize_data(data)
-
-        # abstracted to directly passing a callable with sklearn syntax - DAO 06/08/2023
-        self.classifier = classifier(**classifier_params)
-
-        # handling discrete dict conditions
-        if type(list(conditions.values())[0]) == list:
-            conditions = generate_binary_conditions(conditions)
-
-        # setting input parameters
-        self.conditions = conditions
-
         # decodanda parameters; making call to hashmap each time but more pythonic & flexible--also faster fwiw
         # kwargs take precedence over passed params dictionary -- DAO 06/10/2023
         if isinstance(decodanda_params, DecodandaParameters):
@@ -186,10 +174,27 @@ class Decodanda:
         # it's still protected as before,
         # but we have a dedicated getter/setter now that allows the user to view & change the values
         # DAO 06/11/2023
-        if vars(self._parameters).get("verbose"): # Print parameters if verbose
+        if vars(self._parameters).get("verbose"):  # Print parameters if verbose
             print(self._parameters)
         # Convert parameters to dictionary (no longer validated dataclass but hashmap)
         self._parameters = vars(self._parameters)
+
+        # abstracted for readability - DAO 06/08/2023
+        self.data = self._sanitize_data(data)
+
+        # abstracted to directly passing a callable with sklearn syntax - DAO 06/08/2023
+        if self._parameters.get("verbose"):
+            print(f"\nClassifier: {classifier}")
+            print(f"\nClassifier Parameters: {classifier_params}")
+        self.classifier = classifier(**classifier_params)
+        validate_classifier(self.classifier)  # make sure compatible with decodanda syntax
+
+        # handling discrete dict conditions
+        if type(list(conditions.values())[0]) == list:
+            conditions = generate_binary_conditions(conditions)
+
+        # setting input parameters
+        self.conditions = conditions
 
         # deriving dataset(s) attributes
         self.n_datasets = len(self.data)
@@ -250,11 +255,11 @@ class Decodanda:
                 self.ordered_conditioned_trial_index[w] = self.conditioned_trial_index[w].copy()
 
     @property
-    def parameters(self) -> dict:
+    def parameters(self) -> MappingProxyType:
         """
         Decodanda parameters
         """
-        return self._parameters
+        return MappingProxyType(self._parameters)
 
     @staticmethod
     def _sanitize_data(data: Union[Iterable, dict]) -> List[dict]:
@@ -371,7 +376,7 @@ class Decodanda:
         testing_array_b = np.vstack(testing_array_b)
 
         if scale:
-            scaler = scale().fit(np.vstack([training_array_a, training_array_b]))
+            scaler = clone(scale).fit(np.vstack([training_array_a, training_array_b]))
             training_array_a = scaler.transform(training_array_a, copy=False)
             training_array_b = scaler.transform(training_array_b, copy=False)
             testing_array_a = scaler.transform(testing_array_a, copy=False)

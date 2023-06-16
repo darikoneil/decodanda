@@ -6,13 +6,14 @@ from collections import ChainMap
 from math import inf
 import re
 
+from sklearn.base import BaseEstimator
 
 import numpy as np
 
 
 # SET VRAM LIMIT FOR THUNDER
 from . import NVIDIA_SMI
-from ._dev import determine_gpu_memory
+from ._dev import determine_gpu_memory, MultiExceptionLogger, ParameterException, TerminalStyle
 if NVIDIA_SMI:
     GPU_MEMORY = determine_gpu_memory(0)
 else:
@@ -31,7 +32,7 @@ classifier_parameters_thunder = MappingProxyType({
     "class_weight": "balanced",
     "gpu_id": 0,
     "kernel": "linear",
-    "max_iter": 1000,
+    "max_iter": 5000,
     "max_mem_size": GPU_MEMORY,
     "n_jobs": -1,
     "probability": False,
@@ -44,7 +45,7 @@ classifier_parameters_intel = MappingProxyType({
     "C": 1.0,
     "class_weight": "balanced",
     "kernel": "linear",
-    "max_iter": 1000,
+    "max_iter": 5000,
     "probability": False,
     "shrinking": False,
     "tol": 1e-4,
@@ -55,7 +56,7 @@ classifier_parameters = MappingProxyType({
     "C": 1.0,
     "class_weight": "balanced",
     "dual": False,
-    "max_iter": 1000,
+    "max_iter": 5000,
     "tol": 1e-4
 })
 
@@ -82,11 +83,11 @@ class DecodandaParameters:
     non_semantic: bool = False
     n_shuffles: int = field(default=25, metadata={"range": (0, inf)})
     parallel: bool = False
-    scale: Optional[Callable] = None
+    scale: BaseEstimator = None
     trial_average: bool = False
     trial_attr: str = "trial"
-    trial_chunk: Optional[int] = None
-    testing_trials: Optional[list] = None
+    trial_chunk: int = None
+    testing_trials: list = None
     training_fraction: float = field(default=0.7, metadata={"range": (0, 1)})
     verbose: bool = False
 
@@ -100,14 +101,14 @@ class DecodandaParameters:
         """
         Verbose printing of the decodanda parameters
         """
-        parameters = f"\n{_TerminalStyle.BOLD}{_TerminalStyle.UNDERLINE}{_TerminalStyle.YELLOW}" \
-                     f"{self.__name__()}{_TerminalStyle.RESET}\n"
+        parameters = f"\n{TerminalStyle.BOLD}{TerminalStyle.UNDERLINE}{TerminalStyle.YELLOW}" \
+                     f"{self.__name__()}{TerminalStyle.RESET}\n"
         annotations_ = self._collect_annotations()
 
         for key, type_ in annotations_.items():
-            parameters += f"{_TerminalStyle.YELLOW}{_TerminalStyle.BOLD}{key}: " \
-                          f"{_TerminalStyle.RESET}{self.__dict__.get(key)}" \
-                          f"{_TerminalStyle.BLUE} ({type_}){_TerminalStyle.RESET}\n"
+            parameters += f"{TerminalStyle.YELLOW}{TerminalStyle.BOLD}{key}: " \
+                          f"{TerminalStyle.RESET}{self.__dict__.get(key)}" \
+                          f"{TerminalStyle.BLUE} ({type_}){TerminalStyle.RESET}\n"
         return parameters
 
     @staticmethod
@@ -150,7 +151,7 @@ class DecodandaParameters:
 
     @staticmethod
     def _validate_permitted(var: Any, values: Tuple[Any]) -> List[Exception]:
-        logger = _ParameterLogger()
+        logger = MultiExceptionLogger()
         try:
             _ = iter(var)
         except TypeError:
@@ -166,7 +167,7 @@ class DecodandaParameters:
 
     @staticmethod
     def _validate_range(var: Any, val_range: Tuple[Any, Any]) -> List[Exception]:
-        logger = _ParameterLogger()
+        logger = MultiExceptionLogger()
         val_min, val_max = val_range
         try:
             _ = iter(var)
@@ -215,7 +216,7 @@ class DecodandaParameters:
         """
         if value is None:
             return
-        logger = _ParameterLogger()
+        logger = MultiExceptionLogger()
         type_ = var.type
         # first check type always
         try:
@@ -246,14 +247,14 @@ class DecodandaParameters:
         """
         Verbose printing of type information to assist users in setting decodanda parameters
         """
-        type_hints = f"\n{_TerminalStyle.BOLD}{_TerminalStyle.YELLOW}{_TerminalStyle.UNDERLINE}" \
-                     f"{self.__name__()}{_TerminalStyle.RESET}\n"
+        type_hints = f"\n{TerminalStyle.BOLD}{TerminalStyle.YELLOW}{TerminalStyle.UNDERLINE}" \
+                     f"{self.__name__()}{TerminalStyle.RESET}\n"
 
         annotations_ = self._collect_annotations()
 
         for key, type_ in annotations_.items():
-            type_hints += f"{_TerminalStyle.YELLOW}{_TerminalStyle.BOLD}{key}: {_TerminalStyle.RESET}" \
-                          f"{_TerminalStyle.BLUE}{type_}{_TerminalStyle.RESET}\n"
+            type_hints += f"{TerminalStyle.YELLOW}{TerminalStyle.BOLD}{key}: {TerminalStyle.RESET}" \
+                          f"{TerminalStyle.BLUE}{type_}{TerminalStyle.RESET}\n"
 
         print(type_hints)
 
@@ -272,7 +273,7 @@ class DecodandaParameters:
 
         :returns: True if valid
         """
-        logger = _ParameterLogger()
+        logger = MultiExceptionLogger(exception_class=ParameterException)
         fields_tuple = self._format_fields()
         for key_, value_, field_ in fields_tuple:
             logger.add_exception(self._field_validator(key=key_, value=value_, var=field_))
@@ -300,60 +301,3 @@ META_VALIDATORS = MappingProxyType({
     "range": DecodandaParameters._validate_range,
     "permitted": DecodandaParameters._validate_permitted,
 })
-
-
-class _ParameterLogger:
-    def __init__(self, exceptions: List[Exception] = None):
-        self.exceptions = []
-        if exceptions:
-            self.add_exception(exceptions)
-
-    def __str__(self):
-        exceptions = "".join([f"\n{message}" for message in self.exceptions])
-        return "".join([f"{_TerminalStyle.YELLOW}", *exceptions, f"{_TerminalStyle.RESET}"])
-
-    def add_exception(self, other: Exception or List[Exception]) -> _ParameterLogger:
-        try:
-            _ = iter(other)
-        except TypeError:
-            self.exceptions.append(other)
-        else:
-            for exception in other:
-                self.add_exception(exception)
-        self.exceptions = [exception for exception in self.exceptions if exception is not None]
-
-    def raise_exceptions(self) -> _ParameterLogger:
-        raise _ParameterException(self.__str__())
-
-    def __add__(self, other: Exception or List[Exception]):
-        try:
-            _ = iter(other)
-        except TypeError:
-            self.add_exception(other)
-        else:
-            for exception in other:
-                self.add_exception(exception)
-        return _ParameterLogger(self.exceptions)
-
-    def __call__(self, *args, **kwargs):
-        self.raise_exceptions()
-
-
-class _ParameterException(Exception):
-    def __init__(self, message: str):
-        super().__init__(message)
-        return
-
-
-class _TerminalStyle:
-    """
-    Font styles for printing to terminal
-    """
-    RED = "\u001b[31m"
-    GREEN = "\u001b[32m"
-    BLUE = "\u001b[38;5;39m"
-    YELLOW = "\u001b[38;5;11m"
-    ORANGE = "\u001b[38;5;208m"
-    BOLD = "\u001b[1m"
-    UNDERLINE = "\u001b[7m"
-    RESET = "\033[0m"

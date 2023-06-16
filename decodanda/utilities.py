@@ -848,9 +848,9 @@ def generate_synthetic_data(n_neurons=50, n_trials=50, timebins_per_trial=5, key
 def visualize_synthetic_data(session):
 
     keys = [k for k in session.keys() if k != 'raster' and k != 'trial']
-    frA0 = np.nanmean(session['raster'][session[keys[0]] == -1], 0)
+    frA0 = np.nanmean(session['raster'][session[keys[0]] == 0], 0)
     frA1 = np.nanmean(session['raster'][session[keys[0]] == 1], 0)
-    frB0 = np.nanmean(session['raster'][session[keys[1]] == -1], 0)
+    frB0 = np.nanmean(session['raster'][session[keys[1]] == 0], 0)
     frB1 = np.nanmean(session['raster'][session[keys[1]] == 1], 0)
     selA = np.abs(frA1 - frA0)/(frA1 + frA0)
     selB = np.abs(frB1 - frB0)/(frB1 + frB0)
