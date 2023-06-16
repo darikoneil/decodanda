@@ -24,4 +24,4 @@ except (ImportError, _pynvml.NVMLError, AssertionError):
 
 
 from .classes import Decodanda  # noqa: F401
-from .defaults import DecodandaParameters  # noqa: F401
+from ._defaults import DecodandaParameters  # noqa: F401
