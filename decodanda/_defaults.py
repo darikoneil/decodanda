@@ -1,13 +1,12 @@
 from __future__ import annotations
 from types import MappingProxyType
-from typing import Optional, Mapping, Iterable, Union, Any, List, Tuple, Callable
+from typing import Mapping, Iterable, Union, Any, List, Tuple
 from dataclasses import dataclass, Field, field  # use for complex property checks (e.g., range)
 from collections import ChainMap
 from math import inf
 import re
 
 from sklearn.base import BaseEstimator
-
 import numpy as np
 
 
@@ -62,7 +61,7 @@ classifier_parameters = MappingProxyType({
 
 
 """
-Self-validating dataclass replicated as-needed with permission from DAO until package publication
+Self-validating dataclass replicated as-needed with permission from DAO's unreleased package
 """
 
 
@@ -114,7 +113,8 @@ class DecodandaParameters:
     @staticmethod
     def _type_check_nested_types(var: Any, expected: str) -> bool:
         """
-        Checks type of nested types. WORKS FOR ONLY ONE NEST.
+        Checks type of nested types. WORKS FOR ONLY ONE NEST in this implementation.
+        Doesn't work for union/optional in some edge cases.
 
         :param var: variable to check
         :param expected: expected type

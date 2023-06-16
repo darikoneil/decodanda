@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import List, Any, Union
 from inspect import stack
 
 
@@ -18,9 +19,9 @@ class MultiExceptionLogger:
 
     def __str__(self):
         exceptions = "".join([f"\n{message}" for message in self.exceptions])
-        return "".join([f"{_TerminalStyle.YELLOW}", *exceptions, f"{_TerminalStyle.RESET}"])
+        return "".join([f"{TerminalStyle.YELLOW}", *exceptions, f"{TerminalStyle.RESET}"])
 
-    def add_exception(self, other: Exception or List[Exception]) -> _MultiExceptionLogger:
+    def add_exception(self, other: Union[Exception, List[Exception]]) -> MultiExceptionLogger:
         try:
             _ = iter(other)
         except TypeError:
@@ -30,11 +31,11 @@ class MultiExceptionLogger:
                 self.add_exception(exception)
         self.exceptions = [exception for exception in self.exceptions if exception is not None]
 
-    def raise_exceptions(self) -> _MultiExceptionLogger:
+    def raise_exceptions(self) -> MultiExceptionLogger:
         # noinspection PyCallingNonCallable
         raise self.exception_class(self.__str__())
 
-    def __add__(self, other: Exception or List[Exception]):
+    def __add__(self, other: Union[Exception, List[Exception]]):
         try:
             _ = iter(other)
         except TypeError:
@@ -42,7 +43,7 @@ class MultiExceptionLogger:
         else:
             for exception in other:
                 self.add_exception(exception)
-        return _MultiExceptionLogger(self.exceptions)
+        return MultiExceptionLogger(self.exceptions)
 
     def __call__(self, *args, **kwargs):
         self.raise_exceptions()
@@ -65,11 +66,8 @@ class TerminalStyle:
     """
     Font styles for printing to terminal
     """
-    RED = "\u001b[31m"
-    GREEN = "\u001b[32m"
     BLUE = "\u001b[38;5;39m"
     YELLOW = "\u001b[38;5;11m"
-    ORANGE = "\u001b[38;5;208m"
     BOLD = "\u001b[1m"
     UNDERLINE = "\u001b[7m"
     RESET = "\033[0m"

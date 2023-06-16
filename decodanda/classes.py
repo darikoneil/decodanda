@@ -5,6 +5,7 @@ from multiprocessing import Pool
 import copy
 from . import INTELX
 
+
 # support for scikit-learn-intelex
 if INTELX:
     from sklearnex import patch_sklearn
@@ -504,7 +505,8 @@ class Decodanda:
         [0.82, 0.87, 0.75, ..., 0.77] # 10 values
 
         """
-        # INGEST PARAMETERS - Actually saves a few hundred ms / model, relevant when 100's of small models
+        # INGEST PARAMETERS - Actually saves a few hundred ms / model, possibly relevant when 100's of small models...
+        # Kinda feels dirty this way, maybe change later
         # DAO 06/11/2023
         ndata = self._parameters.get("ndata")
         max_conditioned_data = self._parameters.get("max_conditioned_data")
@@ -801,7 +803,7 @@ class Decodanda:
 
     def _divide_data_into_conditions(self, datasets: dict) -> Decodanda:
         # TODO: make sure conditions don't overlap somehow
-        # TODO: This is too complex and needs broken down for maintainability
+        # TODO: This is too complex and needs broken down for maintainability (C901)
 
         for si, dataset in enumerate(datasets):
 
@@ -958,6 +960,8 @@ class Decodanda:
 
         :param dic: The dichotomy to be decoded
         """
+        # TODO what type is dic
+        # TODO This is complex is needs broken down (C901)
         # if the dichotomy is semantic, shuffle between rasters at semantic distance=1
         if self._dic_key(dic):
             set_A = dic[0]
@@ -1056,6 +1060,7 @@ class Decodanda:
             self.conditioned_trial_index[w] = self.ordered_conditioned_trial_index[w].copy()
 
     def _dic_key(self, dic):
+        # TODO what type is dic / return
         if len(dic[0]) == 2 ** (self.n_conditions - 1) and len(dic[1]) == 2 ** (self.n_conditions - 1):
             for i in range(len(dic)):
                 d = [string_bool(x) for x in dic[i]]
@@ -1072,18 +1077,6 @@ class Decodanda:
                 semantic_vector += semantic_values[condition_vec[i]]
             semantic_vector = semantic_vector + ')'
             self._semantic_vectors[string_bool(condition_vec)] = semantic_vector
-
-    def _zscore_activity(self) -> Decodanda:
-        keys = [string_bool(w) for w in self._condition_vectors]
-        for n in range(self.n_brains):
-            n_neurons = self.conditioned_rasters[keys[0]][n].shape[1]
-            for i in range(n_neurons):
-                r = np.hstack([self.conditioned_rasters[key][n][:, i] for key in keys])
-                m = np.nanmean(r)
-                std = np.nanstd(r)
-                if std:
-                    for key in keys:
-                        self.conditioned_rasters[key][n][:, i] = (self.conditioned_rasters[key][n][:, i] - m) / std
 
     def _generate_random_subset(self, n: int) -> Decodanda:
         if n < self.n_neurons:
