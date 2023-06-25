@@ -378,10 +378,10 @@ class Decodanda:
 
         if scale:
             scaler = clone(scale).fit(np.vstack([training_array_a, training_array_b]))
-            training_array_a = scaler.transform(training_array_a, copy=False)
-            training_array_b = scaler.transform(training_array_b, copy=False)
-            testing_array_a = scaler.transform(testing_array_a, copy=False)
-            testing_array_b = scaler.transform(testing_array_b, copy=False)
+            training_array_a = scaler.transform(training_array_a)
+            training_array_b = scaler.transform(training_array_b)
+            testing_array_a = scaler.transform(testing_array_a)
+            testing_array_b = scaler.transform(testing_array_b)
 
         classifier = cls._train(classifier=classifier,
                                 subset=subset,
