@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>flake8 violations: decodanda\imports.py</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+<script>
+function bindHandler(link) {
+   var code = link.getAttribute('data-code');
+   var key = location.pathname + '#' + code;
+
+   var ul = link.parentNode.querySelector('.details');
+   if (sessionStorage[key] != 'open') {
+      ul.style.display = 'none';
+   }
+   link.addEventListener('click', function (event) {
+      if (!ul.style.display || ul.style.display == 'none') {
+         ul.style.display = 'block';
+         sessionStorage[key] = 'open';
+      } else {
+         ul.style.display = 'none';
+         sessionStorage[key] = 'closed';
+      }
+   });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+   var links = document.querySelectorAll('#index > li > a');
+   for (var i = 0; i < links.length; i++) {
+      bindHandler(links[i]);
+   }
+});
+</script>
+   </head>
+   <body>
+      <div id="masthead" class="sev-1"></div>
+      <div id="page">
+         <p id="srclink">
+            <a title="View full annotated source"
+               href="decodanda.imports.source.html">
+               <img src="file.svg" alt="&#x2261;">
+            </a></p>
+         <h1>
+            <a href="index.html">
+               <img src="back.svg" alt="&#x2B05;">
+               decodanda\imports.py
+            </a>
+         </h1>
+
+         <ul id="index">
+         
+         <li>
+            <a data-code="F401">
+               <span class="count sev-1">
+                  33
+               </span>
+               <strong>F401:</strong> 'itertools' imported but unused
+               
+                  (and 32 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>'itertools' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l2">
+                  <tt><i>2</i> <span class="kn">import</span> <span class="nn">itertools</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'types' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l3">
+                  <tt><i>3</i> <span class="kn">import</span> <span class="nn">types</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'copy.deepcopy' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l4">
+                  <tt><i>4</i> <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'functools.partial' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l5">
+                  <tt><i>5</i> <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'math.ceil' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l6">
+                  <tt><i>6</i> <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span><span class="p">,</span> <span class="n">floor</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'math.floor' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l6">
+                  <tt><i>6</i> <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span><span class="p">,</span> <span class="n">floor</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'multiprocessing.Pool' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l8">
+                  <tt><i>8</i> <span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'h5py' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l11">
+                  <tt><i>11</i> <span class="kn">import</span> <span class="nn">h5py</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'numpy as np' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l15">
+                  <tt><i>15</i> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'pandas as pd' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l16">
+                  <tt><i>16</i> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy.stats' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l17">
+                  <tt><i>17</i> <span class="kn">import</span> <span class="nn">scipy.stats</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sklearn' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l19">
+                  <tt><i>19</i> <span class="kn">import</span> <span class="nn">sklearn</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'numpy.random.RandomState' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l20">
+                  <tt><i>20</i> <span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">RandomState</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy.spatial.distance.cdist' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l21">
+                  <tt><i>21</i> <span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">cdist</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy.stats.linregress' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l22">
+                  <tt><i>22</i> <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">linregress</span><span class="p">,</span> <span class="n">pearsonr</span><span class="p">,</span> <span class="n">ttest_1samp</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy.stats.pearsonr' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l22">
+                  <tt><i>22</i> <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">linregress</span><span class="p">,</span> <span class="n">pearsonr</span><span class="p">,</span> <span class="n">ttest_1samp</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy.stats.ttest_1samp' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l22">
+                  <tt><i>22</i> <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">linregress</span><span class="p">,</span> <span class="n">pearsonr</span><span class="p">,</span> <span class="n">ttest_1samp</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sklearn.svm.LinearSVC' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l23">
+                  <tt><i>23</i> <span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'matplotlib.gridspec.GridSpec' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l27">
+                  <tt><i>27</i> <span class="kn">from</span> <span class="nn">matplotlib.gridspec</span> <span class="kn">import</span> <span class="n">GridSpec</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'datetime' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l31">
+                  <tt><i>31</i> <span class="kn">import</span> <span class="nn">datetime</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'itertools.chain' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l32">
+                  <tt><i>32</i> <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">combinations</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'itertools.combinations' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l32">
+                  <tt><i>32</i> <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">combinations</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'typing.Optional' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l33">
+                  <tt><i>33</i> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'typing.Union' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l33">
+                  <tt><i>33</i> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'matplotlib.transforms' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l35">
+                  <tt><i>35</i> <span class="kn">import</span> <span class="nn">matplotlib.transforms</span> <span class="k">as</span> <span class="nn">transforms</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'seaborn as sns' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l36">
+                  <tt><i>36</i> <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'matplotlib.animation' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l37">
+                  <tt><i>37</i> <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">animation</span><span class="p">,</span> <span class="n">cm</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'matplotlib.cm' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l37">
+                  <tt><i>37</i> <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">animation</span><span class="p">,</span> <span class="n">cm</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'mpl_toolkits.mplot3d.Axes3D' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l38">
+                  <tt><i>38</i> <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy.spatial.distance.mahalanobis' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l39">
+                  <tt><i>39</i> <span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">mahalanobis</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy.stats.special_ortho_group' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l40">
+                  <tt><i>40</i> <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">special_ortho_group</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sklearn.manifold.MDS' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l41">
+                  <tt><i>41</i> <span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">MDS</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'tqdm.tqdm' imported but unused:</p>
+               
+               <a href="decodanda.imports.source.html#l42">
+                  <tt><i>42</i> <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E402">
+               <span class="count sev-2">
+                  13
+               </span>
+               <strong>E402:</strong> module level import not at top of file
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.imports.source.html#l26">
+                  <tt><i>26</i> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.imports.source.html#l27">
+                  <tt><i>27</i> <span class="kn">from</span> <span class="nn">matplotlib.gridspec</span> <span class="kn">import</span> <span class="n">GridSpec</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.imports.source.html#l31">
+                  <tt><i>31</i> <span class="kn">import</span> <span class="nn">datetime</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.imports.source.html#l32">
+                  <tt><i>32</i> <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">combinations</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.imports.source.html#l33">
+                  <tt><i>33</i> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.imports.source.html#l35">
+                  <tt><i>35</i> <span class="kn">import</span> <span class="nn">matplotlib.transforms</span> <span class="k">as</span> <span class="nn">transforms</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.imports.source.html#l36">
+                  <tt><i>36</i> <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.imports.source.html#l37">
+                  <tt><i>37</i> <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">animation</span><span class="p">,</span> <span class="n">cm</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.imports.source.html#l38">
+                  <tt><i>38</i> <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.imports.source.html#l39">
+                  <tt><i>39</i> <span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">mahalanobis</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.imports.source.html#l40">
+                  <tt><i>40</i> <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">special_ortho_group</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.imports.source.html#l41">
+                  <tt><i>41</i> <span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">MDS</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.imports.source.html#l42">
+                  <tt><i>42</i> <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         </ul>
+      </div>
+   </body>
+</html>

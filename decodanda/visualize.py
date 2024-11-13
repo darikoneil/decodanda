@@ -3,7 +3,6 @@ import numpy as np
 from .imports import *
 from .utilities import *
 
-
 # Viz utilities
 
 def corrfunc(x, y, ax=None, **kws):

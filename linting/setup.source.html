@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>setup.py - flake8 annotated source</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+   </head>
+   <body>
+      <div id="masthead" class="sev-2"></div>
+      <div id="page">
+         <h1>
+            <a href="setup.report.html">
+               <img src="back.svg" alt="&#x2B05;">
+               setup.py source
+            </a>
+         </h1>
+
+         <div id="doc">
+            <div id="l1"
+               class="code sev- "><tt><i>1</i> <span class="kn">from</span> <span class="nn">setuptools</span> <span class="kn">import</span> <span class="n">find_packages</span><span class="p">,</span> <span class="n">setup</span></tt>
+            </div>
+            <div id="l2"
+               class="code sev- "><tt><i>2</i> &nbsp;</tt>
+            </div>
+            <div id="l3"
+               class="code sev- "><tt><i>3</i> <span class="n">VERSION</span> <span class="o">=</span> <span class="s1">&#39;0.7.2&#39;</span></tt>
+            </div>
+            <div id="l4"
+               class="code sev- "><tt><i>4</i> <span class="n">DESCRIPTION</span> <span class="o">=</span> <span class="s1">&#39;Geometric decoding of neural data with built-in best practices.&#39;</span></tt>
+            </div>
+            <div id="l5"
+               class="code sev-2  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-2">
+                        E501
+                     </span>
+                     Line too long (514 > 127 characters)</li>
+               
+               </ul><tt><i>5</i> <span class="n">LONG_DESCRIPTION</span> <span class="o">=</span> <span class="s1">&#39;Decodanda (dog latin for &quot;to be decoded&quot;) is a best-practices-made-easy Python package for decoding neural data. Decodanda is designed to expose a user-friendly and flexible interface for population activity decoding, with a series of built-in best practices to avoid the most common pitfalls. In addition, Decodanda exposes a series of functions to compute the Cross-Condition Generalization Performance (CCGP, Bernardi et al. 2020) for the geometrical analysis of neural population activity.&#39;</span></tt>
+            </div>
+            <div id="l6"
+               class="code sev- "><tt><i>6</i> &nbsp;</tt>
+            </div>
+            <div id="l7"
+               class="code sev- "><tt><i>7</i> <span class="n">setup</span><span class="p">(</span></tt>
+            </div>
+            <div id="l8"
+               class="code sev- "><tt><i>8</i>     <span class="n">name</span><span class="o">=</span><span class="s2">&quot;decodanda&quot;</span><span class="p">,</span></tt>
+            </div>
+            <div id="l9"
+               class="code sev- "><tt><i>9</i>     <span class="n">version</span><span class="o">=</span><span class="n">VERSION</span><span class="p">,</span></tt>
+            </div>
+            <div id="l10"
+               class="code sev- "><tt><i>10</i>     <span class="n">author</span><span class="o">=</span><span class="s2">&quot;Lorenzo Posani&quot;</span><span class="p">,</span></tt>
+            </div>
+            <div id="l11"
+               class="code sev- "><tt><i>11</i>     <span class="n">author_email</span><span class="o">=</span><span class="s2">&quot;lorenzo.posani@gmail.com&quot;</span><span class="p">,</span></tt>
+            </div>
+            <div id="l12"
+               class="code sev- "><tt><i>12</i>     <span class="n">description</span><span class="o">=</span><span class="n">DESCRIPTION</span><span class="p">,</span></tt>
+            </div>
+            <div id="l13"
+               class="code sev- "><tt><i>13</i>     <span class="n">long_description</span><span class="o">=</span><span class="n">LONG_DESCRIPTION</span><span class="p">,</span></tt>
+            </div>
+            <div id="l14"
+               class="code sev- "><tt><i>14</i>     <span class="n">packages</span><span class="o">=</span><span class="n">find_packages</span><span class="p">(),</span></tt>
+            </div>
+            <div id="l15"
+               class="code sev- "><tt><i>15</i>     <span class="n">install_requires</span><span class="o">=</span><span class="p">[</span></tt>
+            </div>
+            <div id="l16"
+               class="code sev- "><tt><i>16</i>         <span class="s1">&#39;matplotlib&gt;=3.3.4&#39;</span><span class="p">,</span> <span class="s1">&#39;numpy&gt;=1.20.1&#39;</span><span class="p">,</span> <span class="s1">&#39;pandas&gt;=1.4.0&#39;</span><span class="p">,</span> <span class="s1">&#39;scikit_learn&gt;=0.24.1&#39;</span><span class="p">,</span></tt>
+            </div>
+            <div id="l17"
+               class="code sev- "><tt><i>17</i>         <span class="s1">&#39;scipy&gt;=1.6.1&#39;</span><span class="p">,</span> <span class="s1">&#39;seaborn&gt;=0.11.1&#39;</span><span class="p">,</span> <span class="s1">&#39;tqdm&gt;=4.58.0&#39;</span><span class="p">,</span> <span class="s1">&#39;h5py&gt;=3.10.0&#39;</span><span class="p">],</span></tt>
+            </div>
+            <div id="l18"
+               class="code sev-2  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-2">
+                        E501
+                     </span>
+                     Line too long (133 > 127 characters)</li>
+               
+               </ul><tt><i>18</i>     <span class="n">keywords</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;python&#39;</span><span class="p">,</span> <span class="s1">&#39;decoding&#39;</span><span class="p">,</span> <span class="s1">&#39;neuroscience&#39;</span><span class="p">,</span> <span class="s1">&#39;ccgp&#39;</span><span class="p">,</span> <span class="s1">&#39;neural activity&#39;</span><span class="p">,</span> <span class="s1">&#39;population activity&#39;</span><span class="p">,</span> <span class="s1">&#39;neural decoding&#39;</span><span class="p">,</span> <span class="s1">&#39;geometry&#39;</span><span class="p">],</span></tt>
+            </div>
+            <div id="l19"
+               class="code sev- "><tt><i>19</i>     <span class="n">url</span><span class="o">=</span><span class="s2">&quot;https://github.com/lposani/decodanda&quot;</span><span class="p">,</span></tt>
+            </div>
+            <div id="l20"
+               class="code sev- "><tt><i>20</i>     <span class="n">classifiers</span><span class="o">=</span><span class="p">[</span></tt>
+            </div>
+            <div id="l21"
+               class="code sev- "><tt><i>21</i>         <span class="s2">&quot;Programming Language :: Python :: 3.8&quot;</span><span class="p">,</span></tt>
+            </div>
+            <div id="l22"
+               class="code sev- "><tt><i>22</i>         <span class="s2">&quot;License :: OSI Approved :: GNU General Public License v3 (GPLv3)&quot;</span><span class="p">,</span></tt>
+            </div>
+            <div id="l23"
+               class="code sev- "><tt><i>23</i>     <span class="p">],</span></tt>
+            </div>
+            <div id="l24"
+               class="code sev- "><tt><i>24</i> <span class="p">)</span></tt>
+            </div>
+            
+         </div>
+      </div>
+   </body>
+</html>

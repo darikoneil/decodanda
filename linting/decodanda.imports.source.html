@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>decodanda\imports.py - flake8 annotated source</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+   </head>
+   <body>
+      <div id="masthead" class="sev-1"></div>
+      <div id="page">
+         <h1>
+            <a href="decodanda.imports.report.html">
+               <img src="back.svg" alt="&#x2B05;">
+               decodanda\imports.py source
+            </a>
+         </h1>
+
+         <div id="doc">
+            <div id="l1"
+               class="code sev- "><tt><i>1</i> <span class="c1"># standard stuff</span></tt>
+            </div>
+            <div id="l2"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'itertools' imported but unused</li>
+               
+               </ul><tt><i>2</i> <span class="kn">import</span> <span class="nn">itertools</span></tt>
+            </div>
+            <div id="l3"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'types' imported but unused</li>
+               
+               </ul><tt><i>3</i> <span class="kn">import</span> <span class="nn">types</span></tt>
+            </div>
+            <div id="l4"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'copy.deepcopy' imported but unused</li>
+               
+               </ul><tt><i>4</i> <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span></tt>
+            </div>
+            <div id="l5"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'functools.partial' imported but unused</li>
+               
+               </ul><tt><i>5</i> <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span></tt>
+            </div>
+            <div id="l6"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'math.ceil' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'math.floor' imported but unused</li>
+               
+               </ul><tt><i>6</i> <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">ceil</span><span class="p">,</span> <span class="n">floor</span></tt>
+            </div>
+            <div id="l7"
+               class="code sev- "><tt><i>7</i> <span class="c1"># parallelization stuff</span></tt>
+            </div>
+            <div id="l8"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'multiprocessing.Pool' imported but unused</li>
+               
+               </ul><tt><i>8</i> <span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span></tt>
+            </div>
+            <div id="l9"
+               class="code sev- "><tt><i>9</i> &nbsp;</tt>
+            </div>
+            <div id="l10"
+               class="code sev- "><tt><i>10</i> <span class="c1"># data reading stuff</span></tt>
+            </div>
+            <div id="l11"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'h5py' imported but unused</li>
+               
+               </ul><tt><i>11</i> <span class="kn">import</span> <span class="nn">h5py</span></tt>
+            </div>
+            <div id="l12"
+               class="code sev- "><tt><i>12</i> <span class="c1"># visualization stuff</span></tt>
+            </div>
+            <div id="l13"
+               class="code sev- "><tt><i>13</i> <span class="kn">import</span> <span class="nn">matplotlib</span> <span class="k">as</span> <span class="nn">mpl</span></tt>
+            </div>
+            <div id="l14"
+               class="code sev- "><tt><i>14</i> <span class="c1"># matrix stuff</span></tt>
+            </div>
+            <div id="l15"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'numpy as np' imported but unused</li>
+               
+               </ul><tt><i>15</i> <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span></tt>
+            </div>
+            <div id="l16"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'pandas as pd' imported but unused</li>
+               
+               </ul><tt><i>16</i> <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span></tt>
+            </div>
+            <div id="l17"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'scipy.stats' imported but unused</li>
+               
+               </ul><tt><i>17</i> <span class="kn">import</span> <span class="nn">scipy.stats</span></tt>
+            </div>
+            <div id="l18"
+               class="code sev- "><tt><i>18</i> <span class="c1"># learning stuff</span></tt>
+            </div>
+            <div id="l19"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'sklearn' imported but unused</li>
+               
+               </ul><tt><i>19</i> <span class="kn">import</span> <span class="nn">sklearn</span></tt>
+            </div>
+            <div id="l20"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'numpy.random.RandomState' imported but unused</li>
+               
+               </ul><tt><i>20</i> <span class="kn">from</span> <span class="nn">numpy.random</span> <span class="kn">import</span> <span class="n">RandomState</span></tt>
+            </div>
+            <div id="l21"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'scipy.spatial.distance.cdist' imported but unused</li>
+               
+               </ul><tt><i>21</i> <span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">cdist</span></tt>
+            </div>
+            <div id="l22"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'scipy.stats.linregress' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'scipy.stats.pearsonr' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'scipy.stats.ttest_1samp' imported but unused</li>
+               
+               </ul><tt><i>22</i> <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">linregress</span><span class="p">,</span> <span class="n">pearsonr</span><span class="p">,</span> <span class="n">ttest_1samp</span></tt>
+            </div>
+            <div id="l23"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'sklearn.svm.LinearSVC' imported but unused</li>
+               
+               </ul><tt><i>23</i> <span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span></tt>
+            </div>
+            <div id="l24"
+               class="code sev- "><tt><i>24</i> &nbsp;</tt>
+            </div>
+            <div id="l25"
+               class="code sev- "><tt><i>25</i> <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.autolayout&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span></tt>
+            </div>
+            <div id="l26"
+               class="code sev-2  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-2">
+                        E402
+                     </span>
+                     Module level import not at top of file</li>
+               
+               </ul><tt><i>26</i> <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span></tt>
+            </div>
+            <div id="l27"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'matplotlib.gridspec.GridSpec' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-2">
+                        E402
+                     </span>
+                     Module level import not at top of file</li>
+               
+               </ul><tt><i>27</i> <span class="kn">from</span> <span class="nn">matplotlib.gridspec</span> <span class="kn">import</span> <span class="n">GridSpec</span></tt>
+            </div>
+            <div id="l28"
+               class="code sev- "><tt><i>28</i> &nbsp;</tt>
+            </div>
+            <div id="l29"
+               class="code sev- "><tt><i>29</i> <span class="n">pltcolors</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;axes.prop_cycle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">by_key</span><span class="p">()[</span><span class="s1">&#39;color&#39;</span><span class="p">]</span></tt>
+            </div>
+            <div id="l30"
+               class="code sev- "><tt><i>30</i> <span class="n">pltcolors</span> <span class="o">=</span> <span class="n">pltcolors</span> <span class="o">*</span> <span class="mi">100</span></tt>
+            </div>
+            <div id="l31"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'datetime' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-2">
+                        E402
+                     </span>
+                     Module level import not at top of file</li>
+               
+               </ul><tt><i>31</i> <span class="kn">import</span> <span class="nn">datetime</span></tt>
+            </div>
+            <div id="l32"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'itertools.chain' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'itertools.combinations' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-2">
+                        E402
+                     </span>
+                     Module level import not at top of file</li>
+               
+               </ul><tt><i>32</i> <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">chain</span><span class="p">,</span> <span class="n">combinations</span></tt>
+            </div>
+            <div id="l33"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'typing.Optional' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'typing.Union' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-2">
+                        E402
+                     </span>
+                     Module level import not at top of file</li>
+               
+               </ul><tt><i>33</i> <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span></tt>
+            </div>
+            <div id="l34"
+               class="code sev- "><tt><i>34</i> &nbsp;</tt>
+            </div>
+            <div id="l35"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'matplotlib.transforms' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-2">
+                        E402
+                     </span>
+                     Module level import not at top of file</li>
+               
+               </ul><tt><i>35</i> <span class="kn">import</span> <span class="nn">matplotlib.transforms</span> <span class="k">as</span> <span class="nn">transforms</span></tt>
+            </div>
+            <div id="l36"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'seaborn as sns' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-2">
+                        E402
+                     </span>
+                     Module level import not at top of file</li>
+               
+               </ul><tt><i>36</i> <span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span></tt>
+            </div>
+            <div id="l37"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'matplotlib.animation' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'matplotlib.cm' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-2">
+                        E402
+                     </span>
+                     Module level import not at top of file</li>
+               
+               </ul><tt><i>37</i> <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">animation</span><span class="p">,</span> <span class="n">cm</span></tt>
+            </div>
+            <div id="l38"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'mpl_toolkits.mplot3d.Axes3D' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-2">
+                        E402
+                     </span>
+                     Module level import not at top of file</li>
+               
+               </ul><tt><i>38</i> <span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span></tt>
+            </div>
+            <div id="l39"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'scipy.spatial.distance.mahalanobis' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-2">
+                        E402
+                     </span>
+                     Module level import not at top of file</li>
+               
+               </ul><tt><i>39</i> <span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">mahalanobis</span></tt>
+            </div>
+            <div id="l40"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'scipy.stats.special_ortho_group' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-2">
+                        E402
+                     </span>
+                     Module level import not at top of file</li>
+               
+               </ul><tt><i>40</i> <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">special_ortho_group</span></tt>
+            </div>
+            <div id="l41"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'sklearn.manifold.MDS' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-2">
+                        E402
+                     </span>
+                     Module level import not at top of file</li>
+               
+               </ul><tt><i>41</i> <span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">MDS</span></tt>
+            </div>
+            <div id="l42"
+               class="code sev-1  le">
+               <ul class="violations">
+               
+                  <li>
+                     <span class="count sev-1">
+                        F401
+                     </span>
+                     'tqdm.tqdm' imported but unused</li>
+               
+                  <li>
+                     <span class="count sev-2">
+                        E402
+                     </span>
+                     Module level import not at top of file</li>
+               
+               </ul><tt><i>42</i> <span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span></tt>
+            </div>
+            
+         </div>
+      </div>
+   </body>
+</html>
