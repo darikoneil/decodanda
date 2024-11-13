@@ -16,7 +16,7 @@ ignore =
     W503,
     W605,
     TRY003
-htmldir = linting_report
+htmldir = reports/linting
 unused-arguments-ignore-stub-functions = True
 unused-arguments-ignore-dunder = True
 unused-arguments-ignore-variadic-names = True
