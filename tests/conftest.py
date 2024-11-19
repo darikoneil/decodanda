@@ -105,7 +105,7 @@ class Results:
 
 
 @dataclass
-class TrainedDecoder:
+class TrainedDecodanda:
     """
     Encapsulation of a trained decoder for providing to test functions.
     """
@@ -155,15 +155,15 @@ class DataRegistry:
         return register_data
 
 
-class DecoderRegistry:
+class DecodandaRegistry:
     """
     Registry of decoder constructors to be accessed by the trained decoder registry (not the test functions).
     """
-    # persistent registry of synthetic data
+    # persistent registry of decoder constructors
     __registry = {}
 
     @classmethod
-    def get(cls, key: str, data: Data) -> TrainedDecoder:
+    def get(cls, key: str, data: Data) -> TrainedDecodanda:
         if key in cls.__registry:
             return cls.__registry.get(key)(data)
         else:
@@ -182,7 +182,7 @@ class DecoderRegistry:
         return register_data
 
 
-class TrainedDecoderRegistry:
+class TrainedDecodandaRegistry:
     """
     Persistent registry of trained decoders to be accessed by test functions without
     the need to retrain decoders for each test.
@@ -195,7 +195,7 @@ class TrainedDecoderRegistry:
         if keys not in cls.__registry:
             data_key, decoder_key = keys
             data = DataRegistry.get(data_key)
-            decoder = DecoderRegistry.get(decoder_key, data)
+            decoder = DecodandaRegistry.get(decoder_key, data)
             cls._train(decoder)
             cls.__registry[keys] = decoder
 
@@ -203,7 +203,7 @@ class TrainedDecoderRegistry:
 
 
     @staticmethod
-    def _train(decoder: TrainedDecoder) -> None:
+    def _train(decoder: TrainedDecodanda) -> None:
 
         if decoder.trained:  # safeguard double-training
             return
@@ -330,8 +330,8 @@ def tangled_data() -> Data:
 
 
 # noinspection DuplicatedCode
-@DecoderRegistry.register()
-def base_decoder(data: Data) -> TrainedDecoder:
+@DecodandaRegistry.register()
+def base_decoder(data: Data) -> TrainedDecodanda:
     """
     Standard decodanda decoder for testing
     LinearSVC--liblinear implementation, squared hinge loss, primal optimization, regularized intercept term
@@ -348,18 +348,18 @@ def base_decoder(data: Data) -> TrainedDecoder:
         "training_fraction": 0.75,
     }
     decoder = Decodanda(data=data.data, **init_parameters)
-    return TrainedDecoder(data=data,
-                          decoder=decoder,
-                          dichotomies=decoder.all_dichotomies(balanced=True, semantic_names=True),
-                          key=(data.key, "base"),
-                          results=Results(results=None),
-                          trained=False,
-                          parameters=parameters)
+    return TrainedDecodanda(data=data,
+                            decoder=decoder,
+                            dichotomies=decoder.all_dichotomies(balanced=True, semantic_names=True),
+                            key=(data.key, "base"),
+                            results=Results(results=None),
+                            trained=False,
+                            parameters=parameters)
 
 
 # noinspection DuplicatedCode
-@DecoderRegistry.register()
-def svc_decoder(data: Data) -> TrainedDecoder:
+@DecodandaRegistry.register()
+def svc_decoder(data: Data) -> TrainedDecodanda:
     """
     Standard linear support vector classifier. SVC--libsvm implementation, hinge loss
     """
@@ -375,18 +375,18 @@ def svc_decoder(data: Data) -> TrainedDecoder:
         "training_fraction": 0.75,
     }
     decoder = Decodanda(data=data.data, **init_parameters)
-    return TrainedDecoder(data=data,
-                          decoder=decoder,
-                          dichotomies=decoder.all_dichotomies(balanced=True, semantic_names=True),
-                          key=(data.key, "base"),
-                          results=Results(results=None),
-                          trained=False,
-                          parameters=parameters)
+    return TrainedDecodanda(data=data,
+                            decoder=decoder,
+                            dichotomies=decoder.all_dichotomies(balanced=True, semantic_names=True),
+                            key=(data.key, "base"),
+                            results=Results(results=None),
+                            trained=False,
+                            parameters=parameters)
 
 
 # noinspection DuplicatedCode
-@DecoderRegistry.register()
-def nonlinear_decoder(data: Data) -> TrainedDecoder:
+@DecodandaRegistry.register()
+def nonlinear_decoder(data: Data) -> TrainedDecodanda:
     init_parameters = {
         "classifier": SVC(C=1.0, kernel='poly', degree=3, gamma=2, max_iter=5000),
         "conditions": data.conditions,
@@ -399,18 +399,18 @@ def nonlinear_decoder(data: Data) -> TrainedDecoder:
         "training_fraction": 0.75,
     }
     decoder = Decodanda(data=data.data, **init_parameters)
-    return TrainedDecoder(data=data,
-                          decoder=decoder,
-                          dichotomies=decoder.all_dichotomies(balanced=True, semantic_names=True),
-                          key=(data.key, "base"),
-                          results=Results(results=None),
-                          trained=False,
-                          parameters=parameters)
+    return TrainedDecodanda(data=data,
+                            decoder=decoder,
+                            dichotomies=decoder.all_dichotomies(balanced=True, semantic_names=True),
+                            key=(data.key, "base"),
+                            results=Results(results=None),
+                            trained=False,
+                            parameters=parameters)
 
 
 # noinspection DuplicatedCode
-@DecoderRegistry.register()
-def unbalancedbase_decoder(data: Data) -> TrainedDecoder:
+@DecodandaRegistry.register()
+def unbalancedbase_decoder(data: Data) -> TrainedDecodanda:
     """
     Standard decodanda decoder for testing
     LinearSVC--liblinear implementation, squared hinge loss, primal optimization, regularized intercept term
@@ -430,18 +430,18 @@ def unbalancedbase_decoder(data: Data) -> TrainedDecoder:
         "training_fraction": 0.75,
     }
     decoder = Decodanda(data=data.data, **init_parameters)
-    return TrainedDecoder(data=data,
-                          decoder=decoder,
-                          dichotomies=decoder.all_dichotomies(balanced=False, semantic_names=True),
-                          key=(data.key, "base"),
-                          results=Results(results=None),
-                          trained=False,
-                          parameters=parameters)
+    return TrainedDecodanda(data=data,
+                            decoder=decoder,
+                            dichotomies=decoder.all_dichotomies(balanced=False, semantic_names=True),
+                            key=(data.key, "base"),
+                            results=Results(results=None),
+                            trained=False,
+                            parameters=parameters)
 
 
 # noinspection DuplicatedCode
-@DecoderRegistry.register()
-def unbalancedsvc_decoder(data: Data) -> TrainedDecoder:
+@DecodandaRegistry.register()
+def unbalancedsvc_decoder(data: Data) -> TrainedDecodanda:
     """
     Standard linear support vector classifier. SVC--libsvm implementation, hinge loss
     """
@@ -459,18 +459,18 @@ def unbalancedsvc_decoder(data: Data) -> TrainedDecoder:
         "training_fraction": 0.75,
     }
     decoder = Decodanda(data=data.data, **init_parameters)
-    return TrainedDecoder(data=data,
-                          decoder=decoder,
-                          dichotomies=decoder.all_dichotomies(balanced=False, semantic_names=True),
-                          key=(data.key, "base"),
-                          results=Results(results=None),
-                          trained=False,
-                          parameters=parameters)
+    return TrainedDecodanda(data=data,
+                            decoder=decoder,
+                            dichotomies=decoder.all_dichotomies(balanced=False, semantic_names=True),
+                            key=(data.key, "base"),
+                            results=Results(results=None),
+                            trained=False,
+                            parameters=parameters)
 
 
 # noinspection DuplicatedCode
-@DecoderRegistry.register()
-def unbalancednonlinear_decoder(data: Data) -> TrainedDecoder:
+@DecodandaRegistry.register()
+def unbalancednonlinear_decoder(data: Data) -> TrainedDecodanda:
     unbalanced_conditions = dict(data.conditions)
     unbalanced_conditions.pop("stimulus")
     init_parameters = {
@@ -485,13 +485,13 @@ def unbalancednonlinear_decoder(data: Data) -> TrainedDecoder:
         "training_fraction": 0.75,
     }
     decoder = Decodanda(data=data.data, **init_parameters)
-    return TrainedDecoder(data=data,
-                          decoder=decoder,
-                          dichotomies=decoder.all_dichotomies(balanced=False, semantic_names=True),
-                          key=(data.key, "base"),
-                          results=Results(results=None),
-                          trained=False,
-                          parameters=parameters)
+    return TrainedDecodanda(data=data,
+                            decoder=decoder,
+                            dichotomies=decoder.all_dichotomies(balanced=False, semantic_names=True),
+                            key=(data.key, "base"),
+                            results=Results(results=None),
+                            trained=False,
+                            parameters=parameters)
 
 
 """
@@ -508,4 +508,4 @@ def data(request) -> Data:
 
 @pytest.fixture(scope="function")
 def trained_decoder(request):
-    return TrainedDecoderRegistry.get(request.param)
+    return TrainedDecodandaRegistry.get(request.param)
