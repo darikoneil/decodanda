@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>flake8 violations: decodanda\classes.py</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+<script>
+function bindHandler(link) {
+   var code = link.getAttribute('data-code');
+   var key = location.pathname + '#' + code;
+
+   var ul = link.parentNode.querySelector('.details');
+   if (sessionStorage[key] != 'open') {
+      ul.style.display = 'none';
+   }
+   link.addEventListener('click', function (event) {
+      if (!ul.style.display || ul.style.display == 'none') {
+         ul.style.display = 'block';
+         sessionStorage[key] = 'open';
+      } else {
+         ul.style.display = 'none';
+         sessionStorage[key] = 'closed';
+      }
+   });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+   var links = document.querySelectorAll('#index > li > a');
+   for (var i = 0; i < links.length; i++) {
+      bindHandler(links[i]);
+   }
+});
+</script>
+   </head>
+   <body>
+      <div id="masthead" class="sev-1"></div>
+      <div id="page">
+         <p id="srclink">
+            <a title="View full annotated source"
+               href="decodanda.classes.source.html">
+               <img src="file.svg" alt="&#x2261;">
+            </a></p>
+         <h1>
+            <a href="index.html">
+               <img src="back.svg" alt="&#x2B05;">
+               decodanda\classes.py
+            </a>
+         </h1>
+
+         <ul id="index">
+         
+         <li>
+            <a data-code="F405">
+               <span class="count sev-1">
+                  63
+               </span>
+               <strong>F405:</strong> 'Optional' may be undefined, or defined from star imports: .imports
+               
+                  (and 10 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l44">
+                  <tt><i>44</i>                  <span class="n">trial_chunk</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'LinearSVC' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l231">
+                  <tt><i>231</i>             <span class="n">classifier</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">(</span><span class="n">dual</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">C</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">class_weight</span><span class="o">=</span><span class="s1">&#39;balanced&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sklearn' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l313">
+                  <tt><i>313</i>         <span class="bp">self</span><span class="o">.</span><span class="n">classifier</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">base</span><span class="o">.</span><span class="n">clone</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">classifier</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l371">
+                  <tt><i>371</i>                 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Condition A&#39;</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l389">
+                  <tt><i>389</i>                 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Condition B&#39;</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l554">
+                  <tt><i>554</i>                          <span class="n">ndata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l557">
+                  <tt><i>557</i>                          <span class="n">testing_trials</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l558">
+                  <tt><i>558</i>                          <span class="n">dic_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l559">
+                  <tt><i>559</i>                          <span class="n">subsample</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'tqdm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l663">
+                  <tt><i>663</i>             <span class="n">count</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">cross_validations</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Pool' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l669">
+                  <tt><i>669</i>             <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">()</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l707">
+                  <tt><i>707</i>                        <span class="n">ndata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'tqdm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l809">
+                  <tt><i>809</i>             <span class="n">iterable</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">resamplings</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1027">
+                  <tt><i>1027</i>                               <span class="n">ndata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1030">
+                  <tt><i>1030</i>                               <span class="n">testing_trials</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1032">
+                  <tt><i>1032</i>                               <span class="n">dic_key</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1033">
+                  <tt><i>1033</i>                               <span class="n">subsample</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'tqdm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1159">
+                  <tt><i>1159</i>             <span class="n">count</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">nshuffles</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1187">
+                  <tt><i>1187</i>                             <span class="n">ndata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'tqdm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1295">
+                  <tt><i>1295</i>             <span class="n">count</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">nshuffles</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'tqdm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1328">
+                  <tt><i>1328</i>             <span class="n">count</span> <span class="o">=</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">nshuffles</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1348">
+                  <tt><i>1348</i>                <span class="n">ndata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1349">
+                  <tt><i>1349</i>                <span class="n">subsample</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1353">
+                  <tt><i>1353</i>                <span class="n">testing_trials</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1355">
+                  <tt><i>1355</i>                <span class="n">ax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1355">
+                  <tt><i>1355</i>                <span class="n">ax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1501">
+                  <tt><i>1501</i>                 <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">+</span> <span class="mf">1.8</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">perfs</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="mf">3.5</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1510">
+                  <tt><i>1510</i>              <span class="n">ndata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1513">
+                  <tt><i>1513</i>              <span class="n">ax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1513">
+                  <tt><i>1513</i>              <span class="n">ax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1603">
+                  <tt><i>1603</i>                 <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">+</span> <span class="mf">1.8</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">semantic_dics</span><span class="p">),</span> <span class="mf">3.5</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1612">
+                  <tt><i>1612</i>            <span class="n">ax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1612">
+                  <tt><i>1612</i>            <span class="n">ax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Axes</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1631">
+                  <tt><i>1631</i>                 <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">+</span> <span class="mf">1.8</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">semantic_dics</span><span class="p">),</span> <span class="mf">3.5</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1641">
+                  <tt><i>1641</i>                                 <span class="n">ndata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1721">
+                  <tt><i>1721</i>                 <span class="n">f</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1725">
+                  <tt><i>1725</i>                 <span class="n">f</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1739">
+                  <tt><i>1739</i>             <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'cm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1745">
+                  <tt><i>1745</i>                                    <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)),</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'cm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1749">
+                  <tt><i>1749</i>                                    <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)),</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'cm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1753">
+                  <tt><i>1753</i>                                    <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)),</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'cm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1765">
+                  <tt><i>1765</i>                                    <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)),</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'cm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1769">
+                  <tt><i>1769</i>                                    <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)),</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'cm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1773">
+                  <tt><i>1773</i>                                    <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)),</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1792">
+                  <tt><i>1792</i>                                   <span class="n">ndata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1793">
+                  <tt><i>1793</i>                                   <span class="n">subsample</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1796">
+                  <tt><i>1796</i>                                   <span class="n">semantic_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'tqdm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1852">
+                  <tt><i>1852</i>         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dic</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">all_dics</span><span class="p">)):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1867">
+                  <tt><i>1867</i>             <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1877">
+                  <tt><i>1877</i>             <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'cm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1883">
+                  <tt><i>1883</i>                                <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)),</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'cm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1887">
+                  <tt><i>1887</i>                                <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)),</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1902">
+                  <tt><i>1902</i>                                   <span class="n">ndata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Optional' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1905">
+                  <tt><i>1905</i>                                   <span class="n">semantic_names</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'tqdm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1955">
+                  <tt><i>1955</i>         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dic</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">enumerate</span><span class="p">(</span><span class="n">all_dics</span><span class="p">)):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1968">
+                  <tt><i>1968</i>             <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1978">
+                  <tt><i>1978</i>             <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'cm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1984">
+                  <tt><i>1984</i>                                <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)),</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'cm' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l1988">
+                  <tt><i>1988</i>                                <span class="n">color</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">cool</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)),</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'chain' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l2192">
+                  <tt><i>2192</i>         <span class="n">powerset</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">combinations</span><span class="p">(</span><span class="n">conditions</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">conditions</span><span class="p">))))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'combinations' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l2192">
+                  <tt><i>2192</i>         <span class="n">powerset</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">chain</span><span class="o">.</span><span class="n">from_iterable</span><span class="p">(</span><span class="n">combinations</span><span class="p">(</span><span class="n">conditions</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">conditions</span><span class="p">))))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'Pool' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l2455">
+                  <tt><i>2455</i>         <span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">()</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'RandomState' may be undefined, or defined from star imports: .imports:</p>
+               
+               <a href="decodanda.classes.source.html#l2580">
+                  <tt><i>2580</i>         <span class="bp">self</span><span class="o">.</span><span class="n">randomstate</span> <span class="o">=</span> <span class="n">RandomState</span><span class="p">(</span><span class="n">i</span><span class="p">)</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="F403">
+               <span class="count sev-1">
+                  1
+               </span>
+               <strong>F403:</strong> 'from .imports import *' used; unable to detect undefined names
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.classes.source.html#l21">
+                  <tt><i>21</i> <span class="kn">from</span> <span class="nn">.imports</span> <span class="kn">import</span> <span class="o">*</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="F841">
+               <span class="count sev-1">
+                  1
+               </span>
+               <strong>F841:</strong> local variable 't' is assigned to but never used
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.classes.source.html#l2505">
+                  <tt><i>2505</i>             <span class="n">t</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">)</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E501">
+               <span class="count sev-2">
+                  28
+               </span>
+               <strong>E501:</strong> line too long (139 > 127 characters)
+               
+                  (and 17 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>Line too long (139 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l139">
+                  <tt><i>139</i> <span class="sd">            This is the set of features we use to decode. Can be continuous (e.g., calcium fluorescence) or discrete (e.g., spikes) values.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (144 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l572">
+                  <tt><i>572</i> <span class="sd">                The dichotomy to be decoded, expressed in a double-list binary format, e.g. [[&#39;10&#39;, &#39;11&#39;], [&#39;01&#39;, &#39;00&#39;]], or as a variable name.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (145 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l580">
+                  <tt><i>580</i> <span class="sd">                if True, population vectors for each condition are sampled in a random way compatibly with a null model for decoding performance.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (138 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l584">
+                  <tt><i>584</i> <span class="sd">                if specified, data sampled from the specified trial numbers will be used for testing, and the remaining ones for training.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (138 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l586">
+                  <tt><i>586</i> <span class="sd">                if specified, weights of the decoding analysis will be saved in self.decoding_weights using dic_key as the dictionary key.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (173 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l721">
+                  <tt><i>721</i> <span class="sd">                The dichotomy corresponding to the variable to be tested, expressed in a double-list binary format, e.g. [[&#39;10&#39;, &#39;11&#39;], [&#39;01&#39;, &#39;00&#39;]], or as a variable name.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (138 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l723">
+                  <tt><i>723</i> <span class="sd">                The number of iterations for each decoding analysis. The returned performance value is the average over these resamplings.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (154 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l727">
+                  <tt><i>727</i> <span class="sd">                The maximum semantic distance (number of variables that change value) between conditions in the held-out pair used to test the classifier.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (399 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l729">
+                  <tt><i>729</i> <span class="sd">                The way conditions are split in training and testing. OneOut (default), name of a variable, or dichotomy in the double-list binary format. If OneOut is used, one pair of conditions is held out and the rest is used to train the classifier; if a variable is specified, then CCGP is computed specifically across that variable, balancing any third (or further) variables during sampling.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (204 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l731">
+                  <tt><i>731</i> <span class="sd">                If True, the data is sampled according to geometrical null model for CCGP that keeps variables decodable but breaks the generalization. See Bernardi et al 2020 &amp; Boyle, Posani et al. 2023.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (144 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1050">
+                  <tt><i>1050</i> <span class="sd">                The dichotomy to be decoded, expressed in a double-list binary format, e.g. [[&#39;10&#39;, &#39;11&#39;], [&#39;01&#39;, &#39;00&#39;]], or as a variable name.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (161 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1062">
+                  <tt><i>1062</i> <span class="sd">                if True, invidual cross-validation values are returned in a list. Otherwise, the average performance over the cross-validation folds is returned.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (138 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1064">
+                  <tt><i>1064</i> <span class="sd">                if specified, data sampled from the specified trial numbers will be used for testing, and the remaining ones for training.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (138 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1068">
+                  <tt><i>1068</i> <span class="sd">                if specified, weights of the decoding analysis will be saved in self.decoding_weights using dic_key as the dictionary key.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (129 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1194">
+                  <tt><i>1194</i> <span class="sd">                Function that performs the cross-condition generalization performance analysis (CCGP, Bernardi et al. 2020, Cell)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (181 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1206">
+                  <tt><i>1206</i> <span class="sd">                        The dichotomy corresponding to the variable to be tested, expressed in a double-list binary format, e.g. [[&#39;10&#39;, &#39;11&#39;], [&#39;01&#39;, &#39;00&#39;]], or as a variable name.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (146 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1208">
+                  <tt><i>1208</i> <span class="sd">                        The number of iterations for each decoding analysis. The returned performance value is the average over these resamplings.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (162 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1214">
+                  <tt><i>1214</i> <span class="sd">                        The maximum semantic distance (number of variables that change value) between conditions in the held-out pair used to test the classifier.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (407 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1216">
+                  <tt><i>1216</i> <span class="sd">                        The way conditions are split in training and testing. OneOut (default), name of a variable, or dichotomy in the double-list binary format. If OneOut is used, one pair of conditions is held out and the rest is used to train the classifier; if a variable is specified, then CCGP is computed specifically across that variable, balancing any third (or further) variables during sampling.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (161 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1218">
+                  <tt><i>1218</i> <span class="sd">                        If True, returns all the individual performances for cross-conditions train-test splits, otherwise returns the average over combinations.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (144 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1223">
+                  <tt><i>1223</i> <span class="sd">                    ccgp: mean of performance values for each cross-condition training-testing split (or list, if ``return_combinations=True``).</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (157 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1408">
+                  <tt><i>1408</i> <span class="sd">            if True, invidual cross-validation values are returned in a list. Otherwise, the average performance over the cross-validation folds is returned.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (134 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1410">
+                  <tt><i>1410</i> <span class="sd">            if specified, data sampled from the specified trial numbers will be used for testing, and the remaining ones for training.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (160 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1424">
+                  <tt><i>1424</i> <span class="sd">                a dictionary containing the decoding performances for all variables in the form of ``{var_name_1: performance1, var_name_2: performance2, ...}``</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (162 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1426">
+                  <tt><i>1426</i> <span class="sd">                a dictionary containing an array of null model decoding performance for each variable in the form ``{var_name_1: [...], var_name_2: [...], ...}``.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (138 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1531">
+                  <tt><i>1531</i> <span class="sd">                The number of iterations for each decoding analysis. The returned performance value is the average over these resamplings.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (154 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l1537">
+                  <tt><i>1537</i> <span class="sd">                The maximum semantic distance (number of variables that change value) between conditions in the held-out pair used to test the classifier.</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Line too long (131 > 127 characters):</p>
+               
+               <a href="decodanda.classes.source.html#l2358">
+                  <tt><i>2358</i>             <span class="c1"># brain_means = np.vstack([np.nanmean(self.conditioned_rasters[key][i], 0) for key in self.conditioned_rasters.keys()])</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E800">
+               <span class="count sev-2">
+                  11
+               </span>
+               <strong>E800:</strong> Found commented out code
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.classes.source.html#l1701">
+                  <tt><i>1701</i>             <span class="c1"># print(i, res)</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1709">
+                  <tt><i>1709</i>             <span class="c1"># print(dic)</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1714">
+                  <tt><i>1714</i>             <span class="c1"># print(i, res)</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2358">
+                  <tt><i>2358</i>             <span class="c1"># brain_means = np.vstack([np.nanmean(self.conditioned_rasters[key][i], 0) for key in self.conditioned_rasters.keys()])</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2359">
+                  <tt><i>2359</i>             <span class="c1"># mean_centroid = np.nanmean(brain_means, axis=0)</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2365">
+                  <tt><i>2365</i>                 <span class="c1"># mean = np.nanmean(raster, 0)</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2366">
+                  <tt><i>2366</i>                 <span class="c1"># randomdir = np.random.rand()-0.5</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2367">
+                  <tt><i>2367</i>                 <span class="c1"># randomdir = randomdir/np.sqrt(np.dot(randomdir, randomdir))</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2368">
+                  <tt><i>2368</i>                 <span class="c1"># vector_from_mean_centroid = mean - mean_centroid</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2369">
+                  <tt><i>2369</i>                 <span class="c1"># distance_from_mean_centroid = np.sqrt(np.dot(vector_from_mean_centroid, vector_from_mean_centroid))</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2370">
+                  <tt><i>2370</i>                 <span class="c1"># raster = raster - vector_from_mean_centroid + randomdir*distance_from_mean_centroid</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E721">
+               <span class="count sev-2">
+                  7
+               </span>
+               <strong>E721:</strong> do not compare types, for exact checks use `is` / `is not`, for instance checks use `isinstance()`
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.classes.source.html#l203">
+                  <tt><i>203</i>         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">list</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l210">
+                  <tt><i>210</i>         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">dict</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l647">
+                  <tt><i>647</i>         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dichotomy</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l795">
+                  <tt><i>795</i>         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dichotomy</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l878">
+                  <tt><i>878</i>             <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">split_rule</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l964">
+                  <tt><i>964</i>         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dichotomy</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1137">
+                  <tt><i>1137</i>         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">dichotomy</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span class="p">:</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E126">
+               <span class="count sev-2">
+                  3
+               </span>
+               <strong>E126:</strong> continuation line over-indented for hanging indent
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.classes.source.html#l1690">
+                  <tt><i>1690</i>                 <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1849">
+                  <tt><i>1849</i>                 <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1952">
+                  <tt><i>1952</i>                 <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">semantic_overlap</span><span class="p">))</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="CCE001">
+               <span class="count sev-2">
+                  2
+               </span>
+               <strong>CCE001:</strong> Decodanda._one_cv_step should be after Decodanda.balanced_resample
+               
+                  (and 1 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>Decodanda._one_cv_step should be after Decodanda.balanced_resample:</p>
+               
+               <a href="decodanda.classes.source.html#l337">
+                  <tt><i>337</i>     <span class="k">def</span> <span class="nf">_one_cv_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">training_fraction</span><span class="p">,</span> <span class="n">ndata</span><span class="p">,</span> <span class="n">shuffled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dic_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Decodanda._find_nonsemantic_dichotomies should be after Decodanda.all_dichotomies:</p>
+               
+               <a href="decodanda.classes.source.html#l2151">
+                  <tt><i>2151</i>     <span class="k">def</span> <span class="nf">_find_nonsemantic_dichotomies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E302">
+               <span class="count sev-2">
+                  1
+               </span>
+               <strong>E302:</strong> expected 2 blank lines, found 1
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.classes.source.html#l33">
+                  <tt><i>33</i> <span class="k">class</span> <span class="nc">Decodanda</span><span class="p">:</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="ANN001">
+               <span class="count sev-3">
+                  65
+               </span>
+               <strong>ANN001:</strong> Missing type annotation for function argument 'training_raster_A'
+               
+                  (and 47 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>Missing type annotation for function argument 'label_A':</p>
+               
+               <a href="decodanda.classes.source.html#l305">
+                  <tt><i>305</i>     <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_raster_A</span><span class="p">,</span> <span class="n">training_raster_B</span><span class="p">,</span> <span class="n">label_A</span><span class="p">,</span> <span class="n">label_B</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'label_B':</p>
+               
+               <a href="decodanda.classes.source.html#l305">
+                  <tt><i>305</i>     <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_raster_A</span><span class="p">,</span> <span class="n">training_raster_B</span><span class="p">,</span> <span class="n">label_A</span><span class="p">,</span> <span class="n">label_B</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'training_raster_A':</p>
+               
+               <a href="decodanda.classes.source.html#l305">
+                  <tt><i>305</i>     <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_raster_A</span><span class="p">,</span> <span class="n">training_raster_B</span><span class="p">,</span> <span class="n">label_A</span><span class="p">,</span> <span class="n">label_B</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'training_raster_B':</p>
+               
+               <a href="decodanda.classes.source.html#l305">
+                  <tt><i>305</i>     <span class="k">def</span> <span class="nf">_train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">training_raster_A</span><span class="p">,</span> <span class="n">training_raster_B</span><span class="p">,</span> <span class="n">label_A</span><span class="p">,</span> <span class="n">label_B</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'label_A':</p>
+               
+               <a href="decodanda.classes.source.html#l319">
+                  <tt><i>319</i>     <span class="k">def</span> <span class="nf">_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testing_raster_A</span><span class="p">,</span> <span class="n">testing_raster_B</span><span class="p">,</span> <span class="n">label_A</span><span class="p">,</span> <span class="n">label_B</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'label_B':</p>
+               
+               <a href="decodanda.classes.source.html#l319">
+                  <tt><i>319</i>     <span class="k">def</span> <span class="nf">_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testing_raster_A</span><span class="p">,</span> <span class="n">testing_raster_B</span><span class="p">,</span> <span class="n">label_A</span><span class="p">,</span> <span class="n">label_B</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'testing_raster_A':</p>
+               
+               <a href="decodanda.classes.source.html#l319">
+                  <tt><i>319</i>     <span class="k">def</span> <span class="nf">_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testing_raster_A</span><span class="p">,</span> <span class="n">testing_raster_B</span><span class="p">,</span> <span class="n">label_A</span><span class="p">,</span> <span class="n">label_B</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'testing_raster_B':</p>
+               
+               <a href="decodanda.classes.source.html#l319">
+                  <tt><i>319</i>     <span class="k">def</span> <span class="nf">_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">testing_raster_A</span><span class="p">,</span> <span class="n">testing_raster_B</span><span class="p">,</span> <span class="n">label_A</span><span class="p">,</span> <span class="n">label_B</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'dic':</p>
+               
+               <a href="decodanda.classes.source.html#l337">
+                  <tt><i>337</i>     <span class="k">def</span> <span class="nf">_one_cv_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">training_fraction</span><span class="p">,</span> <span class="n">ndata</span><span class="p">,</span> <span class="n">shuffled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dic_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'dic_key':</p>
+               
+               <a href="decodanda.classes.source.html#l337">
+                  <tt><i>337</i>     <span class="k">def</span> <span class="nf">_one_cv_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">training_fraction</span><span class="p">,</span> <span class="n">ndata</span><span class="p">,</span> <span class="n">shuffled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dic_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ndata':</p>
+               
+               <a href="decodanda.classes.source.html#l337">
+                  <tt><i>337</i>     <span class="k">def</span> <span class="nf">_one_cv_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">training_fraction</span><span class="p">,</span> <span class="n">ndata</span><span class="p">,</span> <span class="n">shuffled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dic_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'shuffled':</p>
+               
+               <a href="decodanda.classes.source.html#l337">
+                  <tt><i>337</i>     <span class="k">def</span> <span class="nf">_one_cv_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">training_fraction</span><span class="p">,</span> <span class="n">ndata</span><span class="p">,</span> <span class="n">shuffled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dic_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'testing_trials':</p>
+               
+               <a href="decodanda.classes.source.html#l337">
+                  <tt><i>337</i>     <span class="k">def</span> <span class="nf">_one_cv_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">training_fraction</span><span class="p">,</span> <span class="n">ndata</span><span class="p">,</span> <span class="n">shuffled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dic_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'training_fraction':</p>
+               
+               <a href="decodanda.classes.source.html#l337">
+                  <tt><i>337</i>     <span class="k">def</span> <span class="nf">_one_cv_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">training_fraction</span><span class="p">,</span> <span class="n">ndata</span><span class="p">,</span> <span class="n">shuffled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dic_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'condition_names':</p>
+               
+               <a href="decodanda.classes.source.html#l432">
+                  <tt><i>432</i>     <span class="k">def</span> <span class="nf">balanced_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_ar</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'min_ar':</p>
+               
+               <a href="decodanda.classes.source.html#l432">
+                  <tt><i>432</i>     <span class="k">def</span> <span class="nf">balanced_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_ar</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ndata':</p>
+               
+               <a href="decodanda.classes.source.html#l432">
+                  <tt><i>432</i>     <span class="k">def</span> <span class="nf">balanced_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_ar</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'z_score':</p>
+               
+               <a href="decodanda.classes.source.html#l432">
+                  <tt><i>432</i>     <span class="k">def</span> <span class="nf">balanced_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_ar</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'condition_names':</p>
+               
+               <a href="decodanda.classes.source.html#l485">
+                  <tt><i>485</i>     <span class="k">def</span> <span class="nf">split_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">condition_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_ar</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'fraction':</p>
+               
+               <a href="decodanda.classes.source.html#l485">
+                  <tt><i>485</i>     <span class="k">def</span> <span class="nf">split_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">condition_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_ar</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'min_ar':</p>
+               
+               <a href="decodanda.classes.source.html#l485">
+                  <tt><i>485</i>     <span class="k">def</span> <span class="nf">split_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">condition_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_ar</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ndata':</p>
+               
+               <a href="decodanda.classes.source.html#l485">
+                  <tt><i>485</i>     <span class="k">def</span> <span class="nf">split_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">condition_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_ar</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'z_score':</p>
+               
+               <a href="decodanda.classes.source.html#l485">
+                  <tt><i>485</i>     <span class="k">def</span> <span class="nf">split_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">condition_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_ar</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'split_rule':</p>
+               
+               <a href="decodanda.classes.source.html#l709">
+                  <tt><i>709</i>                        <span class="n">split_rule</span><span class="o">=</span><span class="s1">&#39;OneOut&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'split_rule':</p>
+               
+               <a href="decodanda.classes.source.html#l1189">
+                  <tt><i>1189</i>                             <span class="n">split_rule</span><span class="o">=</span><span class="s1">&#39;OneOut&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'resamplings':</p>
+               
+               <a href="decodanda.classes.source.html#l1508">
+                  <tt><i>1508</i>     <span class="k">def</span> <span class="nf">CCGP</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">resamplings</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'visualize':</p>
+               
+               <a href="decodanda.classes.source.html#l1642">
+                  <tt><i>1642</i>                                 <span class="n">visualize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'sessions':</p>
+               
+               <a href="decodanda.classes.source.html#l2009">
+                  <tt><i>2009</i>     <span class="k">def</span> <span class="nf">_divide_data_into_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sessions</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'cond':</p>
+               
+               <a href="decodanda.classes.source.html#l2054">
+                  <tt><i>2054</i>                 <span class="k">def</span> <span class="nf">condition_no</span><span class="p">(</span><span class="n">cond</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'balanced':</p>
+               
+               <a href="decodanda.classes.source.html#l2162">
+                  <tt><i>2162</i>     <span class="k">def</span> <span class="nf">all_dichotomies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">balanced</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">semantic_names</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'semantic_names':</p>
+               
+               <a href="decodanda.classes.source.html#l2162">
+                  <tt><i>2162</i>     <span class="k">def</span> <span class="nf">all_dichotomies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">balanced</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">semantic_names</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'dic':</p>
+               
+               <a href="decodanda.classes.source.html#l2202">
+                  <tt><i>2202</i>     <span class="k">def</span> <span class="nf">_dic_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'key':</p>
+               
+               <a href="decodanda.classes.source.html#l2211">
+                  <tt><i>2211</i>     <span class="k">def</span> <span class="nf">_dichotomy_from_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'string':</p>
+               
+               <a href="decodanda.classes.source.html#l2246">
+                  <tt><i>2246</i>     <span class="k">def</span> <span class="nf">_print</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'n':</p>
+               
+               <a href="decodanda.classes.source.html#l2252">
+                  <tt><i>2252</i>     <span class="k">def</span> <span class="nf">_generate_random_subset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'dic':</p>
+               
+               <a href="decodanda.classes.source.html#l2261">
+                  <tt><i>2261</i>     <span class="k">def</span> <span class="nf">_shuffle_conditioned_arrays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'analysis_params':</p>
+               
+               <a href="decodanda.classes.source.html#l2397">
+                  <tt><i>2397</i> <span class="k">def</span> <span class="nf">decoding_analysis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">decodanda_params</span><span class="p">,</span> <span class="n">analysis_params</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ax':</p>
+               
+               <a href="decodanda.classes.source.html#l2397">
+                  <tt><i>2397</i> <span class="k">def</span> <span class="nf">decoding_analysis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">decodanda_params</span><span class="p">,</span> <span class="n">analysis_params</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'conditions':</p>
+               
+               <a href="decodanda.classes.source.html#l2397">
+                  <tt><i>2397</i> <span class="k">def</span> <span class="nf">decoding_analysis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">decodanda_params</span><span class="p">,</span> <span class="n">analysis_params</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'data':</p>
+               
+               <a href="decodanda.classes.source.html#l2397">
+                  <tt><i>2397</i> <span class="k">def</span> <span class="nf">decoding_analysis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">decodanda_params</span><span class="p">,</span> <span class="n">analysis_params</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'decodanda_params':</p>
+               
+               <a href="decodanda.classes.source.html#l2397">
+                  <tt><i>2397</i> <span class="k">def</span> <span class="nf">decoding_analysis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">decodanda_params</span><span class="p">,</span> <span class="n">analysis_params</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'parallel':</p>
+               
+               <a href="decodanda.classes.source.html#l2397">
+                  <tt><i>2397</i> <span class="k">def</span> <span class="nf">decoding_analysis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">decodanda_params</span><span class="p">,</span> <span class="n">analysis_params</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'plot':</p>
+               
+               <a href="decodanda.classes.source.html#l2397">
+                  <tt><i>2397</i> <span class="k">def</span> <span class="nf">decoding_analysis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">decodanda_params</span><span class="p">,</span> <span class="n">analysis_params</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'conditions':</p>
+               
+               <a href="decodanda.classes.source.html#l2470">
+                  <tt><i>2470</i> <span class="k">def</span> <span class="nf">check_session_requirements</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="o">**</span><span class="n">decodanda_params</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'session':</p>
+               
+               <a href="decodanda.classes.source.html#l2470">
+                  <tt><i>2470</i> <span class="k">def</span> <span class="nf">check_session_requirements</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="o">**</span><span class="n">decodanda_params</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'conditions_1':</p>
+               
+               <a href="decodanda.classes.source.html#l2478">
+                  <tt><i>2478</i> <span class="k">def</span> <span class="nf">check_requirements_two_conditions</span><span class="p">(</span><span class="n">sessions</span><span class="p">,</span> <span class="n">conditions_1</span><span class="p">,</span> <span class="n">conditions_2</span><span class="p">,</span> <span class="o">**</span><span class="n">decodanda_params</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'conditions_2':</p>
+               
+               <a href="decodanda.classes.source.html#l2478">
+                  <tt><i>2478</i> <span class="k">def</span> <span class="nf">check_requirements_two_conditions</span><span class="p">(</span><span class="n">sessions</span><span class="p">,</span> <span class="n">conditions_1</span><span class="p">,</span> <span class="n">conditions_2</span><span class="p">,</span> <span class="o">**</span><span class="n">decodanda_params</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'sessions':</p>
+               
+               <a href="decodanda.classes.source.html#l2478">
+                  <tt><i>2478</i> <span class="k">def</span> <span class="nf">check_requirements_two_conditions</span><span class="p">(</span><span class="n">sessions</span><span class="p">,</span> <span class="n">conditions_1</span><span class="p">,</span> <span class="n">conditions_2</span><span class="p">,</span> <span class="o">**</span><span class="n">decodanda_params</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ds':</p>
+               
+               <a href="decodanda.classes.source.html#l2488">
+                  <tt><i>2488</i> <span class="k">def</span> <span class="nf">balance_decodandas</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'd1':</p>
+               
+               <a href="decodanda.classes.source.html#l2494">
+                  <tt><i>2494</i> <span class="k">def</span> <span class="nf">_balance_two_decodandas</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">sampling_strategy</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'd2':</p>
+               
+               <a href="decodanda.classes.source.html#l2494">
+                  <tt><i>2494</i> <span class="k">def</span> <span class="nf">_balance_two_decodandas</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">sampling_strategy</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'sampling_strategy':</p>
+               
+               <a href="decodanda.classes.source.html#l2494">
+                  <tt><i>2494</i> <span class="k">def</span> <span class="nf">_balance_two_decodandas</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">sampling_strategy</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'key1':</p>
+               
+               <a href="decodanda.classes.source.html#l2539">
+                  <tt><i>2539</i> <span class="k">def</span> <span class="nf">_generate_binary_condition</span><span class="p">(</span><span class="n">var_key</span><span class="p">,</span> <span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">var_key_plot</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'key2':</p>
+               
+               <a href="decodanda.classes.source.html#l2539">
+                  <tt><i>2539</i> <span class="k">def</span> <span class="nf">_generate_binary_condition</span><span class="p">(</span><span class="n">var_key</span><span class="p">,</span> <span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">var_key_plot</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'value1':</p>
+               
+               <a href="decodanda.classes.source.html#l2539">
+                  <tt><i>2539</i> <span class="k">def</span> <span class="nf">_generate_binary_condition</span><span class="p">(</span><span class="n">var_key</span><span class="p">,</span> <span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">var_key_plot</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'value2':</p>
+               
+               <a href="decodanda.classes.source.html#l2539">
+                  <tt><i>2539</i> <span class="k">def</span> <span class="nf">_generate_binary_condition</span><span class="p">(</span><span class="n">var_key</span><span class="p">,</span> <span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">var_key_plot</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'var_key':</p>
+               
+               <a href="decodanda.classes.source.html#l2539">
+                  <tt><i>2539</i> <span class="k">def</span> <span class="nf">_generate_binary_condition</span><span class="p">(</span><span class="n">var_key</span><span class="p">,</span> <span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">var_key_plot</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'var_key_plot':</p>
+               
+               <a href="decodanda.classes.source.html#l2539">
+                  <tt><i>2539</i> <span class="k">def</span> <span class="nf">_generate_binary_condition</span><span class="p">(</span><span class="n">var_key</span><span class="p">,</span> <span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">var_key_plot</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'discrete_dict':</p>
+               
+               <a href="decodanda.classes.source.html#l2557">
+                  <tt><i>2557</i> <span class="k">def</span> <span class="nf">_generate_binary_conditions</span><span class="p">(</span><span class="n">discrete_dict</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'dic':</p>
+               
+               <a href="decodanda.classes.source.html#l2567">
+                  <tt><i>2567</i> <span class="k">def</span> <span class="nf">_powerchotomy_to_key</span><span class="p">(</span><span class="n">dic</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'analysis_params':</p>
+               
+               <a href="decodanda.classes.source.html#l2572">
+                  <tt><i>2572</i>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">decodanda_params</span><span class="p">,</span> <span class="n">analysis_params</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'conditions':</p>
+               
+               <a href="decodanda.classes.source.html#l2572">
+                  <tt><i>2572</i>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">decodanda_params</span><span class="p">,</span> <span class="n">analysis_params</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'data':</p>
+               
+               <a href="decodanda.classes.source.html#l2572">
+                  <tt><i>2572</i>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">decodanda_params</span><span class="p">,</span> <span class="n">analysis_params</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'decodanda_params':</p>
+               
+               <a href="decodanda.classes.source.html#l2572">
+                  <tt><i>2572</i>     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">decodanda_params</span><span class="p">,</span> <span class="n">analysis_params</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'i':</p>
+               
+               <a href="decodanda.classes.source.html#l2578">
+                  <tt><i>2578</i>     <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="ANN202">
+               <span class="count sev-3">
+                  24
+               </span>
+               <strong>ANN202:</strong> Missing return type annotation for protected function
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.classes.source.html#l306">
+                  <tt><i>306</i> &nbsp;</tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l320">
+                  <tt><i>320</i> &nbsp;</tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l337">
+                  <tt><i>337</i>     <span class="k">def</span> <span class="nf">_one_cv_step</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">training_fraction</span><span class="p">,</span> <span class="n">ndata</span><span class="p">,</span> <span class="n">shuffled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dic_key</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2012">
+                  <tt><i>2012</i> &nbsp;</tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2138">
+                  <tt><i>2138</i>     <span class="k">def</span> <span class="nf">_find_semantic_dichotomies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2151">
+                  <tt><i>2151</i>     <span class="k">def</span> <span class="nf">_find_nonsemantic_dichotomies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2190">
+                  <tt><i>2190</i>     <span class="k">def</span> <span class="nf">_powerchotomies</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2202">
+                  <tt><i>2202</i>     <span class="k">def</span> <span class="nf">_dic_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2211">
+                  <tt><i>2211</i>     <span class="k">def</span> <span class="nf">_dichotomy_from_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2221">
+                  <tt><i>2221</i>     <span class="k">def</span> <span class="nf">_generate_semantic_vectors</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2230">
+                  <tt><i>2230</i>     <span class="k">def</span> <span class="nf">_compute_centroids</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2234">
+                  <tt><i>2234</i>     <span class="k">def</span> <span class="nf">_zscore_activity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2246">
+                  <tt><i>2246</i>     <span class="k">def</span> <span class="nf">_print</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">string</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2252">
+                  <tt><i>2252</i>     <span class="k">def</span> <span class="nf">_generate_random_subset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2258">
+                  <tt><i>2258</i>     <span class="k">def</span> <span class="nf">_reset_random_subset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2261">
+                  <tt><i>2261</i>     <span class="k">def</span> <span class="nf">_shuffle_conditioned_arrays</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dic</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2356">
+                  <tt><i>2356</i> &nbsp;</tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2373">
+                  <tt><i>2373</i>     <span class="k">def</span> <span class="nf">_order_conditioned_rasters</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2378">
+                  <tt><i>2378</i>     <span class="k">def</span> <span class="nf">_check_trial_availability</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2390">
+                  <tt><i>2390</i>     <span class="k">def</span> <span class="nf">_reset_weight_arrays</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2494">
+                  <tt><i>2494</i> <span class="k">def</span> <span class="nf">_balance_two_decodandas</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">,</span> <span class="n">sampling_strategy</span><span class="o">=</span><span class="s1">&#39;random&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2539">
+                  <tt><i>2539</i> <span class="k">def</span> <span class="nf">_generate_binary_condition</span><span class="p">(</span><span class="n">var_key</span><span class="p">,</span> <span class="n">value1</span><span class="p">,</span> <span class="n">value2</span><span class="p">,</span> <span class="n">key1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">key2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">var_key_plot</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2557">
+                  <tt><i>2557</i> <span class="k">def</span> <span class="nf">_generate_binary_conditions</span><span class="p">(</span><span class="n">discrete_dict</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2567">
+                  <tt><i>2567</i> <span class="k">def</span> <span class="nf">_powerchotomy_to_key</span><span class="p">(</span><span class="n">dic</span><span class="p">):</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="ANN201">
+               <span class="count sev-3">
+                  19
+               </span>
+               <strong>ANN201:</strong> Missing return type annotation for public function
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.classes.source.html#l432">
+                  <tt><i>432</i>     <span class="k">def</span> <span class="nf">balanced_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condition_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_ar</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l485">
+                  <tt><i>485</i>     <span class="k">def</span> <span class="nf">split_resample</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">condition_names</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">min_ar</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l711">
+                  <tt><i>711</i>                        <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l963">
+                  <tt><i>963</i>                                     <span class="n">return_combinations</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1192">
+                  <tt><i>1192</i> &nbsp;</tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1320">
+                  <tt><i>1320</i> &nbsp;</tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1358">
+                  <tt><i>1358</i> &nbsp;</tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1515">
+                  <tt><i>1515</i> &nbsp;</tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1614">
+                  <tt><i>1614</i> &nbsp;</tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1642">
+                  <tt><i>1642</i>                                 <span class="n">visualize</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1797">
+                  <tt><i>1797</i>                                   <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1906">
+                  <tt><i>1906</i>                                   <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2003">
+                  <tt><i>2003</i>     <span class="k">def</span> <span class="nf">visualize_PCA</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2054">
+                  <tt><i>2054</i>                 <span class="k">def</span> <span class="nf">condition_no</span><span class="p">(</span><span class="n">cond</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2162">
+                  <tt><i>2162</i>     <span class="k">def</span> <span class="nf">all_dichotomies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">balanced</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">semantic_names</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2397">
+                  <tt><i>2397</i> <span class="k">def</span> <span class="nf">decoding_analysis</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">decodanda_params</span><span class="p">,</span> <span class="n">analysis_params</span><span class="p">,</span> <span class="n">parallel</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2470">
+                  <tt><i>2470</i> <span class="k">def</span> <span class="nf">check_session_requirements</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="o">**</span><span class="n">decodanda_params</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2478">
+                  <tt><i>2478</i> <span class="k">def</span> <span class="nf">check_requirements_two_conditions</span><span class="p">(</span><span class="n">sessions</span><span class="p">,</span> <span class="n">conditions_1</span><span class="p">,</span> <span class="n">conditions_2</span><span class="p">,</span> <span class="o">**</span><span class="n">decodanda_params</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2488">
+                  <tt><i>2488</i> <span class="k">def</span> <span class="nf">balance_decodandas</span><span class="p">(</span><span class="n">ds</span><span class="p">):</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="B007">
+               <span class="count sev-3">
+                  9
+               </span>
+               <strong>B007:</strong> Loop control variable 'n' not used within the loop body. If this is intended, start the name with an underscore.
+               
+                  (and 2 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>Loop control variable 'n' not used within the loop body. If this is intended, start the name with an underscore.:</p>
+               
+               <a href="decodanda.classes.source.html#l815">
+                  <tt><i>815</i>         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Loop control variable 'n' not used within the loop body. If this is intended, start the name with an underscore.:</p>
+               
+               <a href="decodanda.classes.source.html#l1300">
+                  <tt><i>1300</i>         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">count</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Loop control variable 'n' not used within the loop body. If this is intended, start the name with an underscore.:</p>
+               
+               <a href="decodanda.classes.source.html#l1333">
+                  <tt><i>1333</i>         <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">count</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Loop control variable 'i' not used within the loop body. If this is intended, start the name with an underscore.:</p>
+               
+               <a href="decodanda.classes.source.html#l1680">
+                  <tt><i>1680</i>         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dic</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_dics</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Loop control variable 'i' not used within the loop body. If this is intended, start the name with an underscore.:</p>
+               
+               <a href="decodanda.classes.source.html#l1695">
+                  <tt><i>1695</i>         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dic</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_dics</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Loop control variable 'i' not used within the loop body. If this is intended, start the name with an underscore.:</p>
+               
+               <a href="decodanda.classes.source.html#l1708">
+                  <tt><i>1708</i>         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dic</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_dics</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Loop control variable 'i' not used within the loop body. If this is intended, start the name with an underscore.:</p>
+               
+               <a href="decodanda.classes.source.html#l2143">
+                  <tt><i>2143</i>         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dic</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dics</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Loop control variable 'i' not used within the loop body. If this is intended, start the name with an underscore.:</p>
+               
+               <a href="decodanda.classes.source.html#l2155">
+                  <tt><i>2155</i>         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">dic</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dics</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Loop control variable 'iteration' not used within the loop body. If this is intended, start the name with an underscore.:</p>
+               
+               <a href="decodanda.classes.source.html#l2327">
+                  <tt><i>2327</i>                 <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="SIM102">
+               <span class="count sev-3">
+                  3
+               </span>
+               <strong>SIM102:</strong> Use a single if-statement instead of nested if-statements
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.classes.source.html#l1890">
+                  <tt><i>1890</i>                 <span class="k">if</span> <span class="n">semantic_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l1991">
+                  <tt><i>1991</i>                 <span class="k">if</span> <span class="n">semantic_names</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.classes.source.html#l2196">
+                  <tt><i>2196</i>                 <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">powerset</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">powerset</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">conditions</span><span class="p">):</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="SIM103">
+               <span class="count sev-3">
+                  1
+               </span>
+               <strong>SIM103:</strong> Return the condition d.n_brains directly
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.classes.source.html#l2472">
+                  <tt><i>2472</i>     <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">n_brains</span><span class="p">:</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="SIM118">
+               <span class="count sev-3">
+                  1
+               </span>
+               <strong>SIM118:</strong> Use '"non_semantic" in self.analysis_params' instead of '"non_semantic" in self.analysis_params.keys()'
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.classes.source.html#l2583">
+                  <tt><i>2583</i>         <span class="k">if</span> <span class="s1">&#39;non_semantic&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">analysis_params</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="SIM120">
+               <span class="count sev-3">
+                  1
+               </span>
+               <strong>SIM120:</strong> Use 'class _NullmodelIterator:' instead of 'class _NullmodelIterator(object):'
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.classes.source.html#l2571">
+                  <tt><i>2571</i> <span class="k">class</span> <span class="nc">_NullmodelIterator</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>  <span class="c1"># necessary for parallelization of null model iterations</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         </ul>
+      </div>
+   </body>
+</html>

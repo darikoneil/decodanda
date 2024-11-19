@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>flake8 violations: decodanda\visualize.py</title>
+      <meta http-equiv="Content-Type" value="text/html; charset=UTF-8">
+      <link rel="stylesheet" href="styles.css">
+<script>
+function bindHandler(link) {
+   var code = link.getAttribute('data-code');
+   var key = location.pathname + '#' + code;
+
+   var ul = link.parentNode.querySelector('.details');
+   if (sessionStorage[key] != 'open') {
+      ul.style.display = 'none';
+   }
+   link.addEventListener('click', function (event) {
+      if (!ul.style.display || ul.style.display == 'none') {
+         ul.style.display = 'block';
+         sessionStorage[key] = 'open';
+      } else {
+         ul.style.display = 'none';
+         sessionStorage[key] = 'closed';
+      }
+   });
+}
+
+window.addEventListener('DOMContentLoaded', function () {
+   var links = document.querySelectorAll('#index > li > a');
+   for (var i = 0; i < links.length; i++) {
+      bindHandler(links[i]);
+   }
+});
+</script>
+   </head>
+   <body>
+      <div id="masthead" class="sev-1"></div>
+      <div id="page">
+         <p id="srclink">
+            <a title="View full annotated source"
+               href="decodanda.visualize.source.html">
+               <img src="file.svg" alt="&#x2261;">
+            </a></p>
+         <h1>
+            <a href="index.html">
+               <img src="back.svg" alt="&#x2B05;">
+               decodanda\visualize.py
+            </a>
+         </h1>
+
+         <ul id="index">
+         
+         <li>
+            <a data-code="F405">
+               <span class="count sev-1">
+                  85
+               </span>
+               <strong>F405:</strong> 'scipy' may be undefined, or defined from star imports: .imports, .utilities
+               
+                  (and 18 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>'scipy' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l10">
+                  <tt><i>10</i>     <span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">linregress</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l11">
+                  <tt><i>11</i>     <span class="n">s</span><span class="p">,</span> <span class="n">psp</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">spearmanr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l12">
+                  <tt><i>12</i>     <span class="n">ax</span> <span class="o">=</span> <span class="n">ax</span> <span class="ow">or</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'p_to_ast' may be undefined, or defined from star imports: .imports, .utilities (in 2 places):</p>
+               
+               <a href="decodanda.visualize.source.html#l14">
+                  <tt><i>14</i>         <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;r = </span><span class="si">{</span><span class="n">r</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">p_to_ast</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="si">:</span><span class="s1">s</span><span class="si">}</span><span class="se">\n</span><span class="s1">ρ = </span><span class="si">{</span><span class="n">s</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">p_to_ast</span><span class="p">(</span><span class="n">psp</span><span class="p">)</span><span class="si">:</span><span class="s1">s</span><span class="si">}</span><span class="se">\n</span><span class="s1">n = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">.75</span><span class="p">,</span> <span class="mf">.01</span><span class="p">),</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'p_to_ast' may be undefined, or defined from star imports: .imports, .utilities (in 2 places):</p>
+               
+               <a href="decodanda.visualize.source.html#l17">
+                  <tt><i>17</i>         <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;r = </span><span class="si">{</span><span class="n">r</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">p_to_ast</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="si">:</span><span class="s1">s</span><span class="si">}</span><span class="se">\n</span><span class="s1">ρ = </span><span class="si">{</span><span class="n">s</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">p_to_ast</span><span class="p">(</span><span class="n">psp</span><span class="p">)</span><span class="si">:</span><span class="s1">s</span><span class="si">}</span><span class="se">\n</span><span class="s1">n = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">:</span><span class="s1">.0f</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="p">(</span><span class="mf">.75</span><span class="p">,</span> <span class="mf">.01</span><span class="p">),</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'pltcolors' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l21">
+                  <tt><i>21</i>     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">+</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pltcolors</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l29">
+                  <tt><i>29</i>         <span class="n">corr</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">pearsonr</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l32">
+                  <tt><i>32</i>         <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l34">
+                  <tt><i>34</i>     <span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">linregress</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l51">
+                  <tt><i>51</i>     <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l64">
+                  <tt><i>64</i>         <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l78">
+                  <tt><i>78</i>     <span class="n">density</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">arraydata</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l100">
+                  <tt><i>100</i>     <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l108">
+                  <tt><i>108</i>         <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">perfs</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'pd' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l110">
+                  <tt><i>110</i>         <span class="n">sns</span><span class="o">.</span><span class="n">swarmplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">perfs_nullmodel</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">labels</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l110">
+                  <tt><i>110</i>         <span class="n">sns</span><span class="o">.</span><span class="n">swarmplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">perfs_nullmodel</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">labels</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'pd' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l112">
+                  <tt><i>112</i>         <span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">perfs_nullmodel</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">labels</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="n">bw</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l112">
+                  <tt><i>112</i>         <span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">perfs_nullmodel</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">labels</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="n">bw</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'z_pval' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l131">
+                  <tt><i>131</i>             <span class="n">pval</span> <span class="o">=</span> <span class="n">z_pval</span><span class="p">(</span><span class="n">perfs</span><span class="p">[</span><span class="n">l</span><span class="p">],</span> <span class="n">perfs_nullmodel</span><span class="p">[</span><span class="n">l</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'pltcolors' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l133">
+                  <tt><i>133</i>         <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">i</span><span class="p">],</span> <span class="p">[</span><span class="n">perfs</span><span class="p">[</span><span class="n">l</span><span class="p">]],</span> <span class="n">marker</span><span class="o">=</span><span class="n">marker</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pltcolors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">facecolor</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'p_to_text' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l135">
+                  <tt><i>135</i>             <span class="n">ptext</span> <span class="o">=</span> <span class="n">p_to_text</span><span class="p">(</span><span class="n">pval</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'transforms' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l136">
+                  <tt><i>136</i>             <span class="n">trans</span> <span class="o">=</span> <span class="n">transforms</span><span class="o">.</span><span class="n">blended_transform_factory</span><span class="p">(</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'p_to_ast' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l149">
+                  <tt><i>149</i>             <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="mf">0.18</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">perfs_nullmodel</span><span class="p">[</span><span class="n">l</span><span class="p">])</span> <span class="o">+</span> <span class="n">perfs</span><span class="p">[</span><span class="n">l</span><span class="p">]),</span> <span class="n">p_to_ast</span><span class="p">(</span><span class="n">pval</span><span class="p">),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l156">
+                  <tt><i>156</i>         <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l157">
+                  <tt><i>157</i>         <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l160">
+                  <tt><i>160</i>         <span class="n">plt</span><span class="o">.</span><span class="n">boxplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">null</span><span class="p">,</span> <span class="n">positions</span><span class="o">=</span><span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">showfliers</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">notch</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">manage_ticks</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'z_pval' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l172">
+                  <tt><i>172</i>         <span class="n">z</span><span class="p">,</span> <span class="n">pval</span> <span class="o">=</span> <span class="n">z_pval</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">null</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'p_to_ast' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l180">
+                  <tt><i>180</i>     <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="mf">0.18</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">null</span><span class="p">)</span> <span class="o">+</span> <span class="n">data</span><span class="p">),</span> <span class="n">p_to_ast</span><span class="p">(</span><span class="n">pval</span><span class="p">),</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l187">
+                  <tt><i>187</i>     <span class="n">f</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l188">
+                  <tt><i>188</i>     <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'GridSpec' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l189">
+                  <tt><i>189</i>     <span class="n">gs</span> <span class="o">=</span> <span class="n">GridSpec</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">f</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'pltcolors' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l223">
+                  <tt><i>223</i>                             <span class="n">color</span><span class="o">=</span><span class="n">pltcolors</span><span class="p">[</span><span class="n">brain_index</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l227">
+                  <tt><i>227</i>         <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l240">
+                  <tt><i>240</i>     <span class="n">kde</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">null</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l246">
+                  <tt><i>246</i>     <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axD</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'z_pval' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l251">
+                  <tt><i>251</i>     <span class="n">z</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">z_pval</span><span class="p">(</span><span class="n">perf</span><span class="p">,</span> <span class="n">null</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'p_to_ast' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l252">
+                  <tt><i>252</i>     <span class="n">axD</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">null_y</span><span class="p">),</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="se">\n</span><span class="s1">z=</span><span class="si">%.1f</span><span class="se">\n</span><span class="s1">P=</span><span class="si">%.1e</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">p_to_ast</span><span class="p">(</span><span class="n">p</span><span class="p">),</span> <span class="n">z</span><span class="p">,</span> <span class="n">p</span><span class="p">),</span> <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l259">
+                  <tt><i>259</i>     <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axW</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l263">
+                  <tt><i>263</i>     <span class="n">kde</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">Ws</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'pltcolors' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l269">
+                  <tt><i>269</i>         <span class="n">axW</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">Ws</span><span class="p">[</span><span class="n">dec</span><span class="o">.</span><span class="n">which_brain</span> <span class="o">==</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pltcolors</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l275">
+                  <tt><i>275</i>     <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axS</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'scipy' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l280">
+                  <tt><i>280</i>     <span class="n">kde</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">selectivity</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'pltcolors' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l286">
+                  <tt><i>286</i>         <span class="n">axS</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">selectivity</span><span class="p">[</span><span class="n">dec</span><span class="o">.</span><span class="n">which_brain</span> <span class="o">==</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pltcolors</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l293">
+                  <tt><i>293</i>     <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axWS</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'pltcolors' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l299">
+                  <tt><i>299</i>         <span class="n">axWS</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">mfrA</span><span class="p">[</span><span class="n">dec</span><span class="o">.</span><span class="n">which_brain</span> <span class="o">==</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">mfrB</span><span class="p">[</span><span class="n">dec</span><span class="o">.</span><span class="n">which_brain</span> <span class="o">==</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">pltcolors</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sample_training_testing_from_rasters' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l314">
+                  <tt><i>314</i>         <span class="n">training</span><span class="p">,</span> <span class="n">testing</span> <span class="o">=</span> <span class="n">sample_training_testing_from_rasters</span><span class="p">(</span><span class="n">dec</span><span class="o">.</span><span class="n">conditioned_rasters</span><span class="p">[</span><span class="n">d</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sample_training_testing_from_rasters' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l324">
+                  <tt><i>324</i>         <span class="n">training</span><span class="p">,</span> <span class="n">testing</span> <span class="o">=</span> <span class="n">sample_training_testing_from_rasters</span><span class="p">(</span><span class="n">dec</span><span class="o">.</span><span class="n">conditioned_rasters</span><span class="p">[</span><span class="n">d</span><span class="p">],</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l339">
+                  <tt><i>339</i>     <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">axTT</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'pltcolors' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l344">
+                  <tt><i>344</i>                      <span class="n">color</span><span class="o">=</span><span class="n">pltcolors</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l354">
+                  <tt><i>354</i>         <span class="n">f</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'mpl' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l363">
+                  <tt><i>363</i>                 <span class="n">alpha</span><span class="o">=</span><span class="n">sizes</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">colormaps</span><span class="p">[</span><span class="s1">&#39;PuRd&#39;</span><span class="p">](</span><span class="n">x</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">d</span><span class="p">])))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l376">
+                  <tt><i>376</i>     <span class="n">f</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">n_axs</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;height_ratios&#39;</span><span class="p">:</span> <span class="n">height_ratios</span><span class="p">},</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sns' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l377">
+                  <tt><i>377</i>     <span class="n">sns</span><span class="o">.</span><span class="n">despine</span><span class="p">(</span><span class="n">f</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'pltcolors' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l383">
+                  <tt><i>383</i>         <span class="n">axs</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">session</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">pltcolors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'mpl' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l391">
+                  <tt><i>391</i>     <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.autolayout&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'mahalanobis_dissimilarity' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l393">
+                  <tt><i>393</i>     <span class="n">cos_dis</span> <span class="o">=</span> <span class="n">mahalanobis_dissimilarity</span><span class="p">(</span><span class="n">dec</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'MDS' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l395">
+                  <tt><i>395</i>     <span class="n">embedding</span> <span class="o">=</span> <span class="n">MDS</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span> <span class="n">dissimilarity</span><span class="o">=</span><span class="s1">&#39;precomputed&#39;</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l403">
+                  <tt><i>403</i>             <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'GridSpec' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l404">
+                  <tt><i>404</i>             <span class="n">G</span> <span class="o">=</span> <span class="n">GridSpec</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l422">
+                  <tt><i>422</i>             <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l430">
+                  <tt><i>430</i>     <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'hamming_distance' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l438">
+                  <tt><i>438</i>                 <span class="k">if</span> <span class="n">hamming_distance</span><span class="p">(</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">names</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'hamming_distance' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l441">
+                  <tt><i>441</i>                 <span class="k">elif</span> <span class="n">hamming_distance</span><span class="p">(</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">names</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'equalize_ax' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l444">
+                  <tt><i>444</i>         <span class="n">equalize_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'animation' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l456">
+                  <tt><i>456</i>         <span class="n">anim</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animate</span><span class="p">,</span> <span class="n">init_func</span><span class="o">=</span><span class="n">init</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'animation' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l458">
+                  <tt><i>458</i>         <span class="n">mywriter</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">PillowWriter</span><span class="p">(</span><span class="n">fps</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'mpl' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l462">
+                  <tt><i>462</i>     <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.autolayout&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'mpl' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l472">
+                  <tt><i>472</i>     <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.autolayout&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sample_from_rasters' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l481">
+                  <tt><i>481</i>         <span class="n">X</span> <span class="o">=</span> <span class="n">sample_from_rasters</span><span class="p">(</span><span class="n">dec</span><span class="o">.</span><span class="n">conditioned_rasters</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">ndata</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'sklearn' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l491">
+                  <tt><i>491</i>     <span class="n">C</span> <span class="o">=</span> <span class="n">sklearn</span><span class="o">.</span><span class="n">decomposition</span><span class="o">.</span><span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="n">dim</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l502">
+                  <tt><i>502</i>             <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'GridSpec' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l503">
+                  <tt><i>503</i>             <span class="n">G</span> <span class="o">=</span> <span class="n">GridSpec</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l519">
+                  <tt><i>519</i>             <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l528">
+                  <tt><i>528</i>     <span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">0.95</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'pltcolors' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l545">
+                  <tt><i>545</i>                                    <span class="n">s</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pltcolors</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'pltcolors' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l548">
+                  <tt><i>548</i>                                    <span class="n">s</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">pltcolors</span><span class="p">[</span><span class="n">i</span><span class="p">])</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'hamming_distance' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l551">
+                  <tt><i>551</i>                             <span class="k">if</span> <span class="n">hamming_distance</span><span class="p">(</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">names</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'hamming_distance' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l555">
+                  <tt><i>555</i>                             <span class="k">elif</span> <span class="p">(</span><span class="n">hamming_distance</span><span class="p">(</span><span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">names</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">and</span> <span class="n">draw_hd2_lines</span><span class="p">:</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'equalize_ax' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l559">
+                  <tt><i>559</i>                 <span class="n">equalize_ax</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'plt' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l568">
+                  <tt><i>568</i>                 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'animation' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l576">
+                  <tt><i>576</i>         <span class="n">anim</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">FuncAnimation</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">animate</span><span class="p">,</span> <span class="n">init_func</span><span class="o">=</span><span class="n">init</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'animation' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l578">
+                  <tt><i>578</i>         <span class="n">mywriter</span> <span class="o">=</span> <span class="n">animation</span><span class="o">.</span><span class="n">PillowWriter</span><span class="p">(</span><span class="n">fps</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'mpl' may be undefined, or defined from star imports: .imports, .utilities:</p>
+               
+               <a href="decodanda.visualize.source.html#l582">
+                  <tt><i>582</i>     <span class="n">mpl</span><span class="o">.</span><span class="n">rcParams</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;figure.autolayout&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="F403">
+               <span class="count sev-1">
+                  2
+               </span>
+               <strong>F403:</strong> 'from .imports import *' used; unable to detect undefined names
+               
+                  (and 1 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>'from .imports import *' used; unable to detect undefined names:</p>
+               
+               <a href="decodanda.visualize.source.html#l3">
+                  <tt><i>3</i> <span class="kn">from</span> <span class="nn">.imports</span> <span class="kn">import</span> <span class="o">*</span></tt>
+               </a>
+            </li><li>
+               
+               <p>'from .utilities import *' used; unable to detect undefined names:</p>
+               
+               <a href="decodanda.visualize.source.html#l4">
+                  <tt><i>4</i> <span class="kn">from</span> <span class="nn">.utilities</span> <span class="kn">import</span> <span class="o">*</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E800">
+               <span class="count sev-2">
+                  8
+               </span>
+               <strong>E800:</strong> Found commented out code
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.visualize.source.html#l42">
+                  <tt><i>42</i>     <span class="c1"># ax.plot(xs, slope*np.asarray(xs)+intercept, color=pltcolors[1])</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l46">
+                  <tt><i>46</i>         <span class="c1">#     ax.text(xs[1], slope*np.asarray(xs)[1]+intercept, &#39;%s\nr=%.2f&#39; % (p_to_text(p), r), va=&#39;center&#39;, ha=&#39;center&#39;, color=&#39;r&#39;)</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l47">
+                  <tt><i>47</i>         <span class="c1"># else:</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l48">
+                  <tt><i>48</i>         <span class="c1">#     ax.text(xs[1], slope*np.asarray(xs)[1]+intercept, &#39;%s\nr=%.2f&#39; % (p_to_text(p), r), va=&#39;center&#39;, ha=&#39;center&#39;, color=&#39;k&#39;)</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l173">
+                  <tt><i>173</i>         <span class="c1"># print(&#39;Z = &#39;, z, &#39;P = &#39;, pval)</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l394">
+                  <tt><i>394</i>     <span class="c1"># cos_dis = cosyne_dissimilarity(np.vstack([r for r in self.centroids.values()]))</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l428">
+                  <tt><i>428</i>     <span class="c1"># ax.grid(False)</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l429">
+                  <tt><i>429</i>     <span class="c1"># ax.set_axis_off()</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E226">
+               <span class="count sev-2">
+                  2
+               </span>
+               <strong>E226:</strong> missing whitespace around arithmetic operator
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.visualize.source.html#l361">
+                  <tt><i>361</i>         <span class="n">sizes</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">d</span><span class="p">]))</span><span class="o">**</span><span class="n">contrast</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l363">
+                  <tt><i>363</i>                 <span class="n">alpha</span><span class="o">=</span><span class="n">sizes</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">colormaps</span><span class="p">[</span><span class="s1">&#39;PuRd&#39;</span><span class="p">](</span><span class="n">x</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">d</span><span class="p">])))</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E501">
+               <span class="count sev-2">
+                  2
+               </span>
+               <strong>E501:</strong> line too long (134 > 127 characters)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.visualize.source.html#l46">
+                  <tt><i>46</i>         <span class="c1">#     ax.text(xs[1], slope*np.asarray(xs)[1]+intercept, &#39;%s\nr=%.2f&#39; % (p_to_text(p), r), va=&#39;center&#39;, ha=&#39;center&#39;, color=&#39;r&#39;)</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l48">
+                  <tt><i>48</i>         <span class="c1">#     ax.text(xs[1], slope*np.asarray(xs)[1]+intercept, &#39;%s\nr=%.2f&#39; % (p_to_text(p), r), va=&#39;center&#39;, ha=&#39;center&#39;, color=&#39;k&#39;)</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="C901">
+               <span class="count sev-2">
+                  1
+               </span>
+               <strong>C901:</strong> 'visualize_PCA' is too complex (27)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.visualize.source.html#l466">
+                  <tt><i>466</i> <span class="k">def</span> <span class="nf">visualize_PCA</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E128">
+               <span class="count sev-2">
+                  1
+               </span>
+               <strong>E128:</strong> continuation line under-indented for visual indent
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.visualize.source.html#l363">
+                  <tt><i>363</i>                 <span class="n">alpha</span><span class="o">=</span><span class="n">sizes</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">mpl</span><span class="o">.</span><span class="n">colormaps</span><span class="p">[</span><span class="s1">&#39;PuRd&#39;</span><span class="p">](</span><span class="n">x</span><span class="p">[</span><span class="n">d</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">nanmax</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">d</span><span class="p">])))</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="E302">
+               <span class="count sev-2">
+                  1
+               </span>
+               <strong>E302:</strong> expected 2 blank lines, found 1
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.visualize.source.html#l8">
+                  <tt><i>8</i> <span class="k">def</span> <span class="nf">corrfunc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="ANN001">
+               <span class="count sev-3">
+                  93
+               </span>
+               <strong>ANN001:</strong> Missing type annotation for function argument 'x'
+               
+                  (and 52 similar)
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <p>Missing type annotation for function argument 'ax':</p>
+               
+               <a href="decodanda.visualize.source.html#l8">
+                  <tt><i>8</i> <span class="k">def</span> <span class="nf">corrfunc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'x':</p>
+               
+               <a href="decodanda.visualize.source.html#l8">
+                  <tt><i>8</i> <span class="k">def</span> <span class="nf">corrfunc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'y':</p>
+               
+               <a href="decodanda.visualize.source.html#l8">
+                  <tt><i>8</i> <span class="k">def</span> <span class="nf">corrfunc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'annotate':</p>
+               
+               <a href="decodanda.visualize.source.html#l24">
+                  <tt><i>24</i> <span class="k">def</span> <span class="nf">corr_scatter</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ax':</p>
+               
+               <a href="decodanda.visualize.source.html#l24">
+                  <tt><i>24</i> <span class="k">def</span> <span class="nf">corr_scatter</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'corr':</p>
+               
+               <a href="decodanda.visualize.source.html#l24">
+                  <tt><i>24</i> <span class="k">def</span> <span class="nf">corr_scatter</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'data_labels':</p>
+               
+               <a href="decodanda.visualize.source.html#l24">
+                  <tt><i>24</i> <span class="k">def</span> <span class="nf">corr_scatter</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'x_data':</p>
+               
+               <a href="decodanda.visualize.source.html#l24">
+                  <tt><i>24</i> <span class="k">def</span> <span class="nf">corr_scatter</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'xlabel':</p>
+               
+               <a href="decodanda.visualize.source.html#l24">
+                  <tt><i>24</i> <span class="k">def</span> <span class="nf">corr_scatter</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'y_data':</p>
+               
+               <a href="decodanda.visualize.source.html#l24">
+                  <tt><i>24</i> <span class="k">def</span> <span class="nf">corr_scatter</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ylabel':</p>
+               
+               <a href="decodanda.visualize.source.html#l24">
+                  <tt><i>24</i> <span class="k">def</span> <span class="nf">corr_scatter</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'alpha':</p>
+               
+               <a href="decodanda.visualize.source.html#l62">
+                  <tt><i>62</i> <span class="k">def</span> <span class="nf">line_with_shade</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">errfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ax':</p>
+               
+               <a href="decodanda.visualize.source.html#l62">
+                  <tt><i>62</i> <span class="k">def</span> <span class="nf">line_with_shade</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">errfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'axis':</p>
+               
+               <a href="decodanda.visualize.source.html#l62">
+                  <tt><i>62</i> <span class="k">def</span> <span class="nf">line_with_shade</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">errfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'color':</p>
+               
+               <a href="decodanda.visualize.source.html#l62">
+                  <tt><i>62</i> <span class="k">def</span> <span class="nf">line_with_shade</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">errfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'errfunc':</p>
+               
+               <a href="decodanda.visualize.source.html#l62">
+                  <tt><i>62</i> <span class="k">def</span> <span class="nf">line_with_shade</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">errfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'label':</p>
+               
+               <a href="decodanda.visualize.source.html#l62">
+                  <tt><i>62</i> <span class="k">def</span> <span class="nf">line_with_shade</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">errfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'x':</p>
+               
+               <a href="decodanda.visualize.source.html#l62">
+                  <tt><i>62</i> <span class="k">def</span> <span class="nf">line_with_shade</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">errfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'y':</p>
+               
+               <a href="decodanda.visualize.source.html#l62">
+                  <tt><i>62</i> <span class="k">def</span> <span class="nf">line_with_shade</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">errfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ax':</p>
+               
+               <a href="decodanda.visualize.source.html#l75">
+                  <tt><i>75</i> <span class="k">def</span> <span class="nf">smooth_hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">stairs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'bins':</p>
+               
+               <a href="decodanda.visualize.source.html#l75">
+                  <tt><i>75</i> <span class="k">def</span> <span class="nf">smooth_hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">stairs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'color':</p>
+               
+               <a href="decodanda.visualize.source.html#l75">
+                  <tt><i>75</i> <span class="k">def</span> <span class="nf">smooth_hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">stairs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'data':</p>
+               
+               <a href="decodanda.visualize.source.html#l75">
+                  <tt><i>75</i> <span class="k">def</span> <span class="nf">smooth_hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">stairs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'label':</p>
+               
+               <a href="decodanda.visualize.source.html#l75">
+                  <tt><i>75</i> <span class="k">def</span> <span class="nf">smooth_hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">stairs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'stairs':</p>
+               
+               <a href="decodanda.visualize.source.html#l75">
+                  <tt><i>75</i> <span class="k">def</span> <span class="nf">smooth_hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">stairs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ax':</p>
+               
+               <a href="decodanda.visualize.source.html#l88">
+                  <tt><i>88</i> <span class="k">def</span> <span class="nf">setup_decoding_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">ylow</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">yhigh</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'labels':</p>
+               
+               <a href="decodanda.visualize.source.html#l88">
+                  <tt><i>88</i> <span class="k">def</span> <span class="nf">setup_decoding_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">ylow</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">yhigh</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'null':</p>
+               
+               <a href="decodanda.visualize.source.html#l88">
+                  <tt><i>88</i> <span class="k">def</span> <span class="nf">setup_decoding_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">ylow</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">yhigh</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'yhigh':</p>
+               
+               <a href="decodanda.visualize.source.html#l88">
+                  <tt><i>88</i> <span class="k">def</span> <span class="nf">setup_decoding_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">ylow</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">yhigh</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ylow':</p>
+               
+               <a href="decodanda.visualize.source.html#l88">
+                  <tt><i>88</i> <span class="k">def</span> <span class="nf">setup_decoding_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">ylow</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">yhigh</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ax':</p>
+               
+               <a href="decodanda.visualize.source.html#l103">
+                  <tt><i>103</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model</span><span class="p">(</span><span class="n">perfs</span><span class="p">,</span> <span class="n">perfs_nullmodel</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Decoding performance&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'marker':</p>
+               
+               <a href="decodanda.visualize.source.html#l103">
+                  <tt><i>103</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model</span><span class="p">(</span><span class="n">perfs</span><span class="p">,</span> <span class="n">perfs_nullmodel</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Decoding performance&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'perfs':</p>
+               
+               <a href="decodanda.visualize.source.html#l103">
+                  <tt><i>103</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model</span><span class="p">(</span><span class="n">perfs</span><span class="p">,</span> <span class="n">perfs_nullmodel</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Decoding performance&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'perfs_nullmodel':</p>
+               
+               <a href="decodanda.visualize.source.html#l103">
+                  <tt><i>103</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model</span><span class="p">(</span><span class="n">perfs</span><span class="p">,</span> <span class="n">perfs_nullmodel</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Decoding performance&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'shownull':</p>
+               
+               <a href="decodanda.visualize.source.html#l103">
+                  <tt><i>103</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model</span><span class="p">(</span><span class="n">perfs</span><span class="p">,</span> <span class="n">perfs_nullmodel</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Decoding performance&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ylabel':</p>
+               
+               <a href="decodanda.visualize.source.html#l103">
+                  <tt><i>103</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model</span><span class="p">(</span><span class="n">perfs</span><span class="p">,</span> <span class="n">perfs_nullmodel</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s1">&#39;Decoding performance&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'annotate':</p>
+               
+               <a href="decodanda.visualize.source.html#l104">
+                  <tt><i>104</i>                           <span class="n">chance</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ylow</span><span class="o">=</span><span class="mf">0.27</span><span class="p">,</span> <span class="n">yhigh</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'chance':</p>
+               
+               <a href="decodanda.visualize.source.html#l104">
+                  <tt><i>104</i>                           <span class="n">chance</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ylow</span><span class="o">=</span><span class="mf">0.27</span><span class="p">,</span> <span class="n">yhigh</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ptype':</p>
+               
+               <a href="decodanda.visualize.source.html#l104">
+                  <tt><i>104</i>                           <span class="n">chance</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ylow</span><span class="o">=</span><span class="mf">0.27</span><span class="p">,</span> <span class="n">yhigh</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'setup':</p>
+               
+               <a href="decodanda.visualize.source.html#l104">
+                  <tt><i>104</i>                           <span class="n">chance</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ylow</span><span class="o">=</span><span class="mf">0.27</span><span class="p">,</span> <span class="n">yhigh</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'yhigh':</p>
+               
+               <a href="decodanda.visualize.source.html#l104">
+                  <tt><i>104</i>                           <span class="n">chance</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ylow</span><span class="o">=</span><span class="mf">0.27</span><span class="p">,</span> <span class="n">yhigh</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ylow':</p>
+               
+               <a href="decodanda.visualize.source.html#l104">
+                  <tt><i>104</i>                           <span class="n">chance</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ylow</span><span class="o">=</span><span class="mf">0.27</span><span class="p">,</span> <span class="n">yhigh</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ax':</p>
+               
+               <a href="decodanda.visualize.source.html#l154">
+                  <tt><i>154</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model_single</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;zscore&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'color':</p>
+               
+               <a href="decodanda.visualize.source.html#l154">
+                  <tt><i>154</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model_single</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;zscore&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'data':</p>
+               
+               <a href="decodanda.visualize.source.html#l154">
+                  <tt><i>154</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model_single</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;zscore&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'marker':</p>
+               
+               <a href="decodanda.visualize.source.html#l154">
+                  <tt><i>154</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model_single</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;zscore&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'null':</p>
+               
+               <a href="decodanda.visualize.source.html#l154">
+                  <tt><i>154</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model_single</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;zscore&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ptype':</p>
+               
+               <a href="decodanda.visualize.source.html#l154">
+                  <tt><i>154</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model_single</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;zscore&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'shownull':</p>
+               
+               <a href="decodanda.visualize.source.html#l154">
+                  <tt><i>154</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model_single</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;zscore&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'x':</p>
+               
+               <a href="decodanda.visualize.source.html#l154">
+                  <tt><i>154</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model_single</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;zscore&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'dec':</p>
+               
+               <a href="decodanda.visualize.source.html#l186">
+                  <tt><i>186</i> <span class="k">def</span> <span class="nf">visualize_decoding</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">perfs</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">training_fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'dic':</p>
+               
+               <a href="decodanda.visualize.source.html#l186">
+                  <tt><i>186</i> <span class="k">def</span> <span class="nf">visualize_decoding</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">perfs</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">training_fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ndata':</p>
+               
+               <a href="decodanda.visualize.source.html#l186">
+                  <tt><i>186</i> <span class="k">def</span> <span class="nf">visualize_decoding</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">perfs</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">training_fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'null':</p>
+               
+               <a href="decodanda.visualize.source.html#l186">
+                  <tt><i>186</i> <span class="k">def</span> <span class="nf">visualize_decoding</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">perfs</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">training_fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'perfs':</p>
+               
+               <a href="decodanda.visualize.source.html#l186">
+                  <tt><i>186</i> <span class="k">def</span> <span class="nf">visualize_decoding</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">perfs</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">training_fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'testing_trials':</p>
+               
+               <a href="decodanda.visualize.source.html#l186">
+                  <tt><i>186</i> <span class="k">def</span> <span class="nf">visualize_decoding</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">perfs</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">training_fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'training_fraction':</p>
+               
+               <a href="decodanda.visualize.source.html#l186">
+                  <tt><i>186</i> <span class="k">def</span> <span class="nf">visualize_decoding</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">perfs</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">training_fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ax':</p>
+               
+               <a href="decodanda.visualize.source.html#l214">
+                  <tt><i>214</i>     <span class="k">def</span> <span class="nf">plot_dic_side</span><span class="p">(</span><span class="n">dic_side</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">lab</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'dic_side':</p>
+               
+               <a href="decodanda.visualize.source.html#l214">
+                  <tt><i>214</i>     <span class="k">def</span> <span class="nf">plot_dic_side</span><span class="p">(</span><span class="n">dic_side</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">lab</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'lab':</p>
+               
+               <a href="decodanda.visualize.source.html#l214">
+                  <tt><i>214</i>     <span class="k">def</span> <span class="nf">plot_dic_side</span><span class="p">(</span><span class="n">dic_side</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">lab</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ax':</p>
+               
+               <a href="decodanda.visualize.source.html#l348">
+                  <tt><i>348</i> <span class="k">def</span> <span class="nf">visualize_raster</span><span class="p">(</span><span class="n">raster</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'colors':</p>
+               
+               <a href="decodanda.visualize.source.html#l348">
+                  <tt><i>348</i> <span class="k">def</span> <span class="nf">visualize_raster</span><span class="p">(</span><span class="n">raster</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'contrast':</p>
+               
+               <a href="decodanda.visualize.source.html#l348">
+                  <tt><i>348</i> <span class="k">def</span> <span class="nf">visualize_raster</span><span class="p">(</span><span class="n">raster</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'offset':</p>
+               
+               <a href="decodanda.visualize.source.html#l348">
+                  <tt><i>348</i> <span class="k">def</span> <span class="nf">visualize_raster</span><span class="p">(</span><span class="n">raster</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'order':</p>
+               
+               <a href="decodanda.visualize.source.html#l348">
+                  <tt><i>348</i> <span class="k">def</span> <span class="nf">visualize_raster</span><span class="p">(</span><span class="n">raster</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'raster':</p>
+               
+               <a href="decodanda.visualize.source.html#l348">
+                  <tt><i>348</i> <span class="k">def</span> <span class="nf">visualize_raster</span><span class="p">(</span><span class="n">raster</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'contrast':</p>
+               
+               <a href="decodanda.visualize.source.html#l367">
+                  <tt><i>367</i> <span class="k">def</span> <span class="nf">visualize_session</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">neural_key</span><span class="o">=</span><span class="s1">&#39;raster&#39;</span><span class="p">,</span> <span class="n">other_keys</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'neural_key':</p>
+               
+               <a href="decodanda.visualize.source.html#l367">
+                  <tt><i>367</i> <span class="k">def</span> <span class="nf">visualize_session</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">neural_key</span><span class="o">=</span><span class="s1">&#39;raster&#39;</span><span class="p">,</span> <span class="n">other_keys</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'other_keys':</p>
+               
+               <a href="decodanda.visualize.source.html#l367">
+                  <tt><i>367</i> <span class="k">def</span> <span class="nf">visualize_session</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">neural_key</span><span class="o">=</span><span class="s1">&#39;raster&#39;</span><span class="p">,</span> <span class="n">other_keys</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'session':</p>
+               
+               <a href="decodanda.visualize.source.html#l367">
+                  <tt><i>367</i> <span class="k">def</span> <span class="nf">visualize_session</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">neural_key</span><span class="o">=</span><span class="s1">&#39;raster&#39;</span><span class="p">,</span> <span class="n">other_keys</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'axs':</p>
+               
+               <a href="decodanda.visualize.source.html#l388">
+                  <tt><i>388</i> <span class="k">def</span> <span class="nf">visualize_decodanda_MDS</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'data':</p>
+               
+               <a href="decodanda.visualize.source.html#l388">
+                  <tt><i>388</i> <span class="k">def</span> <span class="nf">visualize_decodanda_MDS</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'dec':</p>
+               
+               <a href="decodanda.visualize.source.html#l388">
+                  <tt><i>388</i> <span class="k">def</span> <span class="nf">visualize_decodanda_MDS</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'dim':</p>
+               
+               <a href="decodanda.visualize.source.html#l388">
+                  <tt><i>388</i> <span class="k">def</span> <span class="nf">visualize_decodanda_MDS</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'names':</p>
+               
+               <a href="decodanda.visualize.source.html#l388">
+                  <tt><i>388</i> <span class="k">def</span> <span class="nf">visualize_decodanda_MDS</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'null':</p>
+               
+               <a href="decodanda.visualize.source.html#l388">
+                  <tt><i>388</i> <span class="k">def</span> <span class="nf">visualize_decodanda_MDS</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'savename':</p>
+               
+               <a href="decodanda.visualize.source.html#l388">
+                  <tt><i>388</i> <span class="k">def</span> <span class="nf">visualize_decodanda_MDS</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'title':</p>
+               
+               <a href="decodanda.visualize.source.html#l388">
+                  <tt><i>388</i> <span class="k">def</span> <span class="nf">visualize_decodanda_MDS</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">savename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'i':</p>
+               
+               <a href="decodanda.visualize.source.html#l451">
+                  <tt><i>451</i>     <span class="k">def</span> <span class="nf">animate</span><span class="p">(</span><span class="n">i</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'dec':</p>
+               
+               <a href="decodanda.visualize.source.html#l466">
+                  <tt><i>466</i> <span class="k">def</span> <span class="nf">visualize_PCA</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'dim':</p>
+               
+               <a href="decodanda.visualize.source.html#l466">
+                  <tt><i>466</i> <span class="k">def</span> <span class="nf">visualize_PCA</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'ndata':</p>
+               
+               <a href="decodanda.visualize.source.html#l467">
+                  <tt><i>467</i>                   <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">savename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'savename':</p>
+               
+               <a href="decodanda.visualize.source.html#l467">
+                  <tt><i>467</i>                   <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">savename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'title':</p>
+               
+               <a href="decodanda.visualize.source.html#l467">
+                  <tt><i>467</i>                   <span class="n">ndata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">savename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'axs':</p>
+               
+               <a href="decodanda.visualize.source.html#l468">
+                  <tt><i>468</i>                   <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'data':</p>
+               
+               <a href="decodanda.visualize.source.html#l468">
+                  <tt><i>468</i>                   <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'names':</p>
+               
+               <a href="decodanda.visualize.source.html#l468">
+                  <tt><i>468</i>                   <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'null':</p>
+               
+               <a href="decodanda.visualize.source.html#l468">
+                  <tt><i>468</i>                   <span class="n">data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'alpha':</p>
+               
+               <a href="decodanda.visualize.source.html#l469">
+                  <tt><i>469</i>                   <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">draw_hd2_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'draw_hd2_lines':</p>
+               
+               <a href="decodanda.visualize.source.html#l469">
+                  <tt><i>469</i>                   <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">draw_hd2_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'mean':</p>
+               
+               <a href="decodanda.visualize.source.html#l469">
+                  <tt><i>469</i>                   <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">draw_hd2_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'z_score':</p>
+               
+               <a href="decodanda.visualize.source.html#l469">
+                  <tt><i>469</i>                   <span class="n">alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">z_score</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">draw_hd2_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <p>Missing type annotation for function argument 'i':</p>
+               
+               <a href="decodanda.visualize.source.html#l571">
+                  <tt><i>571</i>     <span class="k">def</span> <span class="nf">animate</span><span class="p">(</span><span class="n">i</span><span class="p">):</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         <li>
+            <a data-code="ANN201">
+               <span class="count sev-3">
+                  17
+               </span>
+               <strong>ANN201:</strong> Missing return type annotation for public function
+               
+            </a>
+            <ul class="details">
+            <li>
+               
+               <a href="decodanda.visualize.source.html#l8">
+                  <tt><i>8</i> <span class="k">def</span> <span class="nf">corrfunc</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kws</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l24">
+                  <tt><i>24</i> <span class="k">def</span> <span class="nf">corr_scatter</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">xlabel</span><span class="p">,</span> <span class="n">ylabel</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">corr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l62">
+                  <tt><i>62</i> <span class="k">def</span> <span class="nf">line_with_shade</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">errfunc</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">nanstd</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l75">
+                  <tt><i>75</i> <span class="k">def</span> <span class="nf">smooth_hist</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">bins</span><span class="p">,</span> <span class="n">stairs</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l88">
+                  <tt><i>88</i> <span class="k">def</span> <span class="nf">setup_decoding_axis</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">ylow</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">yhigh</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l104">
+                  <tt><i>104</i>                           <span class="n">chance</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;z&#39;</span><span class="p">,</span> <span class="n">annotate</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ylow</span><span class="o">=</span><span class="mf">0.27</span><span class="p">,</span> <span class="n">yhigh</span><span class="o">=</span><span class="mf">1.02</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l154">
+                  <tt><i>154</i> <span class="k">def</span> <span class="nf">plot_perfs_null_model_single</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;d&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shownull</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">ptype</span><span class="o">=</span><span class="s1">&#39;zscore&#39;</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l186">
+                  <tt><i>186</i> <span class="k">def</span> <span class="nf">visualize_decoding</span><span class="p">(</span><span class="n">dec</span><span class="p">,</span> <span class="n">dic</span><span class="p">,</span> <span class="n">perfs</span><span class="p">,</span> <span class="n">null</span><span class="p">,</span> <span class="n">ndata</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">training_fraction</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">testing_trials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l214">
+                  <tt><i>214</i>     <span class="k">def</span> <span class="nf">plot_dic_side</span><span class="p">(</span><span class="n">dic_side</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">lab</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l348">
+                  <tt><i>348</i> <span class="k">def</span> <span class="nf">visualize_raster</span><span class="p">(</span><span class="n">raster</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l367">
+                  <tt><i>367</i> <span class="k">def</span> <span class="nf">visualize_session</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">neural_key</span><span class="o">=</span><span class="s1">&#39;raster&#39;</span><span class="p">,</span> <span class="n">other_keys</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span> <span class="n">contrast</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l390">
+                  <tt><i>390</i> &nbsp;</tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l432">
+                  <tt><i>432</i>     <span class="k">def</span> <span class="nf">init</span><span class="p">():</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l451">
+                  <tt><i>451</i>     <span class="k">def</span> <span class="nf">animate</span><span class="p">(</span><span class="n">i</span><span class="p">):</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l471">
+                  <tt><i>471</i> &nbsp;</tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l530">
+                  <tt><i>530</i>     <span class="k">def</span> <span class="nf">init</span><span class="p">():</span></tt>
+               </a>
+            </li><li>
+               
+               <a href="decodanda.visualize.source.html#l571">
+                  <tt><i>571</i>     <span class="k">def</span> <span class="nf">animate</span><span class="p">(</span><span class="n">i</span><span class="p">):</span></tt>
+               </a>
+            </li>
+            </ul>
+         </li>
+         
+         </ul>
+      </div>
+   </body>
+</html>

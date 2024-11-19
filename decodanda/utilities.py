@@ -3,7 +3,6 @@ import scipy.stats
 
 from .imports import *
 
-
 # Classes
 
 class CrossValidator(object):
@@ -142,8 +141,8 @@ class DictSession:
 class FakeSession:
     def __init__(self, n_neurons, ndata, persistence_letter=0.97, persistence_number=0.97, persistence_color=0.97,
                  noise_amplitude=0.5, coding_fraction=0.1, rotate=False, symplex=False):
-        from sklearn.datasets import make_spd_matrix
         from scipy.stats import unitary_group
+        from sklearn.datasets import make_spd_matrix
         self.raster = np.zeros((ndata, n_neurons))
         self.behaviour_letter = np.zeros(ndata, dtype=object)
         self.behaviour_number = np.zeros(ndata, dtype=object)
