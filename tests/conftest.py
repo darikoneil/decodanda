@@ -159,7 +159,7 @@ class DecoderRegistry:
     """
     Registry of decoder constructors to be accessed by the trained decoder registry (not the test functions).
     """
-    # persistent registry of synthetic data
+    # persistent registry of decoder constructors
     __registry = {}
 
     @classmethod
