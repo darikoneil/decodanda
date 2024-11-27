@@ -195,3 +195,6 @@ fabric.properties
 
 # idea folder, uncomment if you don't need it
 .idea
+
+# ignore htmls from testing/linting/coverage
+*.html
