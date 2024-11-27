@@ -196,5 +196,10 @@ fabric.properties
 # idea folder, uncomment if you don't need it
 .idea
 
-# ignore htmls from testing/linting/coverage
+# ignore testing/linting/coverage auto-generated stuff
 *.html
+.coverage.json
+.coverage.lcov
+/coverage/
+/linting/
+/tests/assets/
