@@ -9,12 +9,13 @@ from sklearn.svm import SVC, LinearSVC
 
 from decodanda import Decodanda, generate_synthetic_data, z_pval
 
+
 """
-This module provides encapsulated containers and fixtures for testing the decodanda package. 
-The fixtures are designed to easily provide synthetic data, trained decoders, and  results for testing.
+This module provides fixtures for providing synthetic data and their associat
+The fixtures are designed to easily provide synthetic data to Decodanda objects and store the results in a registry.
 Once generated, the data, decoders, and results are stored in a registry for efficient access by downstream tests.
 """
-
+# TODO: Update this documentation
 
 """
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -24,13 +25,42 @@ Once generated, the data, decoders, and results are stored in a registry for eff
 
 
 @dataclass(frozen=True)
+class Parameters:
+    """
+    Encapsulation of parameters for providing to the Decodanda constructor
+    """
+    #: identifier for this parameter configuration
+    key: str
+    #---------------------------------------#
+    classifier: Any = "svc"
+    neural_attr: str = "raster"
+    trial_attr: str = "trial"
+    squeeze_trials: bool = False
+    min_data_per_condition: int = 2
+    min_trials_per_condition: int = 2
+    min_activations_per_cell: int = 1
+    trial_chunk: Optional[int] = None
+    exclude_contiguous_chunks: bool = False
+    exclude_silent: bool = False
+    verbose: bool = False
+    zscore: bool = False
+    fault_tolerance: bool = False
+    debug: bool = False
+
+
+@dataclass(frozen=True)
 class Data:
     """
-    Encapsulation of synthetic datasets for testing.
+    Encapsulation of synthetic data for providing to test functions
     """
+    #: the conditions for the dataset
     conditions: MappingProxyType[str, list[int | str]]
+    #: the actual dataset
     data: dict[str, list | np.ndarray]
+    #: identifier for this dataset
     key: str
+
+
     num_neurons: int
     num_trials: int
     num_samples: int
@@ -41,9 +71,10 @@ class Data:
 class Result:
     """
     Encapsulation of decoding results for providing to test functions.
-
     """
+    #: the specific dichotomy tested
     dichotomy: str
+    #: the balanced accuracy
     performance: float
     null: np.ndarray
     pval: float
@@ -128,7 +159,7 @@ class TrainedDecodanda:
 class DataRegistry:
     """
     Persistent registry of synthetic data to be accessed by test functions without
-    the need to regenerate data for each test.
+    the need to regenerate the data for each test.
     """
     # persistent registry of synthetic data
     __registry = {}
@@ -236,7 +267,7 @@ class TrainedDecodandaRegistry:
 @DataRegistry.register()
 def base_data() -> Data:
     """
-    Base dataset for testing.
+    Standard, 'base' dataset for testing.
     """
     data = generate_synthetic_data(n_neurons=80,
                                    n_trials=200,
@@ -294,7 +325,7 @@ def undersampled_data() -> Data:
 
 # noinspection DuplicatedCode
 @DataRegistry.register()
-def tangled_data() -> Data:
+def correlated_conditions_data() -> Data:
     """
     A dataset with tangled conditions for testing.
     """
