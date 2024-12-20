@@ -170,7 +170,6 @@ class DecodandaTestCase:
     #: the results associated with each dichotomy
     results: Results
 
-
 """
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Registries
@@ -446,7 +445,7 @@ def initialization_parameters() -> MappingProxyType[str, Any]:
         "neural_attr": "raster",
         "trial_attr": "trial",
         "squeeze_trials": False,
-        "min_data_per_condition": 2,
+        "min_data_per_condition": 1,
         "min_trials_per_condition": 1,
         "min_activations_per_cell": 1,
         "trial_chunk": None,
@@ -477,6 +476,11 @@ def ccgp_parameters() -> MappingProxyType[str, Any]:
 @pytest.fixture(scope="session")
 def ps_parameters() -> MappingProxyType[str, Any]:
     ...
+
+
+@pytest.fixture(scope="class")
+def data(request) -> Dataset:
+    return DatasetRegistry.get(request.param)
 
 
 @pytest.fixture(scope="class")
@@ -522,12 +526,12 @@ def decoding_test_case(request, initialization_parameters, decoding_parameters) 
 
 
 @pytest.fixture(scope="class")
-def ccgp_test_case(request, initialization_parameters, ccgp_parameters):
+def ccgp_test_case(request, initialization_parameters, ccgp_parameters) -> DecodandaTestCase:
     ...
 
 
 @pytest.fixture(scope="class")
-def ps_test_case(request, initialization_parameters, ps_parameters):
+def ps_test_case(request, initialization_parameters, ps_parameters) -> DecodandaTestCase:
     ...
 
 
