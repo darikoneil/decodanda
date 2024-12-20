@@ -557,7 +557,7 @@ class Decodanda:
                          testing_trials: Optional[list] = None,
                          dic_key: Optional[str] = None,
                          subsample: Optional[float] = 0,
-                         **kwargs) -> ndarray:
+                         **kwargs) ->   ndarray:
         """
         Function that performs cross-validated decoding of a specific dichotomy.
         Decoding is performed by sampling a balanced amount of data points from each condition in each class of the

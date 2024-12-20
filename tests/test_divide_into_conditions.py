@@ -1,10 +1,7 @@
 import numpy as np
 import pytest
+from decodent import Decodanda
 
-from decodanda import Decodanda
-
-# Test the core functionality of the Decodanda class,
-#  i.e., dividing the data into conditioned arrays
 
 @pytest.mark.parametrize("data", ["base", "undersampled", "tangled"], indirect=["data"])
 def test_division_into_conditioned_data(data) -> None:
