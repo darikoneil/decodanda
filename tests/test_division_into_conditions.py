@@ -3,13 +3,22 @@ import pytest
 from decodanda import Decodanda
 
 
-@pytest.mark.parametrize("data", [["base_dataset", "correlated_dataset", "random_dataset"]], indirect=True)
-def test_division_into_conditions(data):
+@pytest.mark.parametrize("data", ["base_dataset", "correlated_dataset", "random_dataset"], indirect=True)
+def test_division_into_conditions(data, initialization_parameters):
+    """
+    Test the division of the dataset into conditions. First, a decodanda object is created using the dataset as input.
+    Next, we check that the number of features is the same for all conditioned data. Then, we check that the number of
+    we check that the number of features, samples and trials in the decodanda object is less than or equal to the
+    number of features, samples and trials in the dataset.
+
+    Parameters
+    ----------
+    data: Dataset
+        The dataset to test
+    """
     decodanda = Decodanda(data=dict(data.data),
                           conditions=dict(data.conditions),
-                          verbose=False,
-                          min_data_per_condition=0,
-                          min_trials_per_condition=0)
+                          **initialization_parameters)
     max_features_expected = data.num_neurons
     max_samples_expected = data.num_samples
     num_features = {raster[0].shape[1] for raster in decodanda.conditioned_rasters.values()}
