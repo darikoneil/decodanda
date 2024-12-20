@@ -395,7 +395,7 @@ def base_dataset() -> Dataset:
     return Dataset(
         conditions=MappingProxyType({"a_condition": [-1, 1], "b_condition": [-1, 1]}),
         linearly_separable_semantic_dichotomies=["a_condition", "b_condition"],
-        non_linearly_separable_dichotomies=["XOR", ],
+        non_linearly_separable_semantic_dichotomies=["XOR", ],
         data=MappingProxyType(data),
         key="base_dataset",
     )
@@ -428,7 +428,7 @@ def undersampled_dataset() -> Dataset:
     return Dataset(
         conditions=MappingProxyType({"a_condition": [-1, 1], "b_condition": [-1, 1]}),
         linearly_separable_semantic_dichotomies=["a_condition", "b_condition"],
-        non_linearly_separable_dichotomies=["XOR", ],
+        non_linearly_separable_semantic_dichotomies=["XOR", ],
         data=MappingProxyType(data),
         key="undersampled_dataset",
     )
@@ -462,7 +462,7 @@ def correlated_dataset() -> Dataset:
         conditions=MappingProxyType({"a_condition": [-1, 1], "b_condition": [-1, 1]}),
         data=MappingProxyType(data),
         linearly_separable_semantic_dichotomies=["a_condition"],
-        non_linearly_separable_dichotomies=[None, ],
+        non_linearly_separable_semantic_dichotomies=[None, ],
         key="correlated_dataset",
     )
 
@@ -495,7 +495,7 @@ def random_dataset() -> Dataset:
         conditions=MappingProxyType({"a_condition": [-1, 1], "b_condition": [-1, 1]}),
         data=MappingProxyType(data),
         linearly_separable_semantic_dichotomies=[None, ],
-        non_linearly_separable_dichotomies=[None, ],
+        non_linearly_separable_semantic_dichotomies=[None, ],
         key="random_dataset",
     )
 
