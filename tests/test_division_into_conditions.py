@@ -3,7 +3,10 @@ import pytest
 from decodanda import Decodanda
 
 
-@pytest.mark.parametrize("data", ["base_dataset", "correlated_dataset", "random_dataset"], indirect=True)
+@pytest.mark.parametrize("data", indirect=True, argvalues=["base_dataset",
+                                                           "correlated_dataset",
+                                                           "undersampled_dataset",
+                                                           "random_dataset"])
 def test_division_into_conditions(data, initialization_parameters):
     """
     Test the division of the dataset into conditions. First, a decodanda object is created using the dataset as input.

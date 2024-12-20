@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import singledispatchmethod, partial
 from types import MappingProxyType
 from typing import Any, Callable, Iterator, Optional
@@ -101,16 +101,25 @@ class Dataset:
     data: MappingProxyType[str, list | np.ndarray]
 
     #: linearly separable semantic dichotomies
-    linearly_separable_semantic_dichotomies: list[str | None]
+    linearly_separable_semantic_dichotomies: list[str | None] = field(default_factory=list)
 
     #: non-linearly separable semantic dichotomies
-    non_linearly_separable_semantic_dichotomies: list[str | None]
+    non_linearly_separable_semantic_dichotomies: list[str | None] = field(default_factory=list)
 
-    # Reserved for expected CGP
+    #: linearly separable non-semantic dichotomies
+    linearly_separable_nonsemantic_dichotomies: list[str | None] = field(default_factory=list)
+
+    #: non-linearly separable non-semantic dichotomies
+    non_linearly_separable_nonsemantic_dichotomies: list[str | None] = field(default_factory=list)
+
+    # Reserved for expected CCGP
+    # expected results ccgp
 
     # Reserved for expected PS
+    # expected results ps
 
     # Reserved for expected In-Time
+    # expected results in_time
 
     @property
     def num_conditions(self) -> int:
@@ -395,7 +404,7 @@ def base_dataset() -> Dataset:
     return Dataset(
         conditions=MappingProxyType({"a_condition": [-1, 1], "b_condition": [-1, 1]}),
         linearly_separable_semantic_dichotomies=["a_condition", "b_condition"],
-        non_linearly_separable_semantic_dichotomies=["XOR", ],
+        non_linearly_separable_nonsemantic_dichotomies=["XOR", ],
         data=MappingProxyType(data),
         key="base_dataset",
     )
@@ -412,8 +421,8 @@ def undersampled_dataset() -> Dataset:
     Dataset
         The dataset for testing.
     """
-    data = generate_synthetic_data(n_neurons=80,
-                                   n_trials=8,
+    data = generate_synthetic_data(n_neurons=200,
+                                   n_trials=10,
                                    keyA="a_condition",
                                    rateA=0.3,
                                    keyB="b_condition",
@@ -428,7 +437,7 @@ def undersampled_dataset() -> Dataset:
     return Dataset(
         conditions=MappingProxyType({"a_condition": [-1, 1], "b_condition": [-1, 1]}),
         linearly_separable_semantic_dichotomies=["a_condition", "b_condition"],
-        non_linearly_separable_semantic_dichotomies=["XOR", ],
+        non_linearly_separable_nonsemantic_dichotomies=["XOR", ],
         data=MappingProxyType(data),
         key="undersampled_dataset",
     )
@@ -462,7 +471,7 @@ def correlated_dataset() -> Dataset:
         conditions=MappingProxyType({"a_condition": [-1, 1], "b_condition": [-1, 1]}),
         data=MappingProxyType(data),
         linearly_separable_semantic_dichotomies=["a_condition"],
-        non_linearly_separable_semantic_dichotomies=[None, ],
+        non_linearly_separable_nonsemantic_dichotomies=[None, ],
         key="correlated_dataset",
     )
 
@@ -481,21 +490,13 @@ def random_dataset() -> Dataset:
     data = generate_synthetic_data(n_neurons=80,
                                    n_trials=100,
                                    keyA="a_condition",
-                                   rateA=0.0,
                                    keyB="b_condition",
-                                   rateB=0.0,
                                    timebins_per_trial=5,
-                                   corrAB=0.0,
-                                   scale=1.0,
-                                   meanfr=0.25,
-                                   mixed_term=0.0,
-                                   mixing_factor=0.0
                                    )
+    data["raster"] = np.random.randint(0, 5, data.get("raster").shape)
     return Dataset(
         conditions=MappingProxyType({"a_condition": [-1, 1], "b_condition": [-1, 1]}),
         data=MappingProxyType(data),
-        linearly_separable_semantic_dichotomies=[None, ],
-        non_linearly_separable_semantic_dichotomies=[None, ],
         key="random_dataset",
     )
 
@@ -720,22 +721,11 @@ def decoding_test_case(request, initialization_parameters, decoding_parameters) 
         result, null = decodanda.decode_with_nullmodel(value, **decoding_parameters)
         zval, pval = z_pval(result, null)
         test_case.results.add(Result(
-            dichotomy=key,
+           dichotomy=key,
             performance=result,
             null=null,
             pval=pval,
-            zval=zval,
-        ))
-    # TRAIN NON-SEMANTIC DICHOTOMIES
-    for key, value in decodanda.all_dichotomies(balanced=True, semantic_names=False).items():
-        result, null = decodanda.decode_with_nullmodel(value, **decoding_parameters)
-        zval, pval = z_pval(result, null)
-        test_case.results.add(Result(
-            dichotomy=key,
-            performance=result,
-            null=null,
-            pval=pval,
-            zval=zval,
+           zval=zval,
         ))
     # ADD THE DECODANDA OBJECT TO THE TEST CASE
     test_case.decodanda = decodanda
