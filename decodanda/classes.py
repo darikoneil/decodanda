@@ -20,7 +20,7 @@ from numpy import ndarray
 from .imports import *
 from .utilities import generate_binary_words, string_bool, sample_training_testing_from_rasters, CrossValidator, \
     log_dichotomy, hamming, sample_from_rasters, generate_dichotomies, semantic_score, z_pval, DictSession, \
-    contiguous_chunking, non_contiguous_mask, cosine
+    contiguous_chunking, non_contiguous_mask, cosine, Classifier
 from .visualize import corr_scatter, visualize_decoding, plot_perfs_null_model, visualize_PCA
 
 
@@ -30,7 +30,7 @@ class Decodanda:
     def __init__(self,
                  data: Union[list, dict],
                  conditions: dict,
-                 classifier: any = 'svc',
+                 classifier: Classifier | None = None,
                  neural_attr: str = 'raster',
                  trial_attr: str = 'trial',
                  squeeze_trials: bool = False,
@@ -67,8 +67,8 @@ class Decodanda:
             A dictionary that specifies which values for which variables of `data` we want to decode.
             See the ``Data Structure`` section for more details.
 
-        classifier
-            The classifier used for all decoding analyses. Default: ``sklearn.svm.LinearSVC``.
+        classifier: Classifier | None
+            The classifier used for all decoding analyses. If None, ``sklearn.svm.LinearSVC``.
 
         neural_attr
             The key under which the neural features are stored in the ``data`` dictionary.
@@ -223,9 +223,20 @@ class Decodanda:
         # setting input parameters
         self.data = data
         self.conditions = conditions
-        if classifier == 'svc':
-            classifier = LinearSVC(dual=False, C=1.0, class_weight='balanced', max_iter=5000)
-        self.classifier = classifier
+
+        # validate and set classifier
+        if classifier is None:
+            # We do this instead of setting LinearSVC as the default in the function signature to allow
+            # someone to pass a LinearSVC with different parameters as the classifier and to allow us to set defaults
+            # with having to set a partial with the parameters bound as the default. We don't pass a string as the
+            # default for simplicity of this code block
+            self.classifier = LinearSVC(dual=False, C=1.0, class_weight='balanced', max_iter=5000)
+        elif not isinstance(classifier, Classifier):
+            # This will return true if the classifier is a class and not an instance of a class
+            raise ValueError("The classifier parameter must adhere to the Classifier interface (e.g., sklearn).")
+        else:
+            # noinspection PyCallingNonCallable
+            self.classifier = classifier()
 
         # private params
         self._min_data_per_condition = min_data_per_condition

@@ -1,10 +1,78 @@
 import numpy as np
 import scipy.stats
-
+from typing import Protocol, runtime_checkable
 from .imports import *
 
 
 # Classes
+
+# noinspection PyPep8Naming
+@runtime_checkable
+class Classifier(Protocol):  # Structural subtyping class that allows for type checking at runtime & IDE support
+    """
+    Decodanda accepts any classifier that adheres to this interface (e.g., sklearn). If you are
+    implementing a custom classifier, ensure that it implements the following methods. These methods must adhere to
+    the designated return type, and (at minimum) accept parameters with the specified types.
+
+    Methods
+    -------
+    fit(X: np.ndarray, y: np.ndarray, sample_weight: Optional = None) -> None
+        Method that fits the classifier to the provided data, where X is the data and y is the target labels.
+    predict(X: np.ndarray) -> np.ndarray
+        Method that predicts the class labels for the provided data (X)
+    score(X: np.ndarray, y: np.ndarray) -> float
+        Method that returns the balanced accuracy of the classifier on the provided data (X) and target labels (y).
+    """
+
+    def fit(self, X: np.ndarray, y: np.ndarray, sample_weight: Optional = None) -> None:
+        """
+        Method that fits the classifier to the provided data, where X is the data and y is the target labels.
+
+        Parameters
+        ----------
+        X : np.ndarray
+            The data to fit the classifier on.
+        y : np.ndarray
+            The target labels for the data.
+        sample_weight : Optional
+            The sample weights for the data. Default is None.
+        """
+        ...
+
+    def predict(self, X: np.ndarray) -> np.ndarray:
+        """
+        Method that predicts the class labels for the provided data (X)
+
+        Parameters
+        ----------
+        X : np.ndarray
+            The data to predict the class labels for.
+
+        Returns
+        -------
+        np.ndarray
+            The predicted class labels.
+        """
+        ...
+
+    def score(self, X: np.ndarray, y: np.ndarray) -> float:
+        """
+        Method that returns the balanced accuracy of the classifier on the provided data (X) and target labels (y).
+
+        Parameters
+        ----------
+        X : np.ndarray
+            The data to score the classifier on.
+        y : np.ndarray
+            The target labels for the data.
+
+        Returns
+        -------
+        float
+            The balanced accuracy of the classifier.
+        """
+        ...
+
 
 class CrossValidator(object):
     # necessary for parallelization of cross validation repetitions
