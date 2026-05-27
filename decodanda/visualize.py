@@ -101,7 +101,7 @@ def setup_decoding_axis(ax, labels, ylow=0.4, yhigh=1.0, null=0.5):
     sns.despine(ax=ax)
 
 
-def plot_perfs_null_model(perfs, perfs_nullmodel, marker='d', ylabel='Decoding performance', ax=None, shownull=False,
+def plot_perfs_null_model(perfs, perfs_nullmodel, marker='o', ylabel='Decoding performance', ax=None, shownull=False,
                           chance=0.5, setup=True, ptype='z', annotate=True, ylow=0.27, yhigh=1.02, **kwargs):
     labels = list(perfs.keys())
     pvals = {}
@@ -253,7 +253,7 @@ def visualize_decoding(dec, dic, perfs, null, ndata=100, training_fraction=0.5, 
     axD.text(1.0, 0.05 * np.max(null_y), '%s\nz=%.1f\nP=%.1e' % (p_to_ast(p), z, p), ha='center')
     axD.plot(null, np.zeros(len(null)), linestyle='', marker='|', color='k')
     axD.plot(perfs, np.zeros(len(perfs)), linestyle='', marker='.', color='r', alpha=0.5)
-    axD.plot([null_mean, null_mean], [0, float(kde(null_mean))], color='k', linestyle='--')
+    axD.plot([null_mean, null_mean], [0, float(kde(null_mean)[0])], color='k', linestyle='--')
 
     # plotting decoding weight distribution
     axW = f.add_subplot(gs[9:16, 25:31])

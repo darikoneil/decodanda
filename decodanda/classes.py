@@ -14,13 +14,14 @@
 import copy
 from typing import Tuple, Union
 
+import matplotlib.pyplot as plt
 import numpy as np
 import scipy.stats.stats
 from numpy import ndarray
 from .imports import *
-from .utilities import generate_binary_words, string_bool, sample_training_testing_from_rasters, CrossValidator, \
+from .utilities import generate_binary_words, string_digits, sample_training_testing_from_rasters, CrossValidator, \
     log_dichotomy, hamming, sample_from_rasters, generate_dichotomies, semantic_score, z_pval, DictSession, \
-    contiguous_chunking, non_contiguous_mask, cosine
+    contiguous_chunking, non_contiguous_mask, cosine, generate_words, plot_confusion_matrix, enforce_min_time_separation
 from .visualize import corr_scatter, visualize_decoding, plot_perfs_null_model, visualize_PCA
 
 
@@ -37,8 +38,9 @@ class Decodanda:
                  min_data_per_condition: int = 2,
                  min_trials_per_condition: int = 2,
                  min_activations_per_cell: int = 1,
+                 min_time_separation: Optional[float] = None,
+                 time_attr: Optional[str] = None,
                  trial_chunk: Optional[int] = None,
-                 exclude_contiguous_chunks: bool = False,
                  exclude_silent: bool = False,
                  verbose: bool = False,
                  zscore: bool = False,
@@ -98,16 +100,19 @@ class Decodanda:
             The minimum number of non-zero bins that single neurons / features need to have to be
             included into the analysis.
 
+        min_time_separation
+            The minimum time difference, computed using ``time_attr``, between data assigned to different trial numbers.
+            This prevents signals with long autocorrelations (e.g., calcium activity) from spilling over between
+            training and testing trials.
+
+        time_attr
+            Name of the session field/attribute containing the time vector (one value per sample/bin),
+            used to compute ``min_time_separation``.
+
         trial_chunk
             Only used when ``trial_attr=None``. The maximum number of consecutive data points
             within the same bout. Bouts longer than ``trial_chunk`` data points are split into
             different trials.
-
-        exclude_contiguous_chunks
-            Only used when ``trial_attr=None`` and ``trial_chunks != None``. Discards every second trial
-            that has the same value of all variables as the previous one. It can be useful to avoid
-            decoding temporal artifacts when there are long auto-correlation times in the neural
-            activations.
 
         exclude_silent
             If ``True``, all silent population vectors (only zeros) are excluded from the analysis.
@@ -210,23 +215,27 @@ class Decodanda:
             data = dict_sessions
 
         # check whether conditions are binary
+        self._is_multiclass = False
         for key in conditions:
             if len(conditions[key]) != 2:
-                raise RuntimeError(
-                    f"\n[Decodanda] In this version of Decodanda, variables should be binary\n "
-                    f"Variable {key} has {len(conditions[key])} values. Please check the conditions dictionary.")
+                self._is_multiclass = True
 
         # handling discrete dict conditions
         if type(list(conditions.values())[0]) == list:
-            conditions = _generate_binary_conditions(conditions)
+            conditions = _generate_conditions_from_dic(conditions)
 
         # setting input parameters
         self.data = data
         self.conditions = conditions
         if classifier == 'svc':
-            classifier = LinearSVC(dual=False, C=1.0, class_weight='balanced', max_iter=5000)
-        self.classifier = classifier
+            if self._is_multiclass:
+                # One-vs-one linear SVM for multiclass
+                classifier = SVC(kernel='linear', class_weight='balanced', C=1.0, max_iter=5000)
+            else:
+                # Faster solver for binary case
+                classifier = LinearSVC(dual=False, C=1.0, class_weight='balanced', max_iter=5000)
 
+        self.classifier = classifier
         # private params
         self._min_data_per_condition = min_data_per_condition
         self._min_trials_per_condition = min_trials_per_condition
@@ -238,7 +247,8 @@ class Decodanda:
         self._neural_attr = neural_attr
         self._trial_attr = trial_attr
         self._trial_chunk = trial_chunk
-        self._exclude_contiguous_trials = exclude_contiguous_chunks
+        self._min_time_separation = min_time_separation
+        self._time_attr = time_attr
         self._trial_average = squeeze_trials
 
         # setting session(s) data
@@ -249,11 +259,12 @@ class Decodanda:
         self.n_neurons = 0
         self.n_brains = 0
         self.which_brain = []
+        self._time_separation_masks = []
+        self._session_trial_vectors = []
 
         # keys and stuff
-        self._condition_vectors = generate_binary_words(self.n_conditions)  # TODO change this for multimodal
+        self._condition_vectors = generate_words(self.conditions)
         self._semantic_keys = list(self.conditions.keys())
-        self._semantic_vectors = {string_bool(w): [] for w in generate_binary_words(self.n_conditions)}
         self._generate_semantic_vectors()
 
         # decoding weights
@@ -266,10 +277,10 @@ class Decodanda:
         #   as a value, create a list of neural data for each session conditioned as per key
 
         #   >>> main object: neural rasters conditioned to semantic vector <<<
-        self.conditioned_rasters = {string_bool(w): [] for w in self._condition_vectors}
+        self.conditioned_rasters = {string_digits(w): [] for w in self._condition_vectors}
 
         # conditioned null model index is the chunk division used for null model shuffles
-        self.conditioned_trial_index = {string_bool(w): [] for w in self._condition_vectors}
+        self.conditioned_trial_index = {string_digits(w): [] for w in self._condition_vectors}
 
         #   >>> main part: create conditioned arrays <<< ---------------------------------
         self._divide_data_into_conditions(data)
@@ -286,7 +297,7 @@ class Decodanda:
             self._compute_centroids()
 
             # null model variables
-            self.random_translations = {string_bool(w): [] for w in self._condition_vectors}
+            self.random_translations = {string_digits(w): [] for w in self._condition_vectors}
             self.subset = np.arange(self.n_neurons)
 
             self.ordered_conditioned_rasters = {}
@@ -420,6 +431,79 @@ class Decodanda:
                 self.decoding_weights_null[dic_key].append(self.classifier.coef_)
 
         performance = self._test(testing_array_A, testing_array_B, label_A, label_B)
+
+        return performance
+
+    def _one_X_cv_step(self, dic1, dic2, training_fraction, ndata, shuffled=False):
+        # Training rasters
+        training_set_A = dic1[0]
+        training_set_B = dic1[1]
+        testing_set_A = dic2[0]
+        testing_set_B = dic2[1]
+
+        training_array_A = []
+        training_array_B = []
+        testing_array_A = []
+        testing_array_B = []
+
+        # allow for unbalanced dichotomies
+        n_conditions_A = float(len(dic1[0]))
+        n_conditions_B = float(len(dic1[1]))
+        fraction = n_conditions_A / n_conditions_B
+
+        for d in training_set_A:
+            training, testing = sample_training_testing_from_rasters(self.conditioned_rasters[d],
+                                                                     int(ndata / fraction),
+                                                                     training_fraction,
+                                                                     self.conditioned_trial_index[d],
+                                                                     debug=self._debug)
+            if self._debug:
+                plt.title('Condition A')
+                print("Sampling for condition A, d=%s" % d)
+                print("Conditioned raster mean:")
+                print(np.nanmean(self.conditioned_rasters[d][0], 0))
+
+            training_array_A.append(training)
+            if d in testing_set_A:
+                testing_array_A.append(testing)
+            elif d in testing_set_B:
+                testing_array_B.append(testing)
+
+        for d in training_set_B:
+            training, testing = sample_training_testing_from_rasters(self.conditioned_rasters[d],
+                                                                     int(ndata),
+                                                                     training_fraction,
+                                                                     self.conditioned_trial_index[d],
+                                                                     debug=self._debug)
+            training_array_B.append(training)
+            if d in testing_set_A:
+                testing_array_A.append(testing)
+            elif d in testing_set_B:
+                testing_array_B.append(testing)
+
+        training_array_A = np.vstack(training_array_A)
+        training_array_B = np.vstack(training_array_B)
+        testing_array_A = np.vstack(testing_array_A)
+        testing_array_B = np.vstack(testing_array_B)
+
+        if self._debug:
+            selectivity_training = np.nanmean(training_array_A, 0) - np.nanmean(training_array_B, 0)
+            selectivity_testing = np.nanmean(testing_array_A, 0) - np.nanmean(testing_array_B, 0)
+            corr_scatter(selectivity_training, selectivity_testing, 'Selectivity (training)', 'Selectivity (testing)')
+
+        if self._zscore:
+            big_raster = np.vstack([training_array_A, training_array_B])  # z-scoring using the training data
+            big_mean = np.nanmean(big_raster, 0)
+            big_std = np.nanstd(big_raster, 0)
+            big_std[big_std == 0] = np.inf
+            training_array_A = (training_array_A - big_mean) / big_std
+            training_array_B = (training_array_B - big_mean) / big_std
+            testing_array_A = (testing_array_A - big_mean) / big_std
+            testing_array_B = (testing_array_B - big_mean) / big_std
+
+        self._train(training_array_A, training_array_B, 'A', 'B')
+
+        performance = self._test(testing_array_A, testing_array_B, 'A', 'B')
 
         return performance
 
@@ -787,6 +871,8 @@ class Decodanda:
         [0.82, 0.87] # 2 values
 
         """
+        if self._is_multiclass:
+            raise RuntimeError(f"{self.__class__.__name__}: this analysis is only defined for binary variables. ")
 
         if type(dichotomy) == str:
             dic = self._dichotomy_from_key(dichotomy)
@@ -821,7 +907,8 @@ class Decodanda:
                         test_condition_A = set_A[i]
                         test_condition_B = set_B[j]
 
-                        if hamming(string_bool(test_condition_A), string_bool(test_condition_B)) <= max_semantic_dist:
+                        if hamming(string_digits(test_condition_A),
+                                   string_digits(test_condition_B)) <= max_semantic_dist:
                             training_conditions_A = [x for iA, x in enumerate(set_A) if iA != i]
                             training_conditions_B = [x for iB, x in enumerate(set_B) if iB != j]
 
@@ -897,8 +984,8 @@ class Decodanda:
                 training_array_A = np.vstack(training_array_A)
                 training_array_B = np.vstack(training_array_B)
 
-                if self._debug:
-                    print(f'CCGP: Training on {label_A} vs {label_B}')
+                if self._verbose:
+                    print(f'\nCCGP: Training on {label_A} vs {label_B}')
 
                 testing_array_A = []
                 testing_array_B = []
@@ -918,7 +1005,7 @@ class Decodanda:
                 testing_array_A = np.vstack(testing_array_A)
                 testing_array_B = np.vstack(testing_array_B)
 
-                if self._debug:
+                if self._verbose:
                     print(f'CCGP: Testing on {label_A_test} vs {label_B_test}')
 
                 if shuffled:
@@ -957,6 +1044,9 @@ class Decodanda:
                                     shuffled: bool = False,
                                     method: str = 'pearson',
                                     return_combinations: bool = False):
+        if self._is_multiclass:
+            raise RuntimeError(f"{self.__class__.__name__}: this analysis is only defined for binary variables. ")
+
         if type(dichotomy) == str:
             dic = self._dichotomy_from_key(dichotomy)
         else:
@@ -973,7 +1063,7 @@ class Decodanda:
             for j in range(len(set_B)):
                 test_condition_A = set_A[i]
                 test_condition_B = set_B[j]
-                if hamming(string_bool(test_condition_A), string_bool(test_condition_B)) <= max_semantic_dist:
+                if hamming(string_digits(test_condition_A), string_digits(test_condition_B)) <= max_semantic_dist:
                     testing_array_A = sample_from_rasters(self.conditioned_rasters[test_condition_A], ndata=ndata)
                     testing_array_B = sample_from_rasters(self.conditioned_rasters[test_condition_B], ndata=ndata)
 
@@ -1015,6 +1105,207 @@ class Decodanda:
             return np.nanmean(parallelism_scores)
 
     # Dichotomy analysis functions with null model
+    def decode_multiclass(self,
+                          classes,
+                          training_fraction: float,
+                          cross_validations: int = 10,
+                          ndata: Optional[int] = None,
+                          subsample: Optional[int] = 0,
+                          shuffled: Optional[bool] = False):
+        """
+        Multiclass decoding of a single variable.
+
+        Parameters
+        ----------
+            classes : str or list
+                If str, interpreted as the name of a variable in self.conditions,
+                and the class structure is obtained via self._balanced_classes(classes).
+                If list, it should be a list of lists of condition keys, e.g.
+                [['00', '01'], ['10', '11'], ['20', '21']].
+            training_fraction : float
+                Fraction of trials used for training in each cross-validation fold.
+            cross_validations : int
+                Number of cross-validation iterations.
+            ndata : int, optional
+                Number of data points sampled per condition for training and testing.
+                If None, defaults are chosen as in decode_dichotomy.
+            subsample : int, optional
+                If >0, a random subset of neurons of size=subsample is used.
+            shuffled : bool, optional
+                If True, use the geometric null model implemented by
+                ``self._shuffle_conditioned_arrays`` before decoding, and
+                restore the original ordering afterwards.
+
+        Returns
+        -------
+            performance : np.ndarray
+                Array of decoding performance values for each cross-validation.
+        """
+
+        # define class groups
+        if isinstance(classes, str):
+            class_sets = self._balanced_classes(classes)
+        else:
+            class_sets = classes
+
+        # choose default ndata as in decode_dichotomy
+        if ndata is None and self.n_brains == 1:
+            ndata = self._max_conditioned_data
+        if ndata is None and self.n_brains > 1:
+            ndata = max(self._max_conditioned_data, 2 * self.n_neurons)
+
+        # null-model shuffling of conditioned arrays
+        if shuffled:
+            self._shuffle_conditioned_arrays([[],[]])  # empty dic returns 0 for dic_key so it shuffles as for XORs
+
+        performance = []
+        CM = []
+
+        for k in range(cross_validations):
+            if subsample:
+                self._generate_random_subset(subsample)
+
+            training_arrays = []
+            testing_arrays = []
+            training_labels = []
+            testing_labels = []
+
+            # loop over classes (values of the decoded variable)
+            for class_id, cond_list in enumerate(class_sets):
+
+                class_training = []
+                class_testing = []
+
+                # sample from each full condition in this class
+                for d in cond_list:
+                    training, testing = sample_training_testing_from_rasters(
+                        rasters=self.conditioned_rasters[d],
+                        ndata=int(ndata),
+                        training_fraction=training_fraction,
+                        trials=self.conditioned_trial_index[d],
+                        debug=self._debug
+                    )
+                    class_training.append(training)
+                    class_testing.append(testing)
+
+                if not len(class_training):
+                    continue
+
+                class_training = np.vstack(class_training)
+                class_testing = np.vstack(class_testing)
+
+                training_arrays.append(class_training)
+                testing_arrays.append(class_testing)
+
+                training_labels.append(
+                    np.repeat(class_id, class_training.shape[0]).astype(object)
+                )
+                testing_labels.append(
+                    np.repeat(class_id, class_testing.shape[0]).astype(object)
+                )
+
+            # if nothing was sampled, skip
+            if not len(training_arrays):
+                performance.append(np.nan)
+                continue
+
+            training_raster = np.vstack(training_arrays)
+            testing_raster = np.vstack(testing_arrays)
+            training_labels = np.hstack(training_labels).astype(int)
+            testing_labels = np.hstack(testing_labels).astype(int)
+
+            # z-score on training data, apply to both
+            if self._zscore:
+                big_mean = np.nanmean(training_raster, 0)
+                big_std = np.nanstd(training_raster, 0)
+                big_std[big_std == 0] = np.inf
+                training_raster = (training_raster - big_mean) / big_std
+                testing_raster = (testing_raster - big_mean) / big_std
+
+            # local clone of the classifier; keep self.classifier untouched
+            classifier = sklearn.base.clone(self.classifier)
+
+            training_raster_sub = training_raster[:, self.subset]
+            testing_raster_sub = testing_raster[:, self.subset]
+
+            if self._debug:
+                print("decode_multiclass: fold %d" % k)
+                print("Training shape:", training_raster_sub.shape)
+                print("Testing shape:", testing_raster_sub.shape)
+
+            classifier.fit(training_raster_sub, training_labels)
+            perf = classifier.score(testing_raster_sub, testing_labels)
+
+            from sklearn.metrics import confusion_matrix
+            y_pred = classifier.predict(testing_raster_sub)
+            cm = confusion_matrix(testing_labels, y_pred, labels=np.arange(len(class_sets)))
+
+            performance.append(perf)
+            CM.append(cm)
+
+            if subsample:
+                self._reset_random_subset()
+
+        # restore original ordering of conditioned rasters after null shuffling
+        if shuffled:
+            self._order_conditioned_rasters()
+
+        return np.asarray(performance), np.asarray(CM)
+
+    def decode_multiclass_with_nullmodel(self, variable: Union[str, list],
+                                         training_fraction: float,
+                                         cross_validations: int = 10,
+                                         nshuffles: int = 10,
+                                         ndata: Optional[int] = None,
+                                         return_CV: bool = False,
+                                         plot: bool = False,
+                                         dic_key: Optional[str] = None,
+                                         subsample: Optional[int] = 0,
+                                         **kwargs):
+        if dic_key is None and type(variable) == str:
+            dic_key = variable
+        elif dic_key is None:
+            dic_key = 'Var'
+        if type(variable) == str:
+            classes = self._balanced_classes(variable)
+        else:
+            classes = variable
+
+        perf, cm = self.decode_multiclass(classes=classes,
+                                          training_fraction=training_fraction,
+                                          cross_validations=cross_validations,
+                                          ndata=ndata,
+                                          subsample=subsample,
+                                          shuffled=False)
+        perf_null = []
+        cm_null = []
+        for n in tqdm(range(nshuffles)):
+            perfs_n, cm_n = self.decode_multiclass(classes=classes,
+                                                   training_fraction=training_fraction,
+                                                   cross_validations=cross_validations,
+                                                   ndata=ndata,
+                                                   subsample=subsample,
+                                                   shuffled=True)
+            perf_null.append(perfs_n)
+            cm_null.append(cm_n)
+
+        if plot:
+            f, axs = plt.subplots(1, 2, figsize=(8, 5), gridspec_kw={'width_ratios': [2, 1]})
+            plot_confusion_matrix(np.nanmean(cm, 0), ax=axs[0])
+            plot_perfs_null_model(perfs={dic_key: np.nanmean(perf)},
+                                  perfs_nullmodel={dic_key: np.nanmean(perf_null, 1)},
+                                  chance=0,
+                                  ylow=np.nanmin(perf_null) * 0.75,
+                                  yhigh=1.05,
+                                  ax=axs[1])
+
+        if not return_CV:
+            perf = np.nanmean(perf)
+            perf_null = np.nanmean(perf_null, 1)
+            cm = np.nanmean(cm, 0)
+            cm_null = np.nanmean(cm, 1)
+
+        return perf, perf_null, cm, cm_null
 
     def decode_with_nullmodel(self, dichotomy: Union[str, list],
                               training_fraction: float,
@@ -1129,6 +1420,8 @@ class Decodanda:
         >>> null
         [0.51, 0.54, 0.48, ..., 0.46] # 25 values
         """
+        if self._is_multiclass:
+            raise RuntimeError(f"{self.__class__.__name__}: this analysis is only defined for binary variables. ")
 
         if type(dichotomy) == str:
             dic = self._dichotomy_from_key(dichotomy)
@@ -1277,6 +1570,8 @@ class Decodanda:
                 >>> null
                 [0.44, 0.48, ..., 0.54] # 10 values
                 """
+        if self._is_multiclass:
+            raise RuntimeError(f"{self.__class__.__name__}: this analysis is only defined for binary variables. ")
 
         performances = self.CCGP_dichotomy(dichotomy=dichotomy, resamplings=resamplings, ndata=ndata,
                                            max_semantic_dist=max_semantic_dist, split_rule=split_rule)
@@ -1437,11 +1732,33 @@ class Decodanda:
         >>> null
         {'stimulus': [0.51, ..., 0.46], 'action': [0.48, ..., 0.55]}  # null model means, 20 values each
         """
+        perfs = {}
+        perfs_nullmodel = {}
+
+        if self._is_multiclass:
+            for key in self._semantic_keys:
+                print("\nTesting multiclass decoding performance for semantic variable: ", key)
+                performance, null_model_performances, cm_data, cm_null = self.decode_multiclass_with_nullmodel(
+                    variable=key,
+                    training_fraction=training_fraction,
+                    cross_validations=cross_validations,
+                    ndata=ndata,
+                    nshuffles=nshuffles,
+                    return_CV=return_CV,
+                    plot=plot_all,
+                    subsample=subsample)
+                perfs[key] = performance
+                perfs_nullmodel[key] = null_model_performances
+            if plot:
+                if not ax:
+                    f, ax = plt.subplots(figsize=(0.5 + 1.8 * len(perfs.keys()), 3.5))
+                plot_perfs_null_model(perfs, perfs_nullmodel, ylabel='Decoding performance', ax=ax, marker='o', ylow=0,
+                                      chance=0, **kwargs)
+
+            return perfs, perfs_nullmodel
 
         semantic_dics, semantic_keys = self._find_semantic_dichotomies()
 
-        perfs = {}
-        perfs_nullmodel = {}
         for key, dic in zip(semantic_keys, semantic_dics):
             if self._verbose:
                 print("\nTesting decoding performance for semantic dichotomy: ", key)
@@ -1899,9 +2216,10 @@ class Decodanda:
                                   p_threshold: float = 0.01,
                                   visualize: bool = True,
                                   semantic_names: Optional[dict] = None,
+                                  max_semantic_dist = 99,
                                   **kwargs):
         """
-        [WIP] This function computes shattering generalization defined as the number of balanced dichotomies that
+        This function computes shattering generalization defined as the number of balanced dichotomies that
         have a above-chance CCGP.
 
         Parameters
@@ -1951,7 +2269,7 @@ class Decodanda:
         for i, dic in tqdm(enumerate(all_dics)):
             res, null = self.CCGP_with_nullmodel(dic, resamplings=2,
                                                  nshuffles=nshuffles, ndata=ndata,
-                                                 max_semantic_dist=99)
+                                                 max_semantic_dist=max_semantic_dist)
 
             perfs[dic_name[i]] = res
             nulls[dic_name[i]] = null
@@ -1994,6 +2312,60 @@ class Decodanda:
         else:
             return shattering_gen, perfs, nulls
 
+
+    def CVI(self, training_fraction: float = 0.75,
+            cross_validations: int = 10,
+            nshuffles: int = 10,
+            ndata: Optional[int] = None,
+            return_splits: bool = False,
+            signed=False
+            ):
+        if ndata is None:
+            ndata = 2 * self._max_conditioned_data
+
+        dics, vars = self._find_semantic_dichotomies()
+        # data
+        results = {}
+        for v1 in range(len(vars)):
+            var1 = vars[v1]
+            dic1 = dics[v1]
+            for v2 in range(len(vars)):
+                if v2 != v1:
+                    var2 = vars[v2]
+                    dic2 = dics[v2]
+                    results[f'{var1}-{var2}'] = []
+                    for k in range(cross_validations):
+                        perf = self._one_X_cv_step(dic1, dic2, training_fraction, ndata)
+                        results[f'{var1}-{var2}'].append(perf)
+                    if signed:
+                        results[f'{var1}-{var2}'] = np.nanmean(np.asarray(results[f'{var1}-{var2}']))
+                    else:
+                        results[f'{var1}-{var2}'] = 0.5 + np.abs(
+                            np.nanmean(np.asarray(results[f'{var1}-{var2}']) - 0.5))
+        # null
+        null = {key: [] for key in results}
+        for n in range(nshuffles):
+            self._shuffle_conditioned_arrays(dic='XOR')
+            for v1 in range(len(vars)):
+                var1 = vars[v1]
+                dic1 = dics[v1]
+                for v2 in range(len(vars)):
+                    if v2 != v1:
+                        var2 = vars[v2]
+                        dic2 = dics[v2]
+                        null_n = []
+                        for k in range(cross_validations):
+                            perf = self._one_X_cv_step(dic1, dic2, training_fraction, ndata)
+                            null_n.append(perf)
+                        null[f'{var1}-{var2}'].append(np.nanmean(null_n))
+            self._order_conditioned_rasters()
+        if not return_splits:
+            megakey = '-'.join(vars)
+            results_combined = {megakey: np.nanmean([results[key] for key in results])}
+            null_combined = {megakey: [np.nanmean([null[key][i] for key in null]) for i in range(nshuffles)]}
+            return results_combined, null_combined
+        return results, null
+
     # Utilities
 
     def visualize_PCA(self, **kwargs):
@@ -2004,7 +2376,6 @@ class Decodanda:
 
     def _divide_data_into_conditions(self, sessions):
         # TODO: rename sessions into datasets?
-        # TODO: make sure conditions don't overlap somehow
 
         for si, session in enumerate(sessions):
 
@@ -2019,17 +2390,61 @@ class Decodanda:
 
             # exclude inactive neurons across the specified conditions
             array = getattr(session, self._neural_attr)
-            total_mask = np.zeros(len(array)) > 0
+            T = array.shape[0]
 
-            for condition_vec in self._condition_vectors:
-                mask = np.ones(len(array)) > 0
+            total_mask = np.zeros(T, dtype=bool)
+            cond_of_bin = np.full(T, -1.0, dtype=float)
+            local_trial_of_bin = np.full(T, -1.0, dtype=float)
+
+            for ci, condition_vec in enumerate(self._condition_vectors):
+                mask = np.ones(T, dtype=bool)
                 for i, sk in enumerate(self._semantic_keys):
                     semantic_values = list(self.conditions[sk])
                     mask_i = self.conditions[sk][semantic_values[condition_vec[i]]](session)
-                    mask = mask & mask_i
-                total_mask = total_mask | mask
+                    mask &= mask_i
+                total_mask |= mask
 
-            min_activity_mask = np.sum(array[total_mask] != 0, 0) >= self._min_activations_per_cell
+                if not np.any(mask):
+                    continue
+
+                # local trials
+                if self._trial_attr is not None:
+                    local_trials = np.asarray(getattr(session, self._trial_attr))[mask]
+                else:
+                    if self._trial_chunk is None:
+                        local_trials = contiguous_chunking(mask)[mask].astype(float)
+                    else:
+                        local_trials = contiguous_chunking(mask, self._trial_chunk)[mask].astype(float)
+                local_trials[np.isnan(local_trials)] = -1.0
+
+                # overlap check (assigned bins are those with cond_of_bin != -1)
+                if np.any(cond_of_bin[mask] != -1.0):
+                    raise ValueError("Conditions overlap in time; cannot build a unique session-wide trial vector.")
+
+                cond_of_bin[mask] = float(ci)
+                local_trial_of_bin[mask] = local_trials
+
+            # factorize (ci, local_trial) -> global id
+            valid = (cond_of_bin != -1.0) & (local_trial_of_bin != -1.0)
+            pairs = np.stack([cond_of_bin[valid], local_trial_of_bin[valid]], axis=1)
+
+            _, inv = np.unique(pairs, axis=0, return_inverse=True)
+
+            session_trial_vector = np.full(T, -1.0, dtype=float)
+            session_trial_vector[valid] = inv.astype(float)
+
+            if self._time_attr is not None:
+                time_vector = getattr(session, self._time_attr)
+                time_separation_mask = enforce_min_time_separation(session_trial_vector, self._min_time_separation, time_vector)
+                if self._debug:
+                    print('[Enforcing time separation] selected %u time bin over %u total time bins' % (np.sum(time_separation_mask), np.sum(total_mask)))
+            else:
+                time_separation_mask = np.ones(T, dtype=bool)
+
+            self._time_separation_masks.append(time_separation_mask)
+            self._session_trial_vectors.append(session_trial_vector)
+
+            min_activity_mask = np.sum(array[total_mask & time_separation_mask] != 0, 0) >= self._min_activations_per_cell
 
             for condition_vec in self._condition_vectors:
                 # get the array from the session object
@@ -2037,38 +2452,19 @@ class Decodanda:
                 array = array[:, min_activity_mask]
 
                 # create a mask that becomes more and more restrictive by iterating on semanting conditions
-                mask = np.ones(len(array)) > 0
+                mask = np.ones(T, dtype=bool)
                 for i, sk in enumerate(self._semantic_keys):
                     semantic_values = list(self.conditions[sk])
                     mask_i = self.conditions[sk][semantic_values[condition_vec[i]]](session)
                     mask = mask & mask_i
 
+                mask = mask & time_separation_mask
+
                 # select bins conditioned on the semantic behavioural vector
                 conditioned_raster = array[mask, :]
 
-                # Define trial logic
-                def condition_no(cond):
-                    no = 0
-                    for i in range(len(cond)):
-                        no += cond[i] * 10 ** (i + 3)
-                    return no
-
-                if self._trial_attr is not None:
-                    conditioned_trial = getattr(session, self._trial_attr)[mask]
-                elif self._trial_chunk is None:
-                    if self._verbose:
-                        print('[Decodanda]\tUsing contiguous chunks of the same labels as trials.')
-                    conditioned_trial = contiguous_chunking(mask)[mask]
-                    conditioned_trial += condition_no(condition_vec)
-                else:
-                    conditioned_trial = contiguous_chunking(mask, self._trial_chunk)[mask]
-                    conditioned_trial += condition_no(condition_vec)
-
-                if self._exclude_contiguous_trials:
-                    contiguous_chunks = contiguous_chunking(mask)[mask]
-                    nc_mask = non_contiguous_mask(contiguous_chunks, conditioned_trial)
-                    conditioned_raster = conditioned_raster[nc_mask, :]
-                    conditioned_trial = conditioned_trial[nc_mask]
+                # select trial numbers
+                conditioned_trial = session_trial_vector[mask]
 
                 # exclude empty time bins (only for binary discrete decoding)
                 if self._exclude_silent:
@@ -2078,7 +2474,7 @@ class Decodanda:
 
                 # squeeze into trials
                 if self._trial_average:
-                    unique_trials = np.unique(conditioned_trial)
+                    unique_trials = np.unique(conditioned_trial[conditioned_trial != -1.0])
                     squeezed_raster = []
                     squeezed_trial_index = []
                     for t in unique_trials:
@@ -2090,8 +2486,8 @@ class Decodanda:
                     conditioned_trial = np.asarray(squeezed_trial_index)
 
                 # set the conditioned neural data in the conditioned_rasters dictionary
-                session_conditioned_rasters[string_bool(condition_vec)] = conditioned_raster
-                session_conditioned_trial_index[string_bool(condition_vec)] = conditioned_trial
+                session_conditioned_rasters[string_digits(condition_vec)] = conditioned_raster
+                session_conditioned_trial_index[string_digits(condition_vec)] = conditioned_trial
 
                 if self._verbose:
                     semantic_vector_string = []
@@ -2117,9 +2513,9 @@ class Decodanda:
             if np.min(session_conditioned_data) >= self._min_data_per_condition and \
                     np.min(session_conditioned_trials) >= self._min_trials_per_condition:
                 for cv in self._condition_vectors:
-                    self.conditioned_rasters[string_bool(cv)].append(session_conditioned_rasters[string_bool(cv)])
-                    self.conditioned_trial_index[string_bool(cv)].append(
-                        session_conditioned_trial_index[string_bool(cv)])
+                    self.conditioned_rasters[string_digits(cv)].append(session_conditioned_rasters[string_digits(cv)])
+                    self.conditioned_trial_index[string_digits(cv)].append(
+                        session_conditioned_trial_index[string_digits(cv)])
                 if self._verbose:
                     print('\n')
                 self.n_brains += 1
@@ -2137,7 +2533,7 @@ class Decodanda:
         semantic_keys = []
 
         for i, dic in enumerate(dics):
-            d = [string_bool(x) for x in dic[0]]
+            d = [string_digits(x) for x in dic[0]]
             col_sum = np.sum(d, 0)
             if (0 in col_sum) or (len(dic[0]) in col_sum):
                 semantic_dics.append(dic)
@@ -2149,7 +2545,7 @@ class Decodanda:
         nonsemantic_dics = []
 
         for i, dic in enumerate(dics):
-            d = [string_bool(x) for x in dic[0]]
+            d = [string_digits(x) for x in dic[0]]
             col_sum = np.sum(d, 0)
             if not ((0 in col_sum) or (len(dic[0]) in col_sum)):
                 nonsemantic_dics.append(dic)
@@ -2198,7 +2594,7 @@ class Decodanda:
     def _dic_key(self, dic):
         if len(dic[0]) == 2 ** (self.n_conditions - 1) and len(dic[1]) == 2 ** (self.n_conditions - 1):
             for i in range(len(dic)):
-                d = [string_bool(x) for x in dic[i]]
+                d = [string_digits(x) for x in dic[i]]
                 col_sum = np.sum(d, 0)
                 if len(dic[0]) in col_sum:
                     return self._semantic_keys[np.where(col_sum == len(dic[0]))[0][0]]
@@ -2215,20 +2611,63 @@ class Decodanda:
         return dic
 
     def _generate_semantic_vectors(self):
+        self._semantic_vectors = {}
         for condition_vec in self._condition_vectors:
             semantic_vector = '('
             for i, sk in enumerate(self._semantic_keys):
-                semantic_values = list(self.conditions[sk])
+                semantic_values = list(self.conditions[sk])  # keys of the dict
                 semantic_vector += semantic_values[condition_vec[i]] + ' '
             semantic_vector = semantic_vector[:-1] + ')'
-            self._semantic_vectors[string_bool(condition_vec)] = semantic_vector
+            self._semantic_vectors[string_digits(condition_vec)] = semantic_vector
+
+    def _balanced_classes(self, key):
+        """
+        For a given semantic variable name ``key``, return a list of lists of
+        condition keys that define the classes for multiclass decoding.
+
+        Each inner list contains all condition keys that share the same value
+        of variable ``key``, while all other variables are free to vary.
+
+        Example:
+            conditions:
+                var1: 3 values
+                var2: 2 values
+
+            condition_vectors (var1,var2) ->
+                [0,0],[0,1],[1,0],[1,1],[2,0],[2,1]
+
+            _balanced_classes('var1') ->
+                [['00','01'], ['10','11'], ['20','21']]
+        """
+        if key not in self._semantic_keys:
+            raise KeyError(f"[Decodanda] Variable {key} not found in semantic keys.")
+
+        key_index = self._semantic_keys.index(key)
+
+        # group condition keys by the value of variable `key`
+        class_groups = {}
+        for condition_vec in self._condition_vectors:
+            class_id = condition_vec[key_index]
+            cond_key = string_digits(condition_vec)
+
+            # in principle all condition vectors should be present, but be robust
+            if cond_key not in self.conditioned_rasters:
+                continue
+
+            if class_id not in class_groups:
+                class_groups[class_id] = []
+            class_groups[class_id].append(cond_key)
+
+        # return groups ordered by class index (0,1,2,...) so they match
+        # the implicit ordering of values in self.conditions[key]
+        return [class_groups[cid] for cid in sorted(class_groups.keys())]
 
     def _compute_centroids(self):
         self.centroids = {w: np.hstack([np.nanmean(r, 0) for r in self.conditioned_rasters[w]])
                           for w in self.conditioned_rasters.keys()}
 
     def _zscore_activity(self):
-        keys = [string_bool(w) for w in self._condition_vectors]
+        keys = [string_digits(w) for w in self._condition_vectors]
         for n in range(self.n_brains):
             n_neurons = self.conditioned_rasters[keys[0]][n].shape[1]
             for i in range(n_neurons):
@@ -2275,7 +2714,7 @@ class Decodanda:
                 for j in range(len(set_B)):
                     test_condition_A = set_A[i]
                     test_condition_B = set_B[j]
-                    if hamming(string_bool(test_condition_A), string_bool(test_condition_B)) == 1:
+                    if hamming(string_digits(test_condition_A), string_digits(test_condition_B)) == 1:
                         for n in range(self.n_brains):
                             # select conditioned rasters
                             arrayA = np.copy(self.conditioned_rasters[test_condition_A][n])
@@ -2550,13 +2989,12 @@ def _generate_binary_condition(var_key, value1, value2, key1=None, key2=None, va
     return conditions
 
 
-def _generate_binary_conditions(discrete_dict):
+def _generate_conditions_from_dic(discrete_dict):
     conditions = {}
     for key in discrete_dict.keys():
-        conditions[key] = {
-            '%s' % discrete_dict[key][0]: lambda d, k=key: getattr(d, k) == discrete_dict[k][0],
-            '%s' % discrete_dict[key][1]: lambda d, k=key: getattr(d, k) == discrete_dict[k][1],
-        }
+        conditions[key] = {}
+        for v in discrete_dict[key]:
+            conditions[key]['%s' % v] = (lambda d, k=key, vv=v: getattr(d, k) == vv)
     return conditions
 
 

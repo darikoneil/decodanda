@@ -360,7 +360,8 @@ def training_test_block_masks(T, training_fraction, trials, randomstate=None, de
     unique_trial_numbers = np.unique(trials)
     nutn = len(unique_trial_numbers)
     if testing_trials is None:
-        if (nutn * (1. - training_fraction)) <= 1:  # in the case of very small number of trials, use all but one for training
+        if (nutn * (
+                1. - training_fraction)) <= 1:  # in the case of very small number of trials, use all but one for training
             if randomstate is None:
                 testing_trials = unique_trial_numbers[np.random.choice(nutn, size=1, replace=False)]
             else:
@@ -375,7 +376,7 @@ def training_test_block_masks(T, training_fraction, trials, randomstate=None, de
         if debug:
             print("All trials:", unique_trial_numbers)
             print("Testing trials:", testing_trials)
-    testing_mask = np.in1d(trials, testing_trials)
+    testing_mask = np.isin(trials, testing_trials)
     training_mask = testing_mask == 0
     return training_mask, testing_mask
 
@@ -455,12 +456,12 @@ def delete_silent_bins(array):
     return array[mask, :]
 
 
-def string_bool(x):
+def string_digits(x):
     if (type(x) == str) or (type(x) == np.str_):
         values = []
         for s in x:
             values.append(bool(int(s)))
-    elif (type(x) == list) or (type(x)==type(np.zeros(10))):
+    elif (type(x) == list) or (type(x) == type(np.zeros(10))):
         values = ''
         for s in x:
             values += str(s)
@@ -477,29 +478,193 @@ def generate_binary_words(n):
     return np.asarray(words)
 
 
+def generate_words(conditions):
+    """
+    conditions: dict[var_name -> dict[value_name -> predicate]]
+
+    Returns:
+        words: np.ndarray of shape (n_combinations, n_variables)
+               where each column is an integer code for that variable's value.
+               The order of variables is list(conditions.keys()).
+    """
+    var_names = list(conditions.keys())
+    n_levels_per_var = [len(conditions[var]) for var in var_names]
+
+    # cartesian product over indices for each variable
+    index_ranges = [range(n) for n in n_levels_per_var]
+    words = list(itertools.product(*index_ranges))
+
+    return np.asarray(words, dtype=int)
+
+
 def generate_dichotomies(n):
     words = generate_binary_words(n)
     dy_words = generate_binary_words(2 ** n)
     dichotomies = []
     sets = []
     for w in dy_words:
-        string_w = string_bool(w)
-        string_not_w = string_bool((w == 0).astype(int))
+        string_w = string_digits(w)
+        string_not_w = string_digits((w == 0).astype(int))
         if (np.sum(w) == np.sum(w == 0)) and (string_not_w not in dichotomies):
             dichotomies.append(string_w)
-            set_A = [string_bool(x) for x in words[w > 0]]
-            set_B = [string_bool(x) for x in words[w == 0]]
+            set_A = [string_digits(x) for x in words[w > 0]]
+            set_B = [string_digits(x) for x in words[w == 0]]
             sets.append([set_A, set_B])
     return dichotomies, sets
 
 
 def semantic_score(dic):
-    d = [string_bool(x) for x in dic[0]]
+    d = [string_digits(x) for x in dic[0]]
     fingerprint = np.abs(np.sum(d, 0) - len(d) / 2)
     return np.max(fingerprint) * np.sum(fingerprint)
 
 
+def enforce_min_time_separation(trial_vector, min_time, time_vector, weight="n_trials"):
+    """
+    Select a subset of trial *segments* (contiguous runs with constant trial id) such that:
+      - any two kept segments are separated by at least `min_time` in `time_vector`
+      - the selection maximizes an objective (`weight`)
+
+    Invalid bins (never selectable):
+      - trial_vector == -1   (float or int)
+      - NaN trial_vector     (float only)
+
+    Parameters
+    ----------
+    trial_vector : (T,) array-like
+        Trial id per time bin.
+    min_time : float
+        Minimum required gap between the end of one kept segment and the start of the next.
+        If <= 0, returns mask of all valid bins.
+    time_vector : (T,) array-like
+        Time coordinate per bin.
+    weight : {"n_trials", "n_bins", "duration"}
+        Objective to maximize:
+          - "n_trials": keep as many segments as possible (default)
+          - "n_bins": keep as many bins as possible
+          - "duration": keep as much time coverage as possible (end-start per segment)
+
+    Returns
+    -------
+    keep_mask : (T,) bool ndarray
+        True on bins belonging to kept segments.
+    """
+    tv = np.asarray(trial_vector)
+    tt = np.asarray(time_vector)
+
+    if tv.ndim != 1 or tt.ndim != 1 or tv.shape[0] != tt.shape[0]:
+        raise ValueError("trial_vector and time_vector must be 1D arrays with the same length.")
+
+    # 1) define which bins are valid candidates
+    if np.issubdtype(tv.dtype, np.floating):
+        valid = (~np.isnan(tv)) & (tv != -1.0)
+        tv_int = np.full(tv.shape[0], -1, dtype=int)
+        tv_int[valid] = tv[valid].astype(int)
+        tv = tv_int
+    else:
+        valid = (tv != -1)
+
+    if min_time is None or min_time <= 0:
+        return valid.copy()
+    if not np.any(valid):
+        return np.zeros_like(valid, dtype=bool)
+
+    # 2) compress time series into contiguous segments of constant trial id
+    #    each segment becomes an interval [start_time, end_time] with a weight
+    seg_id = np.full(tv.shape[0], -1, dtype=int)
+
+    starts = []
+    ends = []
+    nbins = []
+
+    current = -1
+    prev_trial = None
+    in_seg = False
+
+    for i in range(tv.shape[0]):
+        if not valid[i]:
+            in_seg = False
+            prev_trial = None
+            continue
+
+        trial_i = int(tv[i])
+
+        if (not in_seg) or (trial_i != prev_trial):
+            current += 1
+            starts.append(float(tt[i]))
+            ends.append(float(tt[i]))
+            nbins.append(1)
+            in_seg = True
+            prev_trial = trial_i
+        else:
+            ends[current] = float(tt[i])
+            nbins[current] += 1
+
+        seg_id[i] = current
+
+    nseg = current + 1
+    if nseg <= 1:
+        return valid.copy()
+
+    starts = np.asarray(starts, dtype=float)
+    ends = np.asarray(ends, dtype=float)
+    nbins = np.asarray(nbins, dtype=int)
+
+    if weight == "n_trials":
+        w = np.ones(nseg, dtype=int)
+    elif weight == "n_bins":
+        w = nbins
+    elif weight == "duration":
+        w = (ends - starts).astype(float)
+    else:
+        raise ValueError("weight must be one of: 'n_trials', 'n_bins', 'duration'.")
+
+    # 3) choose a maximum-weight subset of segments with a minimum gap constraint
+    #    (classic weighted interval scheduling with a required gap)
+    order = np.argsort(starts, kind="mergesort")
+    starts = starts[order]
+    ends = ends[order]
+    w = w[order]
+
+    # map back from ordered index -> original segment index
+    inv_order = np.empty_like(order)
+    inv_order[order] = np.arange(nseg)
+
+    # p[j] = rightmost segment i<j that ends at least min_time before segment j starts
+    cutoff = starts - float(min_time)
+    p = np.searchsorted(ends, cutoff, side="right") - 1
+
+    dp = np.zeros(nseg, dtype=float if weight == "duration" else int)
+    take = np.zeros(nseg, dtype=bool)
+
+    for j in range(nseg):
+        best_with = w[j] + (dp[p[j]] if p[j] >= 0 else 0)
+        best_without = dp[j - 1] if j > 0 else 0
+        if best_with > best_without:
+            dp[j] = best_with
+            take[j] = True
+        else:
+            dp[j] = best_without
+            take[j] = False
+
+    keep_ordered = np.zeros(nseg, dtype=bool)
+    j = nseg - 1
+    while j >= 0:
+        if take[j]:
+            keep_ordered[j] = True
+            j = p[j]
+        else:
+            j -= 1
+
+    # convert kept segments back to original segment ids
+    keep_orig = keep_ordered[inv_order]
+
+    # 4) expand kept segments back to a per-bin mask
+    keep_mask = valid & (seg_id != -1) & keep_orig[seg_id.clip(min=0)]
+    return keep_mask
+
 # Analysis
+
 
 def hamming_distance(x, y):
     d = [x[i] != y[i] for i in range(len(x))]
@@ -508,7 +673,7 @@ def hamming_distance(x, y):
 
 def hamming(x, y):
     if type(x) == str:
-        return np.sum((np.asarray(string_bool(x)) == np.asarray(string_bool(y))) == 0)
+        return np.sum((np.asarray(string_digits(x)) == np.asarray(string_digits(y))) == 0)
     else:
         return np.sum((np.asarray(x) == np.asarray(y)) == 0)
 
@@ -761,7 +926,7 @@ def visualize_data_vs_null(data, null, value, ax=None):
     if ax is None:
         f, ax = plt.subplots(figsize=(6, 3))
     kde = scipy.stats.gaussian_kde(null)
-    null_x = np.linspace(np.nanmean(null)-5*np.nanstd(null), np.nanmean(null)+5*np.nanstd(null), 100)
+    null_x = np.linspace(np.nanmean(null) - 5 * np.nanstd(null), np.nanmean(null) + 5 * np.nanstd(null), 100)
     null_y = kde(null_x)
     ax.plot(null_x, null_y, color='k', alpha=0.5)
     ax.fill_between(null_x, null_y, color='k', alpha=0.3)
@@ -776,8 +941,93 @@ def visualize_data_vs_null(data, null, value, ax=None):
         ax.text(0.15, 0.95, '%s\nz=%.1f\nP=%.1e' % (p_to_ast(p), z, p), ha='center', transform=ax.transAxes)
 
     ax.plot(null, np.zeros(len(null)), linestyle='', marker='|', color='k')
-    _ = ax.plot([null_mean, null_mean], [0, kde(null_mean)], color='k', linestyle='--')
+    _ = ax.plot([null_mean, null_mean], [0, kde(null_mean)[0]], color='k', linestyle='--')
     return z, p
+
+
+# CM viz
+
+def plot_confusion_matrix(cm,
+                          labels=None,
+                          normalize: bool = False,
+                          ax=None,
+                          cmap='viridis',
+                          fontsize=10):
+    from matplotlib.colors import Normalize
+
+    """
+    Pretty confusion-matrix plot with values in each cell.
+
+    Parameters
+    ----------
+    cm : array-like, shape (n_classes, n_classes)
+        Confusion matrix (counts).
+    labels : list of str, optional
+        Class labels in the order used to build `cm`.
+    normalize : bool
+        If True, normalize rows to sum to 1.
+    ax : matplotlib.axes.Axes, optional
+        Axis to plot on. If None, a new figure/axis is created.
+    cmap : str
+        Matplotlib colormap name.
+    fontsize : int
+        Font size for numbers and tick labels.
+    """
+    cm = np.asarray(cm).astype(float)
+    if normalize:
+        row_sums = cm.sum(axis=1, keepdims=True)
+        row_sums[row_sums == 0] = 1.0
+        cm_display = cm / row_sums
+    else:
+        cm_display = cm
+
+    n_classes = cm.shape[0]
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(4 + 0.3 * n_classes,
+                                        4 + 0.3 * n_classes))
+
+    im = ax.imshow(cm_display, interpolation='nearest', cmap=cmap,
+                   norm=Normalize(vmin=0, vmax=cm_display.max()))
+
+    plt.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+
+    if labels is None:
+        labels = [str(i) for i in range(n_classes)]
+
+    ax.set_xticks(np.arange(n_classes))
+    ax.set_yticks(np.arange(n_classes))
+    ax.set_xticklabels(labels, fontsize=fontsize)
+    ax.set_yticklabels(labels, fontsize=fontsize)
+
+    ax.set_xlabel('Predicted', fontsize=fontsize + 1)
+    ax.set_ylabel('True', fontsize=fontsize + 1)
+
+    # Rotate x tick labels
+    plt.setp(ax.get_xticklabels(), rotation=45, ha='right', rotation_mode='anchor')
+
+    # Print values in each cell
+    thresh = cm_display.max() / 2.0 if cm_display.size else 0.0
+    for i in range(n_classes):
+        for j in range(n_classes):
+            if normalize:
+                val = cm_display[i, j]
+                text = f"{val:.2f}"
+            else:
+                val = cm[i, j]
+                text = f"{int(val)}"
+
+            ax.text(j, i, text,
+                    ha='center', va='center',
+                    fontsize=fontsize,
+                    color='white' if cm_display[i, j] < thresh else 'black')
+
+    ax.set_xlim(-0.5, n_classes - 1 + 0.5)
+    ax.set_ylim(n_classes - 1 + 0.5, -0.5)
+    ax.grid(False)
+    ax.spines[:].set_visible(False)
+
+    return ax
 
 
 # Histogram comparison
@@ -921,8 +1171,7 @@ def box_comparison_two(A, B, labelA, labelB, quantity, force=False, swarm=False,
 
 
 def generate_synthetic_data(n_neurons=50, n_trials=50, timebins_per_trial=5, keyA='stimulus', keyB='action',
-                           rateA=0.1, rateB=0.1, corrAB=0, scale=1, meanfr=0.1, mixing_factor=0., mixed_term=0.):
-
+                            rateA=0.1, rateB=0.1, corrAB=0, scale=1, meanfr=0.1, mixing_factor=0., mixed_term=0.):
     session = {}
 
     # sample correlated labels
@@ -944,19 +1193,19 @@ def generate_synthetic_data(n_neurons=50, n_trials=50, timebins_per_trial=5, key
     rates = np.random.lognormal(meanfr, scale, n_neurons)
     rA = np.random.randn(n_neurons) * rateA
     rB = np.random.randn(n_neurons) * rateB
-    rC = np.random.randn(n_neurons) * (rateB+rateA)/2.
+    rC = np.random.randn(n_neurons) * (rateB + rateA) / 2.
 
     # sample activity
     raster = []
     for n in range(n_neurons):
-        x = np.zeros(n_trials*timebins_per_trial)
+        x = np.zeros(n_trials * timebins_per_trial)
         for A in [-1, 1]:
             for B in [-1, 1]:
                 mask = (behavior_B == B) & (behavior_A == A)
-                if n > n_neurons/2:
-                    f = (1 - mixing_factor) * rA[n] * A + mixing_factor * rB[n] * B + rA[n] * (A*B) * mixed_term
+                if n > n_neurons / 2:
+                    f = (1 - mixing_factor) * rA[n] * A + mixing_factor * rB[n] * B + rA[n] * (A * B) * mixed_term
                 else:
-                    f = (1 - mixing_factor) * rB[n] * B + mixing_factor * rA[n] * A + rB[n] * (A*B) * mixed_term
+                    f = (1 - mixing_factor) * rB[n] * B + mixing_factor * rA[n] * A + rB[n] * (A * B) * mixed_term
                 f -= 2 * np.min(np.hstack([rA, rB]))
                 if f < 0:
                     f = 0
@@ -976,14 +1225,13 @@ def generate_synthetic_data(n_neurons=50, n_trials=50, timebins_per_trial=5, key
 
 
 def visualize_synthetic_data(session):
-
     keys = [k for k in session.keys() if k != 'raster' and k != 'trial']
     frA0 = np.nanmean(session['raster'][session[keys[0]] == -1], 0)
     frA1 = np.nanmean(session['raster'][session[keys[0]] == 1], 0)
     frB0 = np.nanmean(session['raster'][session[keys[1]] == -1], 0)
     frB1 = np.nanmean(session['raster'][session[keys[1]] == 1], 0)
-    selA = np.abs(frA1 - frA0)/(frA1 + frA0)
-    selB = np.abs(frB1 - frB0)/(frB1 + frB0)
+    selA = np.abs(frA1 - frA0) / (frA1 + frA0)
+    selB = np.abs(frB1 - frB0) / (frB1 + frB0)
     order = np.argsort(selA - selB)
 
     f, axs = plt.subplots(4, 1, figsize=(10, 10), gridspec_kw={'height_ratios': [6, 0.75, 1, 1]})
@@ -995,7 +1243,7 @@ def visualize_synthetic_data(session):
 
     for i in range(int(n_neurons)):
         xval = np.where(activity[:, i] > 0)[0]
-        axs[0].scatter(xval, np.ones(len(xval))*i, color='k', marker='|', alpha=0.5)
+        axs[0].scatter(xval, np.ones(len(xval)) * i, color='k', marker='|', alpha=0.5)
         # nanact = np.copy(activity[:, i])
         # nanact[nanact == 0] = np.nan
         # axs[0].plot(i + (nanact>0), marker='|', linestyle='', color='k', alpha=0.5, markersize=3)
@@ -1037,7 +1285,7 @@ def generate_synthetic_data_intime(n_neurons=50, min_time=-10, max_time=10, sign
 
         data['raster'].append(trial_raster)
         data['time_from_onset'].append(trial_time)
-        data['trial'].append(np.ones(len(trial_time))*trial)
+        data['trial'].append(np.ones(len(trial_time)) * trial)
         data['stimulus'].append(np.repeat('A', len(trial_time)))
 
     # sampling B trials
@@ -1065,4 +1313,3 @@ def generate_synthetic_data_intime(n_neurons=50, min_time=-10, max_time=10, sign
     data['stimulus'] = np.hstack(data['stimulus'])
 
     return data
-
