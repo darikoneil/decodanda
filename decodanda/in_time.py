@@ -183,7 +183,7 @@ def decoding_at_time(data, conditions, time_attr, time, dt, decodanda_params, de
       decoder = Decodanda(data=data, conditions=t_conditions, **decodanda_params)
       perf, null = decoder.decode(non_semantic=True, **decoding_params)
     else:
-      decoder = Decodanda(data=data, conditions=t_conditions, **decodanda_params).decode(**decoding_params)
+      decoder = Decodanda(data=data, conditions=t_conditions, **decodanda_params)
       perfs, null = decoder.decode(**decoding_params)
     return perfs, null, decoder
 
