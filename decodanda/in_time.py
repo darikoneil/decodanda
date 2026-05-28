@@ -57,7 +57,7 @@ def decode_in_time(data, conditions, time_attr, time_window, decodanda_params, d
         for key in perfs:
             performances[key][i] = perfs[key]
             nulls[key][i] = null[key]
-            decoders[key].append(decoders_[key])
+            decoders[key].append(decoders_)
             if verbose:
                 print(key, 'Performance: %.2f' % np.nanmean(perfs[key]), 'Null: %.2f +- %.2f std' %
                       (np.nanmean(null[key]), np.nanstd(null[key])), p_to_ast(z_pval(perfs[key], null[key])[1]))
