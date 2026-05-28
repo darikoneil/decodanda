@@ -41,20 +41,23 @@ def decode_in_time(data, conditions, time_attr, time_window, decodanda_params, d
         performances = {key: np.zeros(len(time_centers)) for key in list(conditions.keys()) + ['XOR']}
         nulls = {key: np.zeros((len(time_centers), decoding_params['nshuffles'])) for key in
                  list(conditions.keys()) + ['XOR']}
+        decoders = {key: [] for key in list(conditions.keys()) + ["XOR"]}
         pvalues = {key: np.zeros(len(time_centers)) * np.nan for key in list(conditions.keys()) + ['XOR']}
     else:
         performances = {key: np.zeros(len(time_centers)) for key in conditions}
         nulls = {key: np.zeros((len(time_centers), decoding_params['nshuffles'])) for key in conditions}
+        decoders = {key: [] for key in list(conditions.keys())}
         pvalues = {key: np.zeros(len(time_centers)) * np.nan for key in conditions}
-
+    
     for i, t in tqdm(enumerate(time_centers)):
         if verbose:
             print("\n[Decoding in time]\tdecoding using data in the time window: [%.2f, %.2f]" % (t, t + time_window))
-        perfs, null = decoding_at_time(data, conditions, 'time_selected', t, time_window, decodanda_params,
+        perfs, null, decoders_ = decoding_at_time(data, conditions, 'time_selected', t, time_window, decodanda_params,
                                        decoding_params)
         for key in perfs:
             performances[key][i] = perfs[key]
             nulls[key][i] = null[key]
+            decoders[key].append(decoders_[key])
             if verbose:
                 print(key, 'Performance: %.2f' % np.nanmean(perfs[key]), 'Null: %.2f +- %.2f std' %
                       (np.nanmean(null[key]), np.nanstd(null[key])), p_to_ast(z_pval(perfs[key], null[key])[1]))
@@ -81,7 +84,7 @@ def decode_in_time(data, conditions, time_attr, time_window, decodanda_params, d
                     ax[i].text(time_centers[t], performances[key][t], p_to_ast(pvalues[key][t]), ha='center',
                                va='bottom', fontsize=11)
 
-    return performances, nulls, time_centers
+    return performances, nulls, decoders, time_centers
 
 
 def CCGP_in_time(data, conditions, time_attr, time_window, decodanda_params, decoding_params, time_boundaries,
@@ -177,11 +180,12 @@ def decoding_at_time(data, conditions, time_attr, time, dt, decodanda_params, de
                     d[time_attr] >= t0) & (d[
                                                time_attr] < t0 + dt)  # pass these  ^      ^       ^   as default args to allow iteration
     if len(conditions) == 2:
-        perfs, null = Decodanda(data=data, conditions=t_conditions, **decodanda_params).decode(non_semantic=True,
-                                                                                       **decoding_params)
+      decoder = Decodanda(data=data, conditions=t_conditions, **decodanda_params)
+      perf, null = decoder.decode(non_semantic=True, **decoding_params)
     else:
-        perfs, null = Decodanda(data=data, conditions=t_conditions, **decodanda_params).decode(**decoding_params)
-    return perfs, null
+      decoder = Decodanda(data=data, conditions=t_conditions, **decodanda_params).decode(**decoding_params)
+      perfs, null = decoder.decode(**decoding_params)
+    return perfs, null, decoder
 
 
 # Function to decode one specific time bin
