@@ -38,13 +38,20 @@ def decode_in_time(data, conditions, time_attr, time_window, decodanda_params, d
     time_centers = np.linspace(all_times[0], all_times[-1], 1 + floor((all_times[-1] - all_times[0]) / time_window))[
                    :-1]
     if len(conditions) == 2:
-        performances = {key: np.zeros(len(time_centers)) for key in list(conditions.keys()) + ['XOR']}
+        if decoding_params['return_CV']:
+            performances = {key: [] for key in
+                            list(conditions.keys()) + ['XOR']}
+        else:
+            performances = {key: np.zeros(len(time_centers)) for key in list(conditions.keys()) + ['XOR']}
         nulls = {key: np.zeros((len(time_centers), decoding_params['nshuffles'])) for key in
                  list(conditions.keys()) + ['XOR']}
         decoders = {key: [] for key in list(conditions.keys()) + ["XOR"]}
         pvalues = {key: np.zeros(len(time_centers)) * np.nan for key in list(conditions.keys()) + ['XOR']}
     else:
-        performances = {key: np.zeros(len(time_centers)) for key in conditions}
+        if decoding_params['return_CV']:
+            performances = {key: [] for key in conditions}
+        else:
+            performances = {key: np.zeros(len(time_centers)) for key in conditions}
         nulls = {key: np.zeros((len(time_centers), decoding_params['nshuffles'])) for key in conditions}
         decoders = {key: [] for key in list(conditions.keys())}
         pvalues = {key: np.zeros(len(time_centers)) * np.nan for key in conditions}
@@ -55,13 +62,19 @@ def decode_in_time(data, conditions, time_attr, time_window, decodanda_params, d
         perfs, null, decoders_ = decoding_at_time(data, conditions, 'time_selected', t, time_window, decodanda_params,
                                        decoding_params)
         for key in perfs:
-            performances[key][i] = perfs[key]
+            if decoding_params['return_CV']:
+                performances[key].append(perfs[key])
+            else:
+                performances[key][i] = perfs[key]
             nulls[key][i] = null[key]
             decoders[key].append(decoders_)
             if verbose:
                 print(key, 'Performance: %.2f' % np.nanmean(perfs[key]), 'Null: %.2f +- %.2f std' %
                       (np.nanmean(null[key]), np.nanstd(null[key])), p_to_ast(z_pval(perfs[key], null[key])[1]))
-            pvalues[key][i] = z_pval(perfs[key], null[key])[1]
+            if decoding_params['return_CV']:
+                pvalues[key][i] = z_pval(np.nanmean(perfs[key]), null[key])[1]
+            else:
+                pvalues[key][i] = z_pval(perfs[key], null[key])[1]
 
     if plot:
         nkeys = len(performances.keys())
